@@ -7,10 +7,19 @@ import { sendWelcomeEmail } from "~/server/mail";
 
 export const GET = async (request: NextRequest) => {
   const url = new URL(request.url);
+  const setup_action = url.searchParams.get("setup_action");
   const code = url.searchParams.get("code");
   const state = url.searchParams.get("state");
+  const installation_id = url.searchParams.get("installation_id");
   const storedState = cookies().get("github_oauth_state")?.value ?? null;
-  if (!code || !state || !storedState || state !== storedState) {
+  if (
+    !setup_action &&
+    (!code || !state || !storedState || state !== storedState)
+  ) {
+    return new Response(null, {
+      status: 400,
+    });
+  } else if (!code || installation_id) {
     return new Response(null, {
       status: 400,
     });
@@ -38,6 +47,17 @@ export const GET = async (request: NextRequest) => {
         sessionCookie.value,
         sessionCookie.attributes
       );
+
+      // * If there have no github installation access token then flying to Apps installation page
+      if (!session.id) {
+        return new Response(null, {
+          status: 302,
+          headers: {
+            Location: "/dashboard/install",
+          },
+        });
+      }
+
       return new Response(null, {
         status: 302,
         headers: {
@@ -62,10 +82,22 @@ export const GET = async (request: NextRequest) => {
       sessionCookie.value,
       sessionCookie.attributes
     );
+
+    if (setup_action === "install") {
+      //** App installation */
+
+      return new Response(null, {
+        status: 302,
+        headers: {
+          Location: "/dashboard",
+        },
+      });
+    }
+
     return new Response(null, {
       status: 302,
       headers: {
-        Location: "/dashboard",
+        Location: "/dashboard/install",
       },
     });
   } catch (e) {
