@@ -4,6 +4,7 @@ import type { NextRequest } from "next/server";
 import db from "~/lib/db";
 import { github, lucia } from "~/lib/lucia";
 import { sendWelcomeEmail } from "~/server/mail";
+import { app } from "~/lib/octokit";
 
 export const GET = async (request: NextRequest) => {
   const url = new URL(request.url);
@@ -47,9 +48,15 @@ export const GET = async (request: NextRequest) => {
         sessionCookie.value,
         sessionCookie.attributes
       );
+      const isInstalled = await app.octokit.request(
+        "GET /users/{username}/installation",
+        {
+          username: githubUser.name,
+        }
+      );
 
       // * If there have no github installation access token then flying to Apps installation page
-      if (!session.id) {
+      if (!isInstalled) {
         return new Response(null, {
           status: 302,
           headers: {
