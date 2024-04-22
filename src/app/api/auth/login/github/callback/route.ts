@@ -20,7 +20,7 @@ export const GET = async (request: NextRequest) => {
     return new Response(null, {
       status: 400,
     });
-  } else if (!code || !installation_id) {
+  } else if (setup_action === "install" && (!code || !installation_id)) {
     return new Response(null, {
       status: 400,
     });
@@ -29,7 +29,7 @@ export const GET = async (request: NextRequest) => {
   let newAccessToken = null;
 
   try {
-    const tokens = await github.validateAuthorizationCode(code);
+    const tokens = await github.validateAuthorizationCode(String(code));
     const githubUserResponse = await fetch("https://api.github.com/user", {
       headers: {
         Authorization: `Bearer ${tokens.accessToken}`,
@@ -73,6 +73,12 @@ export const GET = async (request: NextRequest) => {
           },
           data: {
             githubAccessToken: newAccessToken,
+          },
+        });
+        return new Response(null, {
+          status: 302,
+          headers: {
+            Location: "/dashboard",
           },
         });
       }
