@@ -58,6 +58,17 @@ export const GET = async (request: NextRequest) => {
     }
 
     if (existingUser) {
+      if (!existingUser.activate) {
+        await db.user.update({
+          where: {
+            id: existingUser.id,
+          },
+          data: {
+            activate: true,
+          },
+        });
+      }
+
       const session = await lucia.createSession(existingUser.id, {});
       const sessionCookie = lucia.createSessionCookie(session.id);
       cookies().set(
