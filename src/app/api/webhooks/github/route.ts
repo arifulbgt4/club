@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import { type NextRequest } from "next/server";
 import db from "~/lib/db";
+import { app } from "~/lib/octokit";
 
 export async function POST(req: NextRequest) {
   // * webhooks event type
@@ -10,6 +11,7 @@ export async function POST(req: NextRequest) {
   // * action ex: create, delete
   // * data ex: id, sender, requester ...
   const data = await req.json();
+  console.log("data: ", data);
   // * ☝️ create, delete
   const action = data.action;
   // * ☝️ id, sender, requester ...
@@ -30,6 +32,18 @@ export async function POST(req: NextRequest) {
           });
         }
 
+        break;
+      case "installation":
+        if (action === "deleted") {
+          await db.user.update({
+            where: {
+              githubId: sender.id,
+            },
+            data: {
+              githubAccessToken: null,
+            },
+          });
+        }
         break;
       default:
         console.log("Alert! Comming Unknown github webhook event.");
