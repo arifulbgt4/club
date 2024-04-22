@@ -54,7 +54,7 @@ export const GET = async (request: NextRequest) => {
         }
       );
 
-      newAccessToken = await accessToken.data.token;
+      newAccessToken = accessToken.data.token;
     }
 
     if (existingUser) {
