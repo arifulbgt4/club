@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 import db from "~/lib/db";
 import { github, lucia } from "~/lib/lucia";
 import { sendWelcomeEmail } from "~/server/mail";
-import { app } from "~/lib/octokit";
+import { app, privateKey } from "~/lib/octokit";
 
 export const GET = async (request: NextRequest) => {
   const url = new URL(request.url);
@@ -20,11 +20,13 @@ export const GET = async (request: NextRequest) => {
     return new Response(null, {
       status: 400,
     });
-  } else if (!code || installation_id) {
+  } else if (!code || !installation_id) {
     return new Response(null, {
       status: 400,
     });
   }
+
+  let newAccessToken = null;
 
   try {
     const tokens = await github.validateAuthorizationCode(code);
@@ -40,6 +42,21 @@ export const GET = async (request: NextRequest) => {
       },
     });
 
+    if (setup_action === "install") {
+      //** App installation */
+      const accessToken = await app.octokit.request(
+        "POST /app/installations/{installation_id}/access_tokens",
+        {
+          installation_id: Number(installation_id),
+          headers: {
+            authorization: `Bearer ${privateKey}`,
+          },
+        }
+      );
+
+      newAccessToken = await accessToken.data.token;
+    }
+
     if (existingUser) {
       const session = await lucia.createSession(existingUser.id, {});
       const sessionCookie = lucia.createSessionCookie(session.id);
@@ -48,15 +65,19 @@ export const GET = async (request: NextRequest) => {
         sessionCookie.value,
         sessionCookie.attributes
       );
-      const isInstalled = await app.octokit.request(
-        "GET /users/{username}/installation",
-        {
-          username: githubUser.name,
-        }
-      );
 
-      // * If there have no github installation access token then flying to Apps installation page
-      if (!isInstalled) {
+      if (setup_action === "install") {
+        await db.user.update({
+          where: {
+            id: existingUser.id,
+          },
+          data: {
+            githubAccessToken: newAccessToken,
+          },
+        });
+      }
+
+      if (existingUser.githubAccessToken === null) {
         return new Response(null, {
           status: 302,
           headers: {
@@ -79,6 +100,7 @@ export const GET = async (request: NextRequest) => {
         name: githubUser.name,
         email: githubUser.email,
         picture: githubUser.avatar_url,
+        githubAccessToken: newAccessToken,
       },
     });
     sendWelcomeEmail({ toMail: newUser.email!, userName: newUser.name! });
@@ -91,8 +113,6 @@ export const GET = async (request: NextRequest) => {
     );
 
     if (setup_action === "install") {
-      //** App installation */
-
       return new Response(null, {
         status: 302,
         headers: {
