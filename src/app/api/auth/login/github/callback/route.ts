@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import db from "~/lib/db";
 import { github, lucia } from "~/lib/lucia";
-import { sendWelcomeEmail } from "~/server/mail";
+// import { sendWelcomeEmail } from "~/server/mail";
 import { app, privateKey } from "~/lib/octokit";
 
 export const GET = async (request: NextRequest) => {
@@ -53,6 +53,7 @@ export const GET = async (request: NextRequest) => {
       );
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       install = installation.data.account as any;
+      console.log("install: ", install);
       const accessToken = await app.octokit.request(
         "POST /app/installations/{installation_id}/access_tokens",
         {
@@ -87,19 +88,32 @@ export const GET = async (request: NextRequest) => {
       );
 
       if (setup_action === "install") {
-        await db.organization.create({
-          data: {
-            name: install.login,
-            token: newAccessToken,
-            picture: install.avatar_url,
-            type: install.type,
-            user: {
-              connect: {
-                id: existingUser.id,
+        if (install.type === "Organization") {
+          await db.organization.create({
+            data: {
+              name: install.login,
+              token: newAccessToken,
+              picture: install.avatar_url,
+              type: install.type,
+              user: {
+                connect: {
+                  id: existingUser.id,
+                },
               },
             },
-          },
-        });
+          });
+        }
+        if (install.type === "User") {
+          await db.user.update({
+            where: {
+              id: existingUser.id,
+            },
+            data: {
+              accessToken: newAccessToken,
+            },
+          });
+        }
+
         return new Response(null, {
           status: 302,
           headers: {
@@ -108,13 +122,10 @@ export const GET = async (request: NextRequest) => {
         });
       }
 
-      if (existingUser.githubAccessToken === null) {
-        return new Response(null, {
-          status: 302,
-          headers: {
-            Location: "/dashboard/install",
-          },
-        });
+      if (existingUser.accessToken === null) {
+        return Response.redirect(
+          `https://github.com/apps/issueclub/installations/new/permissions?target_id=${existingUser.githubId}`
+        );
       }
 
       return new Response(null, {
@@ -131,9 +142,11 @@ export const GET = async (request: NextRequest) => {
         name: githubUser.name,
         email: githubUser.email,
         picture: githubUser.avatar_url,
+        ...(setup_action === "install" &&
+          install.type === "User" && { accessToken: newAccessToken }),
       },
     });
-    sendWelcomeEmail({ toMail: newUser.email!, userName: newUser.name! });
+    // sendWelcomeEmail({ toMail: newUser.email!, userName: newUser.name! });
     const session = await lucia.createSession(newUser.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
     cookies().set(
@@ -142,7 +155,7 @@ export const GET = async (request: NextRequest) => {
       sessionCookie.attributes
     );
 
-    if (setup_action === "install") {
+    if (setup_action === "install" && install.type === "Organization") {
       await db.organization.create({
         data: {
           name: install.login,
@@ -156,18 +169,12 @@ export const GET = async (request: NextRequest) => {
           },
         },
       });
-      return new Response(null, {
-        status: 302,
-        headers: {
-          Location: "/dashboard",
-        },
-      });
     }
 
     return new Response(null, {
       status: 302,
       headers: {
-        Location: "/dashboard/install",
+        Location: "/dashboard",
       },
     });
   } catch (e) {

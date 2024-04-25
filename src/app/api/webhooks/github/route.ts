@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
   // * action ex: create, delete
   // * data ex: id, sender, requester ...
   const data = await req.json();
-  console.log("data: ", data);
+  // console.log("data: ", data);
   // * ☝️ create, delete
   const action = data.action;
   // * ☝️ id, sender, requester ...
@@ -35,14 +35,29 @@ export async function POST(req: NextRequest) {
         break;
       case "installation":
         if (action === "deleted") {
-          await db.user.update({
-            where: {
-              githubId: sender.id,
-            },
-            data: {
-              githubAccessToken: null,
-            },
-          });
+          if (eventData.account.type === "User") {
+            console.log("Update here!");
+            await db.user.update({
+              where: {
+                githubId: sender.id,
+              },
+              data: {
+                accessToken: null,
+              },
+            });
+          }
+
+          // TODO: Need to add condition for uninstall an Organization
+          if (eventData.account.type === "Organization") {
+            // await db.user.update({
+            //   where: {
+            //     githubId: sender.id,
+            //   },
+            //   data: {
+            //     accessToken: null,
+            //   },
+            // });
+          }
         }
         break;
       default:

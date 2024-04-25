@@ -29,6 +29,7 @@ model User {
   email                   String?                  @unique
   emailVerified           Boolean?                 @default(false)
   picture                 String?
+  accessToken             String?
   activate                Boolean?                 @default(true)
   githubId                Int?                     @unique
   stripeCustomerId        String?                  @unique @map("stripe_customer_id")
