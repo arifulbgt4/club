@@ -27,6 +27,7 @@ export const GET = async (request: NextRequest) => {
   }
 
   let newAccessToken = null;
+  let install;
 
   try {
     const tokens = await github.validateAuthorizationCode(String(code));
@@ -44,6 +45,14 @@ export const GET = async (request: NextRequest) => {
 
     if (setup_action === "install") {
       //** App installation */
+      const installation = await app.octokit.request(
+        "GET /app/installations/{installation_id}",
+        {
+          installation_id: Number(installation_id),
+        }
+      );
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      install = installation.data.account as any;
       const accessToken = await app.octokit.request(
         "POST /app/installations/{installation_id}/access_tokens",
         {
@@ -78,12 +87,17 @@ export const GET = async (request: NextRequest) => {
       );
 
       if (setup_action === "install") {
-        await db.user.update({
-          where: {
-            id: existingUser.id,
-          },
+        await db.organization.create({
           data: {
-            githubAccessToken: newAccessToken,
+            name: install.login,
+            token: newAccessToken,
+            picture: install.avatar_url,
+            type: install.type,
+            user: {
+              connect: {
+                id: existingUser.id,
+              },
+            },
           },
         });
         return new Response(null, {
@@ -117,7 +131,6 @@ export const GET = async (request: NextRequest) => {
         name: githubUser.name,
         email: githubUser.email,
         picture: githubUser.avatar_url,
-        githubAccessToken: newAccessToken,
       },
     });
     sendWelcomeEmail({ toMail: newUser.email!, userName: newUser.name! });
@@ -130,6 +143,19 @@ export const GET = async (request: NextRequest) => {
     );
 
     if (setup_action === "install") {
+      await db.organization.create({
+        data: {
+          name: install.login,
+          token: newAccessToken,
+          picture: install.avatar_url,
+          type: install.type,
+          user: {
+            connect: {
+              id: newUser.id,
+            },
+          },
+        },
+      });
       return new Response(null, {
         status: 302,
         headers: {
