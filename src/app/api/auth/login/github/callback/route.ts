@@ -53,7 +53,7 @@ export const GET = async (request: NextRequest) => {
       );
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       install = installation.data.account as any;
-      console.log("install: ", install);
+
       const accessToken = await app.octokit.request(
         "POST /app/installations/{installation_id}/access_tokens",
         {
@@ -77,6 +77,12 @@ export const GET = async (request: NextRequest) => {
             activate: true,
           },
         });
+      }
+
+      if (setup_action !== "install" && existingUser.accessToken === null) {
+        return Response.redirect(
+          `https://github.com/apps/issueclub/installations/new/permissions?target_id=${existingUser.githubId}`
+        );
       }
 
       const session = await lucia.createSession(existingUser.id, {});
@@ -122,12 +128,6 @@ export const GET = async (request: NextRequest) => {
         });
       }
 
-      if (existingUser.accessToken === null) {
-        return Response.redirect(
-          `https://github.com/apps/issueclub/installations/new/permissions?target_id=${existingUser.githubId}`
-        );
-      }
-
       return new Response(null, {
         status: 302,
         headers: {
@@ -146,37 +146,43 @@ export const GET = async (request: NextRequest) => {
           install.type === "User" && { accessToken: newAccessToken }),
       },
     });
-    // sendWelcomeEmail({ toMail: newUser.email!, userName: newUser.name! });
-    const session = await lucia.createSession(newUser.id, {});
-    const sessionCookie = lucia.createSessionCookie(session.id);
-    cookies().set(
-      sessionCookie.name,
-      sessionCookie.value,
-      sessionCookie.attributes
-    );
 
-    if (setup_action === "install" && install.type === "Organization") {
-      await db.organization.create({
-        data: {
-          name: install.login,
-          token: newAccessToken,
-          picture: install.avatar_url,
-          type: install.type,
-          user: {
-            connect: {
-              id: newUser.id,
+    if (setup_action === "install") {
+      if (install.type === "Organization") {
+        await db.organization.create({
+          data: {
+            name: install.login,
+            token: newAccessToken,
+            picture: install.avatar_url,
+            type: install.type,
+            user: {
+              connect: {
+                id: newUser.id,
+              },
             },
           },
+        });
+      }
+
+      // sendWelcomeEmail({ toMail: newUser.email!, userName: newUser.name! });
+      const session = await lucia.createSession(newUser.id, {});
+      const sessionCookie = lucia.createSessionCookie(session.id);
+      cookies().set(
+        sessionCookie.name,
+        sessionCookie.value,
+        sessionCookie.attributes
+      );
+      return new Response(null, {
+        status: 302,
+        headers: {
+          Location: "/dashboard",
         },
       });
     }
 
-    return new Response(null, {
-      status: 302,
-      headers: {
-        Location: "/dashboard",
-      },
-    });
+    return Response.redirect(
+      `https://github.com/apps/issueclub/installations/new/permissions?target_id=${newUser.githubId}`
+    );
   } catch (e) {
     console.log(e);
     // the specific error message depends on the provider
