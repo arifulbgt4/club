@@ -1,7 +1,6 @@
 import { headers } from "next/headers";
 import { type NextRequest } from "next/server";
 import db from "~/lib/db";
-import { app } from "~/lib/octokit";
 
 export async function POST(req: NextRequest) {
   // * webhooks event type
@@ -36,7 +35,6 @@ export async function POST(req: NextRequest) {
       case "installation":
         if (action === "deleted") {
           if (eventData.account.type === "User") {
-            console.log("Update here!");
             await db.user.update({
               where: {
                 githubId: sender.id,
