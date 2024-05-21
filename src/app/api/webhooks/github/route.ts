@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
               where: { id: org?.id, name: eventData.account.login },
               data: {
                 token: null,
-                active: true,
+                active: false,
               },
             });
           }
