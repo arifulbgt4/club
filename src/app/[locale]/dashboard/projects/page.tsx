@@ -2,12 +2,14 @@ import Link from "next/link";
 import { Card } from "~/components/ui/card";
 import { getProjects } from "./action";
 import CreateProjectModal from "./create-project-modal";
+import SelectDemo from "./Select";
 
 export default async function Projects() {
   const projects = await getProjects();
 
   return (
     <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4 ">
+      <SelectDemo />
       <CreateProjectModal />
       {projects.map((project) => (
         <Card

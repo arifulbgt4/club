@@ -95,19 +95,40 @@ export const GET = async (request: NextRequest) => {
 
       if (setup_action === "install") {
         if (install.type === "Organization") {
-          await db.organization.create({
-            data: {
-              name: install.login,
-              token: newAccessToken,
-              picture: install.avatar_url,
-              type: install.type,
-              user: {
-                connect: {
-                  id: existingUser.id,
+          const org = await db.organization.findFirst({
+            where: { name: install.login },
+          });
+
+          if (!org) {
+            await db.organization.create({
+              data: {
+                name: install.login,
+                token: newAccessToken,
+                picture: install.avatar_url,
+                type: install.type,
+                user: {
+                  connect: {
+                    id: existingUser.id,
+                  },
                 },
               },
-            },
-          });
+            });
+          } else {
+            await db.organization.update({
+              where: {
+                id: org.id,
+              },
+              data: {
+                token: newAccessToken,
+                active: true,
+                user: {
+                  connect: {
+                    id: existingUser.id,
+                  },
+                },
+              },
+            });
+          }
         }
         if (install.type === "User") {
           await db.user.update({

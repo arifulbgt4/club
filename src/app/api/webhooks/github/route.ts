@@ -49,14 +49,16 @@ export async function POST(req: NextRequest) {
 
           // TODO: Need to add condition for uninstall an Organization
           if (eventData.account.type === "Organization") {
-            // await db.user.update({
-            //   where: {
-            //     githubId: sender.id,
-            //   },
-            //   data: {
-            //     accessToken: null,
-            //   },
-            // });
+            const org = await db.organization.findFirst({
+              where: { name: eventData.account.login },
+            });
+            await db.organization.update({
+              where: { id: org?.id, name: eventData.account.login },
+              data: {
+                token: null,
+                active: true,
+              },
+            });
           }
         }
         break;
