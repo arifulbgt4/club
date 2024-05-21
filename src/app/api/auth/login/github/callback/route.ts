@@ -105,7 +105,6 @@ export const GET = async (request: NextRequest) => {
                 name: install.login,
                 token: newAccessToken,
                 picture: install.avatar_url,
-                type: install.type,
                 user: {
                   connect: {
                     id: existingUser.id,
@@ -175,7 +174,6 @@ export const GET = async (request: NextRequest) => {
             name: install.login,
             token: newAccessToken,
             picture: install.avatar_url,
-            type: install.type,
             user: {
               connect: {
                 id: newUser.id,

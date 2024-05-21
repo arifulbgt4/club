@@ -47,7 +47,6 @@ export async function POST(req: NextRequest) {
             });
           }
 
-          // TODO: Need to add condition for uninstall an Organization
           if (eventData.account.type === "Organization") {
             const org = await db.organization.findFirst({
               where: { name: eventData.account.login },

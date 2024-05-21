@@ -48,7 +48,6 @@ model Organization {
   id       String    @id @default(cuid())
   name     String
   active   Boolean?  @default(true)
-  type     String?
   picture  String?
   token    String?
   userId   String?
