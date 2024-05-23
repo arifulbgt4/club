@@ -16,7 +16,8 @@ export default function SelectDemo() {
   const [value, setValue] = React.useState("");
   return (
     <Select
-      onValueChange={(v) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      onValueChange={(v: any) => {
         console.log("first ", v);
       }}
       //   defaultValue="blueberry"
