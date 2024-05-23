@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import db from "~/lib/db";
 import { github, lucia } from "~/lib/lucia";
-import { sendWelcomeEmail } from "~/server/mail";
+// import { sendWelcomeEmail } from "~/server/mail";
 import { app, privateKey } from "~/lib/octokit";
 
 export const GET = async (request: NextRequest) => {
@@ -27,6 +27,7 @@ export const GET = async (request: NextRequest) => {
   }
 
   let newAccessToken = null;
+  let install;
 
   try {
     const tokens = await github.validateAuthorizationCode(String(code));
@@ -44,6 +45,15 @@ export const GET = async (request: NextRequest) => {
 
     if (setup_action === "install") {
       //** App installation */
+      const installation = await app.octokit.request(
+        "GET /app/installations/{installation_id}",
+        {
+          installation_id: Number(installation_id),
+        }
+      );
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      install = installation.data.account as any;
+
       const accessToken = await app.octokit.request(
         "POST /app/installations/{installation_id}/access_tokens",
         {
@@ -58,6 +68,23 @@ export const GET = async (request: NextRequest) => {
     }
 
     if (existingUser) {
+      if (!existingUser.activate) {
+        await db.user.update({
+          where: {
+            id: existingUser.id,
+          },
+          data: {
+            activate: true,
+          },
+        });
+      }
+
+      if (setup_action !== "install" && existingUser.accessToken === null) {
+        return Response.redirect(
+          `https://github.com/apps/issueclub/installations/new/permissions?target_id=${existingUser.githubId}`
+        );
+      }
+
       const session = await lucia.createSession(existingUser.id, {});
       const sessionCookie = lucia.createSessionCookie(session.id);
       cookies().set(
@@ -67,27 +94,56 @@ export const GET = async (request: NextRequest) => {
       );
 
       if (setup_action === "install") {
-        await db.user.update({
-          where: {
-            id: existingUser.id,
-          },
-          data: {
-            githubAccessToken: newAccessToken,
-          },
-        });
+        if (install.type === "Organization") {
+          const org = await db.organization.findFirst({
+            where: { name: install.login },
+          });
+
+          if (!org) {
+            await db.organization.create({
+              data: {
+                name: install.login,
+                token: newAccessToken,
+                picture: install.avatar_url,
+                user: {
+                  connect: {
+                    id: existingUser.id,
+                  },
+                },
+              },
+            });
+          } else {
+            await db.organization.update({
+              where: {
+                id: org.id,
+              },
+              data: {
+                token: newAccessToken,
+                active: true,
+                user: {
+                  connect: {
+                    id: existingUser.id,
+                  },
+                },
+              },
+            });
+          }
+        }
+        if (install.type === "User") {
+          await db.user.update({
+            where: {
+              id: existingUser.id,
+            },
+            data: {
+              accessToken: newAccessToken,
+            },
+          });
+        }
+
         return new Response(null, {
           status: 302,
           headers: {
             Location: "/dashboard",
-          },
-        });
-      }
-
-      if (existingUser.githubAccessToken === null) {
-        return new Response(null, {
-          status: 302,
-          headers: {
-            Location: "/dashboard/install",
           },
         });
       }
@@ -106,19 +162,35 @@ export const GET = async (request: NextRequest) => {
         name: githubUser.name,
         email: githubUser.email,
         picture: githubUser.avatar_url,
-        githubAccessToken: newAccessToken,
+        ...(setup_action === "install" &&
+          install.type === "User" && { accessToken: newAccessToken }),
       },
     });
-    sendWelcomeEmail({ toMail: newUser.email!, userName: newUser.name! });
-    const session = await lucia.createSession(newUser.id, {});
-    const sessionCookie = lucia.createSessionCookie(session.id);
-    cookies().set(
-      sessionCookie.name,
-      sessionCookie.value,
-      sessionCookie.attributes
-    );
 
     if (setup_action === "install") {
+      if (install.type === "Organization") {
+        await db.organization.create({
+          data: {
+            name: install.login,
+            token: newAccessToken,
+            picture: install.avatar_url,
+            user: {
+              connect: {
+                id: newUser.id,
+              },
+            },
+          },
+        });
+      }
+
+      // sendWelcomeEmail({ toMail: newUser.email!, userName: newUser.name! });
+      const session = await lucia.createSession(newUser.id, {});
+      const sessionCookie = lucia.createSessionCookie(session.id);
+      cookies().set(
+        sessionCookie.name,
+        sessionCookie.value,
+        sessionCookie.attributes
+      );
       return new Response(null, {
         status: 302,
         headers: {
@@ -127,12 +199,9 @@ export const GET = async (request: NextRequest) => {
       });
     }
 
-    return new Response(null, {
-      status: 302,
-      headers: {
-        Location: "/dashboard/install",
-      },
-    });
+    return Response.redirect(
+      `https://github.com/apps/issueclub/installations/new/permissions?target_id=${newUser.githubId}`
+    );
   } catch (e) {
     console.log(e);
     // the specific error message depends on the provider
