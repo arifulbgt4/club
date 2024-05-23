@@ -1,6 +1,6 @@
 "use server";
 
-import { type Project } from "@prisma/client";
+import { type Project, type Organization, type User } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import db from "~/lib/db";
@@ -92,4 +92,12 @@ export async function deleteProjectById(id: string) {
   });
   revalidatePath(`/dashboard/projects`);
   redirect("/dashboard/projects");
+}
+
+export async function getOrganizations() {
+  const { user } = await validateRequest();
+  const organization = await db.organization.findMany({
+    where: { userId: user?.id },
+  });
+  return { organization: organization as Organization[], user: user as User };
 }
