@@ -1,5 +1,6 @@
 "use client";
 import { type Organization, type User } from "@prisma/client";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
 
 import {
@@ -13,6 +14,7 @@ import {
 } from "~/components/ui/select";
 
 const DEFAULT_USER = "defaultuser";
+const SEARCH_PARAMS_NAME = "org";
 
 export default function SelectDemo({
   organization,
@@ -21,12 +23,21 @@ export default function SelectDemo({
   organization: Organization[];
   user: User;
 }) {
+  const search = useSearchParams();
+  const router = useRouter();
+  const path = usePathname();
+  const orgParams = search.get(SEARCH_PARAMS_NAME);
+
   return (
     <Select
       onValueChange={(v: string) => {
-        console.log("first ", v);
+        if (v === DEFAULT_USER) {
+          router.push(path);
+          return;
+        }
+        router.push(`${path}?${SEARCH_PARAMS_NAME}=${v}`);
       }}
-      defaultValue={DEFAULT_USER}
+      defaultValue={orgParams === null ? DEFAULT_USER : orgParams}
     >
       <SelectTrigger className=" w-auto">
         <SelectValue placeholder="Select a Organization" />
