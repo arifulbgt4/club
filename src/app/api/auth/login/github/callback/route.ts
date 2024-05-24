@@ -136,6 +136,7 @@ export const GET = async (request: NextRequest) => {
             },
             data: {
               accessToken: newAccessToken,
+              installId: Number(installation_id),
             },
           });
         }
@@ -164,7 +165,10 @@ export const GET = async (request: NextRequest) => {
         username: githubUser.login,
         picture: githubUser.avatar_url,
         ...(setup_action === "install" &&
-          install.type === "User" && { accessToken: newAccessToken }),
+          install.type === "User" && {
+            accessToken: newAccessToken,
+            installId: Number(installation_id),
+          }),
       },
     });
 

@@ -17,6 +17,9 @@ export const lucia = new Lucia(adapter, {
       name: attributes.name,
       email: attributes.email,
       picture: attributes.picture,
+      accessToken: attributes.accessToken,
+      username: attributes.username,
+      installId: attributes.installId,
     };
   },
 });

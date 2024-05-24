@@ -30,6 +30,7 @@ model User {
   emailVerified           Boolean?                 @default(false)
   picture                 String?
   accessToken             String?
+  installId               Int?
   activate                Boolean?                 @default(true)
   githubId                Int?                     @unique
   username                String?                  @unique

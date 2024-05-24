@@ -1,5 +1,7 @@
+import { cache } from "react";
 import jwt from "jsonwebtoken";
 import { Octokit, App } from "octokit";
+import { validateRequest } from "~/server/auth";
 
 export const app = new App({
   appId: process.env.GITHUB_APP_ID!,
@@ -9,6 +11,11 @@ export const app = new App({
     clientId: process.env.GITHUB_CLIENT_ID!,
     clientSecret: process.env.GITHUB_CLIENT_SECRET!,
   },
+});
+
+export default cache(async function Github() {
+  const { user } = await validateRequest();
+  return app.getInstallationOctokit(user?.installId as number);
 });
 
 export const privateKey = jwt.sign(
