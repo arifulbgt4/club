@@ -25,13 +25,14 @@ model EmailVerificationToken {
 
 model User {
   id                      String                   @id @unique @default(cuid())
-  name                    String?
+  name                    String
   email                   String?                  @unique
   emailVerified           Boolean?                 @default(false)
-  picture                 String?
+  picture                 String
   accessToken             String?
   activate                Boolean?                 @default(true)
-  githubId                Int?                     @unique
+  githubId                Int                      @unique
+  username                String                   @unique
   stripeCustomerId        String?                  @unique @map("stripe_customer_id")
   stripeSubscriptionId    String?                  @unique @map("stripe_subscription_id")
   stripePriceId           String?                  @map("stripe_price_id")

@@ -159,8 +159,9 @@ export const GET = async (request: NextRequest) => {
     const newUser = await db.user.create({
       data: {
         githubId: githubUser.id,
-        name: githubUser.name,
+        name: githubUser.name || githubUser.login,
         email: githubUser.email,
+        username: githubUser.login,
         picture: githubUser.avatar_url,
         ...(setup_action === "install" &&
           install.type === "User" && { accessToken: newAccessToken }),
@@ -222,4 +223,5 @@ interface GitHubUser {
   name: string;
   email: string;
   avatar_url: string;
+  login: string;
 }
