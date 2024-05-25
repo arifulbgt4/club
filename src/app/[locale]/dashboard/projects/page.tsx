@@ -1,9 +1,10 @@
 "use server";
 import Link from "next/link";
 import { Card } from "~/components/ui/card";
-import { getOrganizations, getProjects, getUserRepos } from "./action";
+import { getOrganizations, getProjects } from "./action";
 import CreateProjectModal from "./create-project-modal";
 import SelectDemo from "./Select";
+import { RepoImport } from "~/components/sections/RepoImport";
 
 export default async function Projects() {
   const projects = await getProjects();
@@ -15,6 +16,7 @@ export default async function Projects() {
   return (
     <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4 ">
       <SelectDemo organization={organization} user={user} />
+      <RepoImport />
       <CreateProjectModal />
       {projects.map((project) => (
         <Card
