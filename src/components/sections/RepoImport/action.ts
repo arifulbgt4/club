@@ -1,3 +1,4 @@
+"use server";
 import { type Organization } from "@prisma/client";
 import db from "~/lib/db";
 import { app } from "~/lib/octokit";
@@ -65,4 +66,33 @@ export async function getOrganizations() {
     where: { userId: user?.id },
   });
   return organization as Organization[];
+}
+
+export async function createRepo({
+  name,
+  fullName,
+  language,
+  isPrivate,
+}: {
+  name: string;
+  fullName: string;
+  language: string;
+  isPrivate: boolean;
+}) {
+  const { user } = await validateRequest();
+
+  const cr = await db.repository.create({
+    data: {
+      name,
+      fullName,
+      language,
+      private: isPrivate,
+      user: {
+        connect: {
+          id: user?.id,
+        },
+      },
+    },
+  });
+  return cr.id;
 }

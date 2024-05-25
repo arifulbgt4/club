@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { type Organization, type User } from "@prisma/client";
 import { Lock, LockOpen } from "lucide-react";
@@ -22,6 +23,8 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Button } from "~/components/ui/button";
+import { createRepo } from "./action";
+import { useRouter } from "next/navigation";
 
 const DEFAULT_USER = "defaultuser";
 
@@ -35,6 +38,17 @@ const RepoSearch = ({
   repo: any[];
   user: User;
 }) => {
+  const router = useRouter();
+
+  const importRepo = async (data: {
+    name: string;
+    fullName: string;
+    language: string;
+    isPrivate: boolean;
+  }) => {
+    const repoID = await createRepo(data);
+    router.push(`/dashboard/projects/${repoID}`);
+  };
   return (
     <div className=" flex flex-col">
       <div className="">
@@ -82,6 +96,7 @@ const RepoSearch = ({
           <CommandList>
             <CommandGroup className=" p-0" heading="Repository">
               {repo.map((item) => {
+                console.log("item: ", item);
                 return (
                   <React.Fragment key={item?.id}>
                     <CommandSeparator />
@@ -102,7 +117,18 @@ const RepoSearch = ({
                           </span>
                         </div>
                       </div>
-                      <Button size="sm" variant="outline">
+                      <Button
+                        onClick={() =>
+                          importRepo({
+                            name: item?.name,
+                            fullName: item?.full_name,
+                            language: item?.language,
+                            isPrivate: item?.private,
+                          })
+                        }
+                        size="sm"
+                        variant="outline"
+                      >
                         Import
                       </Button>
                     </CommandItem>

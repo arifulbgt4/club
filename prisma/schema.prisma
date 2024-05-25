@@ -44,18 +44,33 @@ model User {
   organizations           Organization[]
   projects                Project[]
   sessions                Session[]
+  Repository              Repository[]
 }
 
 model Organization {
-  id        String    @id @default(cuid())
-  name      String
-  installId Int?
-  active    Boolean?  @default(true)
-  picture   String?
-  token     String?
-  userId    String?
-  user      User?     @relation(fields: [userId], references: [id])
-  projects  Project[]
+  id         String       @id @default(cuid())
+  name       String
+  installId  Int?
+  active     Boolean?     @default(true)
+  picture    String?
+  token      String?
+  userId     String?
+  user       User?        @relation(fields: [userId], references: [id])
+  projects   Project[]
+  Repository Repository[]
+}
+
+model Repository {
+  id       String        @id @default(cuid())
+  name     String
+  fullName String
+  language String?
+  private  Boolean?
+  topics   String[]
+  user     User?         @relation(fields: [userId], references: [id])
+  userId   String?
+  org      Organization? @relation(fields: [orgId], references: [id])
+  orgId    String?
 }
 
 model Project {

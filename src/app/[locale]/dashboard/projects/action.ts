@@ -1,6 +1,11 @@
 "use server";
 
-import { type Project, type Organization, type User } from "@prisma/client";
+import {
+  type Project,
+  type Organization,
+  type User,
+  type Repository,
+} from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import db from "~/lib/db";
@@ -49,26 +54,26 @@ export async function checkIfFreePlanLimitReached() {
 
 export async function getProjects() {
   const { user } = await validateRequest();
-  const projects = await db.project.findMany({
+  const projects = await db.repository.findMany({
     where: {
       userId: user?.id,
     },
-    orderBy: {
-      createdAt: "desc",
-    },
+    // orderBy: {
+    //   createdAt: "desc",
+    // },
   });
-  return projects as Project[];
+  return projects as Repository[];
 }
 
-export async function getProjectById(id: string) {
+export async function getRepositoryById(id: string) {
   const { user } = await validateRequest();
-  const project = await db.project.findFirst({
+  const project = await db.repository.findFirst({
     where: {
       id,
       userId: user?.id,
     },
   });
-  return project as Project;
+  return project as Repository;
 }
 
 export async function updateProjectById(id: string, payload: Payload) {
@@ -85,7 +90,7 @@ export async function updateProjectById(id: string, payload: Payload) {
 
 export async function deleteProjectById(id: string) {
   const { user } = await validateRequest();
-  await db.project.delete({
+  await db.repository.delete({
     where: {
       id,
       userId: user?.id,
