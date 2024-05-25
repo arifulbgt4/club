@@ -1,4 +1,4 @@
-import { getRepositoryById } from "../action";
+import { getRepoIssues, getRepositoryById } from "../action";
 import TabSections from "./tab-sections";
 
 export default async function SingleProject({
@@ -8,5 +8,10 @@ export default async function SingleProject({
 }) {
   const { projectId } = params;
   const project = await getRepositoryById(projectId);
-  return <TabSections project={project} />;
+  const issues = await getRepoIssues(project.name);
+  return (
+    <div>
+      <TabSections project={project} issues={issues} />
+    </div>
+  );
 }

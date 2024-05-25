@@ -76,6 +76,20 @@ export async function getRepositoryById(id: string) {
   return project as Repository;
 }
 
+export async function getRepoIssues(repo: string) {
+  const { user } = await validateRequest();
+  const octo = await app.getInstallationOctokit(Number(user?.installId));
+  const issues = await octo.request("GET /repos/{owner}/{repo}/issues", {
+    owner: user?.username as string,
+    repo,
+    state: "open",
+    headers: {
+      authorization: `token ${user?.accessToken}`,
+    },
+  });
+  return issues.data.filter((i) => i?.author_association !== "NONE");
+}
+
 export async function updateProjectById(id: string, payload: Payload) {
   const { user } = await validateRequest();
   await db.project.update({
