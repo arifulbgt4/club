@@ -36,6 +36,7 @@ export const GET = async (request: NextRequest) => {
         Authorization: `Bearer ${tokens.accessToken}`,
       },
     });
+
     const githubUser: GitHubUser = await githubUserResponse.json();
     const existingUser = await db.user.findUnique({
       where: {
@@ -105,6 +106,7 @@ export const GET = async (request: NextRequest) => {
                 name: install.login,
                 token: newAccessToken,
                 picture: install.avatar_url,
+                installId: Number(installation_id),
                 user: {
                   connect: {
                     id: existingUser.id,
@@ -119,6 +121,7 @@ export const GET = async (request: NextRequest) => {
               },
               data: {
                 token: newAccessToken,
+                installId: Number(installation_id),
                 active: true,
                 user: {
                   connect: {

@@ -47,14 +47,15 @@ model User {
 }
 
 model Organization {
-  id       String    @id @default(cuid())
-  name     String
-  active   Boolean?  @default(true)
-  picture  String?
-  token    String?
-  userId   String?
-  user     User?     @relation(fields: [userId], references: [id])
-  projects Project[]
+  id        String    @id @default(cuid())
+  name      String
+  installId Int?
+  active    Boolean?  @default(true)
+  picture   String?
+  token     String?
+  userId    String?
+  user      User?     @relation(fields: [userId], references: [id])
+  projects  Project[]
 }
 
 model Project {

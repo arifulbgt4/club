@@ -41,6 +41,8 @@ export async function POST(req: NextRequest) {
               },
               data: {
                 accessToken: null,
+                installId: null,
+                activate: false,
               },
             });
           }
@@ -53,6 +55,7 @@ export async function POST(req: NextRequest) {
               where: { id: org?.id, name: eventData.account.login },
               data: {
                 token: null,
+                installId: null,
                 active: false,
               },
             });
