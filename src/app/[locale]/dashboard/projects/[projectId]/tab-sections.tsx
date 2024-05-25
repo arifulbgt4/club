@@ -22,7 +22,6 @@ export default function TabSections({
   }) => {
     const publ = await createIssue(data);
   };
-  console.log(issues);
   return (
     <Tabs defaultValue="details">
       <TabsList>
