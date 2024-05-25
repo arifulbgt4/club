@@ -1,29 +1,16 @@
 "use server";
 import Link from "next/link";
 import { Card } from "~/components/ui/card";
-import { getOrganizations, getProjects } from "./action";
+import { getOrganizations, getProjects, getUserRepos } from "./action";
 import CreateProjectModal from "./create-project-modal";
 import SelectDemo from "./Select";
-import { app } from "~/lib/octokit";
 
 export default async function Projects() {
   const projects = await getProjects();
   const { organization, user } = await getOrganizations();
-  const gst = await app.getInstallationOctokit(Number(user.installId));
-  // const aa = await gst.auth()
-  const repo = await gst.request("GET /installation/repositories", {
-    // sort: "updated",
-    // visibility: "private",
-    per_page: 100,
-    page: 1,
-    headers: {
-      // "X-GitHub-Api-Version": "2022-11-28",
-      Accept: "application/vnd.github.v3+json",
-      authorization: `token ${user.accessToken as string}`,
-    },
-  });
 
-  console.log("repo: ", repo.data.repositories[0]);
+  // const userRepos = await getUserRepos();
+  // console.log("userrepos: ", userRepos);
 
   return (
     <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4 ">
