@@ -12,6 +12,7 @@ import {
 import {
   Command,
   CommandEmpty,
+  CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
@@ -29,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { Button } from "~/components/ui/button";
 
 const DEFAULT_USER = "defaultuser";
 
@@ -90,32 +92,39 @@ const RepoSearch = ({
           </div>
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
-            {/* <CommandGroup heading="Suggestions"> */}
-            {repo.map((item, i) => {
-              console.log("item: ", item);
-              return (
-                <>
-                  <CommandItem className=" p-2" key={item?.id}>
-                    <div className=" mr-2 h-4 w-4">
-                      {item?.private ? (
-                        <Lock className=" mr-2 h-5 w-5" />
-                      ) : (
-                        <LockOpen className=" mr-2 h-5 w-5" />
-                      )}
-                    </div>
-                    <div className="flex flex-col">
-                      <span className=" font-medium">{item?.name}</span>
-                      <span className=" text-xs font-light">
-                        {item?.full_name}
-                      </span>
-                    </div>
-                  </CommandItem>
-                  <CommandSeparator />
-                </>
-              );
-            })}
+            <CommandGroup className=" p-0" heading="Repositorys">
+              {repo.map((item, i) => {
+                return (
+                  <>
+                    <CommandSeparator />
 
-            {/* </CommandGroup> */}
+                    <CommandItem
+                      className="flex justify-between py-3"
+                      key={item?.id}
+                    >
+                      <div className="mr-2 flex">
+                        <div className="mr-2 mt-2 h-4 w-4 ">
+                          {item?.private ? (
+                            <Lock className=" mr-2 h-5 w-5" />
+                          ) : (
+                            <LockOpen className=" mr-2 h-5 w-5" />
+                          )}
+                        </div>
+                        <div className="flex flex-col">
+                          <span className=" font-medium">{item?.name}</span>
+                          <span className=" text-xs font-light">
+                            {item?.full_name}
+                          </span>
+                        </div>
+                      </div>
+                      <Button size="sm" variant="outline">
+                        Import
+                      </Button>
+                    </CommandItem>
+                  </>
+                );
+              })}
+            </CommandGroup>
           </CommandList>
         </Command>
       </div>
