@@ -4,25 +4,26 @@ import { Card } from "~/components/ui/card";
 import { getOrganizations, getProjects } from "./action";
 import CreateProjectModal from "./create-project-modal";
 import SelectDemo from "./Select";
-import GithHub from "~/lib/octokit";
+import { app } from "~/lib/octokit";
 
 export default async function Projects() {
-  const app = await GithHub();
   const projects = await getProjects();
   const { organization, user } = await getOrganizations();
-  console.log("user: ", user);
-  const repo = await app.request("GET /repos/{owner}/{repo}/issues", {
-    owner: user.username as string,
-    repo: "club",
+  const gst = await app.getInstallationOctokit(Number(user.installId));
+  // const aa = await gst.auth()
+  const repo = await gst.request("GET /installation/repositories", {
     // sort: "updated",
     // visibility: "private",
+    per_page: 100,
+    page: 1,
     headers: {
       // "X-GitHub-Api-Version": "2022-11-28",
+      Accept: "application/vnd.github.v3+json",
       authorization: `token ${user.accessToken as string}`,
     },
   });
 
-  console.log("repo: ", repo.data);
+  console.log("repo: ", repo.data.repositories[0]);
 
   return (
     <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4 ">
