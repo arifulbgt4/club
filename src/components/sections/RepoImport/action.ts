@@ -13,7 +13,22 @@ export async function getOrgsRepos(id: string) {
       authorization: `token ${org?.token}`,
     },
   });
-  return repo.data.repositories;
+
+  if (repo.data.total_count <= 100) {
+    return repo.data.repositories;
+  }
+  const getval = [...repo.data.repositories];
+  for (let index = 1; index < Math.ceil(repo.data.total_count / 100); index++) {
+    const a = await octo.request("GET /installation/repositories", {
+      per_page: 100,
+      page: 1 + index,
+      headers: {
+        authorization: `token ${org?.token}`,
+      },
+    });
+    getval.push(...a.data.repositories);
+  }
+  return getval.reverse();
 }
 
 export async function getUserRepos() {
@@ -26,7 +41,22 @@ export async function getUserRepos() {
       authorization: `token ${user?.accessToken}`,
     },
   });
-  return repo.data.repositories;
+
+  if (repo.data.total_count <= 100) {
+    return repo.data.repositories;
+  }
+  const getval = [...repo.data.repositories];
+  for (let index = 1; index < Math.ceil(repo.data.total_count / 100); index++) {
+    const a = await octo.request("GET /installation/repositories", {
+      per_page: 100,
+      page: 1 + index,
+      headers: {
+        authorization: `token ${user?.accessToken}`,
+      },
+    });
+    getval.push(...a.data.repositories);
+  }
+  return getval.reverse();
 }
 
 export async function getOrganizations() {

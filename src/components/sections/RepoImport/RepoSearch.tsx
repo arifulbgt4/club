@@ -1,14 +1,6 @@
+import React from "react";
 import { type Organization, type User } from "@prisma/client";
-import {
-  Calculator,
-  Calendar,
-  CreditCard,
-  Settings,
-  Smile,
-  Github,
-  Lock,
-  LockOpen,
-} from "lucide-react";
+import { Lock, LockOpen } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -17,7 +9,6 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-  CommandShortcut,
 } from "~/components/ui/command";
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
 
@@ -33,11 +24,6 @@ import {
 import { Button } from "~/components/ui/button";
 
 const DEFAULT_USER = "defaultuser";
-
-interface RepoOptions {
-  id: string;
-  name: string;
-}
 
 const RepoSearch = ({
   organization,
@@ -88,20 +74,19 @@ const RepoSearch = ({
                 </SelectGroup>
               </SelectContent>
             </Select>
-            <CommandInput placeholder="Search a repo..." />
+            <CommandInput
+              disabled={!repo.length}
+              placeholder="Search a repo..."
+            />
           </div>
           <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup className=" p-0" heading="Repositorys">
-              {repo.map((item, i) => {
+            <CommandGroup className=" p-0" heading="Repository">
+              {repo.map((item) => {
                 return (
-                  <>
+                  <React.Fragment key={item?.id}>
                     <CommandSeparator />
 
-                    <CommandItem
-                      className="flex justify-between py-3"
-                      key={item?.id}
-                    >
+                    <CommandItem className="flex justify-between py-3">
                       <div className="mr-2 flex">
                         <div className="mr-2 mt-2 h-4 w-4 ">
                           {item?.private ? (
@@ -121,10 +106,11 @@ const RepoSearch = ({
                         Import
                       </Button>
                     </CommandItem>
-                  </>
+                  </React.Fragment>
                 );
               })}
             </CommandGroup>
+            <CommandEmpty>No Git Repositories Found</CommandEmpty>
           </CommandList>
         </Command>
       </div>
