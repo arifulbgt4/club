@@ -121,3 +121,35 @@ export async function getOrganizations() {
   });
   return { organization: organization as Organization[], user: user as User };
 }
+
+export async function createIssue({
+  title,
+  body,
+  repoId,
+  issueNumber,
+}: {
+  title: string;
+  body?: string;
+  repoId?: string;
+  issueNumber: number;
+}) {
+  const { user } = await validateRequest();
+  const issue = await db.issue.create({
+    data: {
+      title,
+      body,
+      issueNumber,
+      repo: {
+        connect: {
+          id: repoId,
+        },
+      },
+      user: {
+        connect: {
+          id: user?.id,
+        },
+      },
+    },
+  });
+  return issue;
+}

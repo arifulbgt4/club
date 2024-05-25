@@ -1,7 +1,10 @@
+"use client";
 import { type Project, type Repository } from "@prisma/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import DeleteCard from "./delete-card";
 import EditableDetails from "./editable-details";
+import { Button } from "~/components/ui/button";
+import { createIssue } from "../action";
 
 export default function TabSections({
   project,
@@ -11,6 +14,15 @@ export default function TabSections({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   issues: any[];
 }) {
+  const publishedIssue = async (data: {
+    title: string;
+    body?: string;
+    repoId?: string;
+    issueNumber: number;
+  }) => {
+    const publ = await createIssue(data);
+  };
+  console.log(issues);
   return (
     <Tabs defaultValue="details">
       <TabsList>
@@ -21,9 +33,9 @@ export default function TabSections({
         <h3>{project.name}</h3>
         {/* <EditableDetails initialValues={project} /> */}
         {issues.map((item) => (
-          <button
+          <div
             key={item?.id}
-            className="mb-2 flex flex-col items-start rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent"
+            className="mb-2 flex flex-col items-start rounded-lg border p-3 text-left text-sm transition-all "
           >
             <div className="flex w-full flex-col gap-1">
               <div className="flex items-center">
@@ -55,7 +67,21 @@ export default function TabSections({
                 ))}
               </div>
                ) : null} */}
-          </button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() =>
+                publishedIssue({
+                  title: item.title,
+                  issueNumber: item.number,
+                  body: item?.body,
+                  repoId: project?.id,
+                })
+              }
+            >
+              Publish
+            </Button>
+          </div>
         ))}
       </TabsContent>
       <TabsContent value="settings">
