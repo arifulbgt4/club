@@ -2,12 +2,11 @@ import { getRepoIssues, getRepositoryById } from "../action";
 import TabSections from "./tab-sections";
 
 export default async function SingleProject({
-  params,
+  params: { repoId },
 }: {
-  params: { projectId: string };
+  params: { repoId: string };
 }) {
-  const { projectId } = params;
-  const project = await getRepositoryById(projectId);
+  const project = await getRepositoryById(repoId);
   const issues = await getRepoIssues(project.name);
   return (
     <div>

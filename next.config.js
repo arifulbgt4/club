@@ -9,7 +9,7 @@ const nextConfig = {
     return [
       {
         source: "/dashboard",
-        destination: "/dashboard/projects",
+        destination: "/dashboard/repo",
         permanent: false,
       },
     ];
@@ -17,7 +17,7 @@ const nextConfig = {
   trailingSlash: true,
   eslint: {
     ignoreDuringBuilds: true,
-  }
+  },
 };
 
 module.exports = withPWA(nextConfig);

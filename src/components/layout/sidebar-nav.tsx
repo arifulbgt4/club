@@ -9,8 +9,8 @@ import LogoutButton from "../shared/logout-button";
 
 const navItems = [
   {
-    title: "Projects",
-    href: "/dashboard/projects",
+    title: "Repository",
+    href: "/dashboard/repo",
     icon: Icons.projectPlus,
   },
   {

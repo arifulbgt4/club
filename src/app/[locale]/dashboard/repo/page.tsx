@@ -30,7 +30,7 @@ export default async function Projects() {
             <h4 className="font-medium ">{project.name}</h4>
             <p className=" text-muted-foreground">{project.fullName}</p>
             <Link
-              href={`/dashboard/projects/${project.id}`}
+              href={`/dashboard/repo/${project.id}`}
               className="absolute inset-0 "
             >
               <span className="sr-only">View project details</span>

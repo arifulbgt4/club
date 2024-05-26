@@ -32,7 +32,7 @@ export async function createProject(payload: Payload) {
     },
   });
 
-  revalidatePath(`/dashboard/projects`);
+  revalidatePath(`/dashboard/repo`);
 }
 
 export async function checkIfFreePlanLimitReached() {
@@ -58,9 +58,9 @@ export async function getProjects() {
     where: {
       userId: user?.id,
     },
-    // orderBy: {
-    //   createdAt: "desc",
-    // },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
   return projects as Repository[];
 }
@@ -99,7 +99,7 @@ export async function updateProjectById(id: string, payload: Payload) {
     },
     data: payload,
   });
-  revalidatePath(`/dashboard/projects`);
+  revalidatePath(`/dashboard/repo`);
 }
 
 export async function deleteProjectById(id: string) {
@@ -110,8 +110,8 @@ export async function deleteProjectById(id: string) {
       userId: user?.id,
     },
   });
-  revalidatePath(`/dashboard/projects`);
-  redirect("/dashboard/projects");
+  revalidatePath(`/dashboard/repo`);
+  redirect("/dashboard/repo");
 }
 
 export async function getOrganizations() {
