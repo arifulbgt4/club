@@ -5,6 +5,7 @@ import DeleteCard from "./delete-card";
 import EditableDetails from "./editable-details";
 import { Button } from "~/components/ui/button";
 import { createIssue } from "../action";
+import { useRouter } from "next/navigation";
 
 export default function TabSections({
   project,
@@ -14,6 +15,7 @@ export default function TabSections({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   issues: any[];
 }) {
+  const router = useRouter();
   const publishedIssue = async (data: {
     title: string;
     body?: string;
@@ -21,6 +23,7 @@ export default function TabSections({
     issueNumber: number;
   }) => {
     const publ = await createIssue(data);
+    router.push(`/issue/${publ.id}`);
   };
   return (
     <Tabs defaultValue="details">
