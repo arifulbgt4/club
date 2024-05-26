@@ -8,6 +8,7 @@ export async function getIssues() {
     },
     include: {
       user: true,
+      repo: true,
     },
   });
   return issues as IssueOptions[];

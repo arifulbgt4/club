@@ -1,4 +1,4 @@
-import { type User, type Issue } from "@prisma/client";
+import { type User, type Issue, type Repository } from "@prisma/client";
 import { z } from "zod";
 
 export type CurrentUser = {
@@ -55,4 +55,5 @@ export interface sendVerificationEmailProps extends SendWelcomeEmailProps {
 
 export interface IssueOptions extends Issue {
   user?: User;
+  repo?: Repository;
 }

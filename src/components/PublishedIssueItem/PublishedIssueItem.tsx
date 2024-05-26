@@ -1,14 +1,25 @@
+"use server";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { type PublishedIssueItemProps } from "./Types";
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
+import { getIssue } from "./action";
 
-export default function PublishedIssueItem({
+export default async function PublishedIssueItem({
   id,
   title,
+  issueNumber,
   user,
+  repo,
   updatedAt,
 }: PublishedIssueItemProps) {
+  const issue = await getIssue(
+    repo?.name as string,
+    user?.username as string,
+    issueNumber,
+    user?.installId as number,
+    user?.accessToken as string
+  );
   return (
     <Link
       href={`/issue/${id}`}
@@ -39,10 +50,7 @@ export default function PublishedIssueItem({
       </div>
       <div className="line-clamp-2 text-xs text-muted-foreground">
         {/* {item.text.substring(0, 300)} */}
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Porro nihil
-        commodi molestias sequi fugiat minus sunt, voluptates natus magnam.
-        Adipisci id officia nulla esse dolore veritatis doloribus ut? Fuga,
-        placeat.
+        {issue.body}
       </div>
 
       {/* {item.labels.length ? (
