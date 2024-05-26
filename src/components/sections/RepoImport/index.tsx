@@ -8,10 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
-
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-
+import { PlusCircleIcon } from "lucide-react";
 import { validateRequest } from "~/server/auth";
 import { getOrganizations, getUserRepos } from "./action";
 import RepoSearch from "./RepoSearch";
@@ -24,8 +21,9 @@ export async function RepoImport() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className=" font-bold" variant="outline">
-          Import a repo
+        <Button variant="secondary">
+          <PlusCircleIcon className="mr-2 h-4 w-4" />
+          Import a repository
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
