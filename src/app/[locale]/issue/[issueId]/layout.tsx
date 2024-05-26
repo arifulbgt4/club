@@ -9,5 +9,5 @@ export default async function IssueLayout({ children }: IssueLayoutProps) {
   // move to middleware and check stripe payment
   //   const { session } = await validateRequest();
   //   if (!session) redirect("/login");
-  return children;
+  return <div className=" container">{children}</div>;
 }

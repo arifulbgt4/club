@@ -4,7 +4,7 @@ import { getIssues } from "./action";
 export default async function Home() {
   const issues = await getIssues();
   return (
-    <>
+    <div className="container">
       {issues.map((item) => (
         <Link
           href={`/issue/${item.id}`}
@@ -47,6 +47,6 @@ export default async function Home() {
       <Features />
       <Pricing />
       <OpenSource /> */}
-    </>
+    </div>
   );
 }
