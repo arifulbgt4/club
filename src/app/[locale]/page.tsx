@@ -1,7 +1,4 @@
-import Features from "~/components/sections/features";
-import Hero from "~/components/sections/hero";
-import OpenSource from "~/components/sections/open-source";
-import Pricing from "~/components/sections/pricing";
+import Link from "next/link";
 import { getIssues } from "./action";
 
 export default async function Home() {
@@ -9,7 +6,8 @@ export default async function Home() {
   return (
     <>
       {issues.map((item) => (
-        <div
+        <Link
+          href={`/issue/${item.id}`}
           key={item?.id}
           className="mb-2 flex flex-col items-start rounded-lg border p-3 text-left text-sm transition-all "
         >
@@ -43,7 +41,7 @@ export default async function Home() {
                 ))}
               </div>
                ) : null} */}
-        </div>
+        </Link>
       ))}
       {/* <Hero />
       <Features />
