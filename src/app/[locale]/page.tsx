@@ -5,17 +5,6 @@ import { Button } from "~/components/ui/button";
 import { Search } from "lucide-react";
 import Pagination from "~/components/sections/pagination";
 
-// import {
-//   Pagination,
-//   PaginationContent,
-//   PaginationEllipsis,
-//   PaginationItem,
-//   PaginationLink,
-//   PaginationNext,
-//   PaginationPrevious,
-// } from "~/components/ui/pagination";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default async function Home({
   searchParams,
 }: {
@@ -25,7 +14,6 @@ export default async function Home({
     Number(searchParams.page) || 1
   );
   const totalPages = Math.ceil(total / take);
-  console.log(totalPages);
   return (
     <div className="container">
       <div className="mt-3 flex">
