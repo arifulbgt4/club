@@ -1,5 +1,4 @@
 "use client";
-import { type Repository } from "@prisma/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import DeleteCard from "./delete-card";
 import { Button } from "~/components/ui/button";
@@ -7,10 +6,10 @@ import { createIssue } from "../action";
 import { useRouter } from "next/navigation";
 
 export default function TabSections({
-  project,
+  repositoryId,
   issues,
 }: {
-  project: Repository;
+  repositoryId: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   issues: any[];
 }) {
@@ -33,8 +32,6 @@ export default function TabSections({
         <TabsTrigger value="settings">Settings</TabsTrigger>
       </TabsList>
       <TabsContent value="issues">
-        <h3>{project.name}</h3>
-        {/* <EditableDetails initialValues={project} /> */}
         {issues.map((item) => (
           <div
             key={item?.id}
@@ -78,7 +75,7 @@ export default function TabSections({
                   title: item.title,
                   issueNumber: item.number,
                   body: item?.body,
-                  repoId: project?.id,
+                  repoId: repositoryId,
                 })
               }
             >
@@ -88,7 +85,7 @@ export default function TabSections({
         ))}
       </TabsContent>
       <TabsContent value="settings">
-        <DeleteCard id={project.id} />
+        <DeleteCard id={repositoryId} />
       </TabsContent>
     </Tabs>
   );

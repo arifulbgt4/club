@@ -23,12 +23,12 @@ export default async function PublishedIssueItem({
   return (
     <Link
       href={`/issue/${id}`}
-      className="mb-2 flex flex-col items-start rounded-lg border p-3 text-left text-sm transition-all "
+      className="mb-2 flex flex-col items-start rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent "
     >
       <div className="flex w-full flex-col">
         <div className="flex items-center">
           <div className="flex items-center gap-2">
-            <div className="text-base font-semibold">{title}</div>
+            <div className="text-base font-semibold">{issue?.title}</div>
             {/* {!item.read && (
             <span className="flex h-2 w-2 rounded-full bg-blue-600" />
           )} */}

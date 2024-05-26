@@ -67,27 +67,33 @@ export async function getProjects() {
 
 export async function getRepositoryById(id: string) {
   const { user } = await validateRequest();
-  const project = await db.repository.findFirst({
+  const repo = await db.repository.findFirst({
     where: {
       id,
       userId: user?.id,
     },
   });
-  return project as Repository;
-}
-
-export async function getRepoIssues(repo: string) {
-  const { user } = await validateRequest();
   const octo = await app.getInstallationOctokit(Number(user?.installId));
-  const issues = await octo.request("GET /repos/{owner}/{repo}/issues", {
+  const repository = await octo.request("GET /repos/{owner}/{repo}", {
     owner: user?.username as string,
-    repo,
-    state: "open",
+    repo: repo?.name as string,
     headers: {
       authorization: `token ${user?.accessToken}`,
     },
   });
-  return issues.data.filter((i) => i?.author_association !== "NONE");
+  const issues = await octo.request("GET /repos/{owner}/{repo}/issues", {
+    owner: user?.username as string,
+    repo: repository?.data?.name as string,
+    state: "open",
+    sort: "updated",
+    headers: {
+      authorization: `token ${user?.accessToken}`,
+    },
+  });
+  return {
+    repository: repository.data,
+    issues: issues.data.filter((i) => i?.author_association !== "NONE"),
+  };
 }
 
 export async function updateProjectById(id: string, payload: Payload) {

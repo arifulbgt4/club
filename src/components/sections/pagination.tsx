@@ -39,16 +39,13 @@ const Pagination = ({ page, totalPages }: PaginationProps) => {
         <PaginationItem>
           <PaginationPrevious href={page === 1 ? "/" : `?page=${page - 1}`} />
         </PaginationItem>
-        {pageNumbers.map((num) => {
-          console.log("num", typeof num);
-          return (
-            <PaginationItem key={num}>
-              <PaginationLink href={`?page=${num}`} isActive={page === num}>
-                {num}
-              </PaginationLink>
-            </PaginationItem>
-          );
-        })}
+        {pageNumbers.map((num) => (
+          <PaginationItem key={num}>
+            <PaginationLink href={`?page=${num}`} isActive={page === num}>
+              {num}
+            </PaginationLink>
+          </PaginationItem>
+        ))}
         <PaginationItem>
           <PaginationNext
             href={page === totalPages ? "" : `?page=${page + 1}`}
