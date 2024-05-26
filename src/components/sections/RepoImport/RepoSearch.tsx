@@ -96,7 +96,6 @@ const RepoSearch = ({
           <CommandList>
             <CommandGroup className=" p-0" heading="Repository">
               {repo.map((item) => {
-                console.log("item: ", item);
                 return (
                   <React.Fragment key={item?.id}>
                     <CommandSeparator />
