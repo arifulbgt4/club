@@ -102,7 +102,7 @@ export async function updateProjectById(id: string, payload: Payload) {
   revalidatePath(`/dashboard/repo`);
 }
 
-export async function deleteProjectById(id: string) {
+export async function deleteRepositoryById(id: string) {
   const { user } = await validateRequest();
   await db.repository.delete({
     where: {

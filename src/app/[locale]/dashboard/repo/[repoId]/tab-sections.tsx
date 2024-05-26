@@ -1,8 +1,7 @@
 "use client";
-import { type Project, type Repository } from "@prisma/client";
+import { type Repository } from "@prisma/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import DeleteCard from "./delete-card";
-import EditableDetails from "./editable-details";
 import { Button } from "~/components/ui/button";
 import { createIssue } from "../action";
 import { useRouter } from "next/navigation";
@@ -16,22 +15,24 @@ export default function TabSections({
   issues: any[];
 }) {
   const router = useRouter();
+
   const publishedIssue = async (data: {
     title: string;
     body?: string;
     repoId?: string;
     issueNumber: number;
   }) => {
-    const publ = await createIssue(data);
-    router.push(`/issue/${publ.id}`);
+    const issue = await createIssue(data);
+    router.push(`/issue/${issue.id}`);
   };
+
   return (
-    <Tabs defaultValue="details">
+    <Tabs defaultValue="issues">
       <TabsList>
-        <TabsTrigger value="details">Details</TabsTrigger>
+        <TabsTrigger value="issues">Issues</TabsTrigger>
         <TabsTrigger value="settings">Settings</TabsTrigger>
       </TabsList>
-      <TabsContent value="details">
+      <TabsContent value="issues">
         <h3>{project.name}</h3>
         {/* <EditableDetails initialValues={project} /> */}
         {issues.map((item) => (

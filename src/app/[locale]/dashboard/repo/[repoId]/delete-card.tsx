@@ -14,22 +14,22 @@ import {
 import { Button } from "~/components/ui/button";
 import { Card, CardDescription, CardTitle } from "~/components/ui/card";
 import { toast } from "~/components/ui/use-toast";
-import { deleteProjectById } from "../action";
+import { deleteRepositoryById } from "../action";
 
 export default function DeleteCard({ id }: { id: string }) {
   const [pending, startTransition] = useTransition();
   const handleDelete = async () => {
     startTransition(() =>
-      deleteProjectById(id)
+      deleteRepositoryById(id)
         .then(() => {
           toast({
-            title: "Project deleted successfully.",
+            title: "Repository deleted successfully.",
           });
         })
         .catch((error) => {
           console.error(error);
           toast({
-            title: "Error deleting project.",
+            title: "Error deleting repository.",
             description: "Please try again.",
             variant: "destructive",
           });
@@ -39,10 +39,10 @@ export default function DeleteCard({ id }: { id: string }) {
   return (
     <Card className="mt-5 flex items-center justify-between p-6">
       <div>
-        <CardTitle className=" mb-2.5">Delete Project</CardTitle>
+        <CardTitle className=" mb-2.5">Delete Repository</CardTitle>
         <CardDescription>
-          The project will be permanently deleted. This action is irreversible
-          and can not be undone.
+          The repository will be permanently deleted. This action is
+          irreversible and can not be undone.
         </CardDescription>
       </div>
 
