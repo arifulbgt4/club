@@ -3,9 +3,29 @@ import { getIssues } from "./action";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { Search } from "lucide-react";
+import Pagination from "~/components/sections/pagination";
 
-export default async function Home() {
-  const issues = await getIssues();
+// import {
+//   Pagination,
+//   PaginationContent,
+//   PaginationEllipsis,
+//   PaginationItem,
+//   PaginationLink,
+//   PaginationNext,
+//   PaginationPrevious,
+// } from "~/components/ui/pagination";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: { page: string };
+}) {
+  const { issues, total, take, page } = await getIssues(
+    Number(searchParams.page) || 1
+  );
+  const totalPages = Math.ceil(total / take);
+  console.log(totalPages);
   return (
     <div className="container">
       <div className="mt-3 flex">
@@ -19,6 +39,7 @@ export default async function Home() {
           {issues.map((issue) => (
             <PublishedIssueItem key={issue.id} {...issue} />
           ))}
+          <Pagination page={page} totalPages={totalPages} />
         </div>
         <div className="flex w-[30%] p-3">card</div>
       </div>
