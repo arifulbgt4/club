@@ -1,5 +1,5 @@
 export const siteUrl =
-  process.env.NEXT_PUBLIC_APP_URL || "https://chadnext.moinulmoin.com";
+  process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 export const siteConfig = (locale?: string) => ({
   name: "ChadNext",
