@@ -110,6 +110,7 @@ export async function updateProjectById(id: string, payload: Payload) {
 
 export async function deleteRepositoryById(id: string) {
   const { user } = await validateRequest();
+  await db.issue.deleteMany({ where: { repoId: id, userId: user?.id } });
   await db.repository.delete({
     where: {
       id,

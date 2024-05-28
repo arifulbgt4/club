@@ -32,12 +32,12 @@ export default function RootLayout({
       >
         {children}
       </body>
-      {process.env.NODE_ENV === "production" && (
+      {/* {process.env.NODE_ENV === "production" && (
         <Script
           src="https://umami.moinulmoin.com/script.js"
           data-website-id="bc66d96a-fc75-4ecd-b0ef-fdd25de8113c"
         />
-      )}
+      )} */}
     </html>
   );
 }
