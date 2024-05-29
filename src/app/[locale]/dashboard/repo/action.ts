@@ -129,23 +129,27 @@ export async function getOrganizations() {
   return { organization: organization as Organization[], user: user as User };
 }
 
-export async function createIssue({
-  title,
-  body,
+export async function publisheAnIssue({
   repoId,
   issueNumber,
+  id,
+  state,
 }: {
-  title: string;
-  body?: string;
   repoId?: string;
   issueNumber: number;
+  state?: string;
+  id: bigint;
 }) {
   const { user } = await validateRequest();
-  const issue = await db.issue.create({
-    data: {
-      title,
-      body,
+  const issue = await db.issue.upsert({
+    where: {
+      id,
+      userId: user?.id,
+    },
+    create: {
+      id,
       issueNumber,
+      state,
       repo: {
         connect: {
           id: repoId,
@@ -157,6 +161,33 @@ export async function createIssue({
         },
       },
     },
+    update: {
+      published: true,
+    },
   });
   return issue;
+}
+
+export async function unpublishedAnIssue(id: bigint) {
+  const { user } = await validateRequest();
+  const issue = await db.issue.update({
+    where: {
+      id,
+      userId: user?.id,
+    },
+    data: {
+      published: false,
+    },
+  });
+  return issue.id;
+}
+
+export async function checkAnIssue(gitIssueId: number) {
+  const { user } = await validateRequest();
+  const issue = await db.issue.findUnique({
+    where: {
+      id: BigInt(gitIssueId),
+      userId: user?.id,
+    },
+  });
 }

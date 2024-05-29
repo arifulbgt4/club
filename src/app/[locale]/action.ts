@@ -5,6 +5,10 @@ const TAKE = 10;
 
 export async function getIssues(page: number = 1) {
   const issues = await db.issue.findMany({
+    where: {
+      state: "open",
+      published: true,
+    },
     orderBy: {
       createdAt: "desc",
     },

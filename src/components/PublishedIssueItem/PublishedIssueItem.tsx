@@ -7,7 +7,6 @@ import { getIssue } from "./action";
 
 export default async function PublishedIssueItem({
   id,
-  title,
   issueNumber,
   user,
   repo,
@@ -16,7 +15,7 @@ export default async function PublishedIssueItem({
   const issue = await getIssue(
     repo?.name as string,
     user?.username as string,
-    issueNumber,
+    Number(issueNumber),
     user?.installId as number,
     user?.accessToken as string
   );

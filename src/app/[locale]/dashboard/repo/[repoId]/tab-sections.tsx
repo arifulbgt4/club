@@ -2,7 +2,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import DeleteCard from "./delete-card";
 import { Button } from "~/components/ui/button";
-import { createIssue } from "../action";
+import { publisheAnIssue } from "../action";
 import { useRouter } from "next/navigation";
 
 export default function TabSections({
@@ -20,8 +20,10 @@ export default function TabSections({
     body?: string;
     repoId?: string;
     issueNumber: number;
+    state?: string;
+    id: bigint;
   }) => {
-    const issue = await createIssue(data);
+    const issue = await publisheAnIssue(data);
     router.push(`/issue/${issue.id}`);
   };
 
@@ -76,6 +78,8 @@ export default function TabSections({
                   issueNumber: item.number,
                   body: item?.body,
                   repoId: repositoryId,
+                  state: item?.state,
+                  id: item.id,
                 })
               }
             >

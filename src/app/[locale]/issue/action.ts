@@ -1,7 +1,7 @@
 import db from "~/lib/db";
 import { app } from "~/lib/octokit";
 
-export async function getAnIssue(id: string) {
+export async function getAnIssue(id: bigint) {
   const issueDB = await db.issue.findUnique({
     where: { id },
     include: { repo: true, user: true },
