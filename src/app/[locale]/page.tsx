@@ -27,7 +27,9 @@ export default async function Home({
           {issues.map((issue) => (
             <PublishedIssueItem key={issue.id} {...issue} />
           ))}
-          <Pagination page={page} totalPages={totalPages} />
+          {totalPages >= 2 && (
+            <Pagination page={page} totalPages={totalPages} />
+          )}
         </div>
         <div className="flex w-[30%] p-3">card</div>
       </div>

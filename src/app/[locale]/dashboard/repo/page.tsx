@@ -4,18 +4,21 @@ import RepositoryItem from "~/components/RepositoryItem";
 import RepoImport from "~/components/RepoImport";
 import SelectDemo from "./Select";
 import { getOrganizations, getRepositoryes } from "./action";
+import Pagination from "~/components/sections/pagination";
 
 export default async function RepositoryPage({
-  searchParams: { org },
+  searchParams: { org, page },
 }: {
-  searchParams: { org: string };
+  searchParams: { org: string; page: string };
 }) {
   const { organization, user } = await getOrganizations();
   const aOrg = organization.find((i) => i?.name === org);
-  const repositorys = await getRepositoryes(aOrg?.id);
+  const { repositorys, take, total } = await getRepositoryes(
+    Number(page) || 1,
+    aOrg?.id
+  );
 
-  // const userRepos = await getUserRepos();
-  // console.log("userrepos: ", userRepos);
+  const totalPages = Math.ceil(total / take);
 
   return (
     <div className=" flex flex-col">
@@ -23,10 +26,15 @@ export default async function RepositoryPage({
         <SelectDemo organization={organization} user={user} />
         <RepoImport />
       </div>
-      <div className="flex gap-2">
-        {repositorys.map((repo: Repository) => (
-          <RepositoryItem key={repo.id} {...repo} />
-        ))}
+      <div>
+        <div className="flex gap-2">
+          {repositorys.map((repo: Repository) => (
+            <RepositoryItem key={repo.id} {...repo} />
+          ))}
+        </div>
+        {totalPages >= 2 && (
+          <Pagination page={Number(page) || 1} totalPages={totalPages} />
+        )}
       </div>
     </div>
   );

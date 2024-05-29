@@ -19,6 +19,11 @@ export async function getIssues(page: number = 1) {
       repo: true,
     },
   });
-  const total = await db.issue.count();
+  const total = await db.issue.count({
+    where: {
+      state: "open",
+      published: true,
+    },
+  });
   return { issues: issues as IssueOptions[], total, take: TAKE, page };
 }

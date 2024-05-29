@@ -47,20 +47,28 @@ export async function checkIfFreePlanLimitReached() {
   return count >= 3;
 }
 
-export async function getRepositoryes(orgId?: string) {
+const TAKE = 10;
+export async function getRepositoryes(page: number, orgId?: string) {
   const { user } = await validateRequest();
   const repos = await db.repository.findMany({
     where: {
       userId: user?.id,
       ...(orgId ? { orgId } : { orgId: null }),
     },
-    take: 10,
-    skip: 0,
+    take: TAKE,
+    skip: (page - 1) * TAKE,
     orderBy: {
       createdAt: "desc",
     },
   });
-  return repos as Repository[];
+  const total = await db.repository.count({
+    where: {
+      userId: user?.id,
+      ...(orgId ? { orgId } : { orgId: null }),
+    },
+  });
+
+  return { repositorys: repos as Repository[], total, take: TAKE };
 }
 
 export async function getRepositoryById(id: string) {
