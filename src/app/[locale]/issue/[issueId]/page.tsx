@@ -6,7 +6,7 @@ interface IssuePageProps {
 }
 
 const IssuePage = async ({ params: { issueId } }: IssuePageProps) => {
-  const issue = await getAnIssue(issueId);
+  const issue = await getAnIssue(BigInt(issueId));
   return (
     <div>
       <h1>{issue?.title}</h1>
