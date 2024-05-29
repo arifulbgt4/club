@@ -1,7 +1,10 @@
 "use client";
 import { type Organization, type User } from "@prisma/client";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
 
 import {
   Select,
@@ -49,7 +52,7 @@ export default function SelectDemo({
               <Avatar className="mr-2 h-[20px] w-[20px]">
                 <AvatarImage src={user.picture || ""} />
               </Avatar>
-              <p className=" font-black">{user.name}</p>
+              <p className=" font-black">{user.username}</p>
             </div>
           </SelectItem>
         </SelectGroup>
@@ -69,6 +72,14 @@ export default function SelectDemo({
               </div>
             </SelectItem>
           ))}
+          <Link
+            target="_blank"
+            href="https://github.com/apps/issueclub/installations/select_target"
+            className=" mt-2 flex items-center justify-center rounded border p-2 text-sm font-semibold hover:bg-accent"
+          >
+            <Plus className="mr-1 h-4 w-4" />
+            Add Organization
+          </Link>
         </SelectGroup>
       </SelectContent>
     </Select>

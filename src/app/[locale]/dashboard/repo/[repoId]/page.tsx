@@ -1,4 +1,4 @@
-import { ExternalLink, Github, Globe, Lock, LockOpen } from "lucide-react";
+import { Github, Globe, Lock, LockOpen } from "lucide-react";
 import { getRepositoryById } from "../action";
 import TabSections from "./tab-sections";
 import Link from "next/link";

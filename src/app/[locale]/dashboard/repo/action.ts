@@ -1,11 +1,6 @@
 "use server";
 
-import {
-  type Project,
-  type Organization,
-  type User,
-  type Repository,
-} from "@prisma/client";
+import { type Organization, type User, type Repository } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import db from "~/lib/db";
@@ -52,17 +47,20 @@ export async function checkIfFreePlanLimitReached() {
   return count >= 3;
 }
 
-export async function getProjects() {
+export async function getRepositoryes(orgId?: string) {
   const { user } = await validateRequest();
-  const projects = await db.repository.findMany({
+  const repos = await db.repository.findMany({
     where: {
       userId: user?.id,
+      ...(orgId ? { orgId } : { orgId: null }),
     },
+    take: 10,
+    skip: 0,
     orderBy: {
       createdAt: "desc",
     },
   });
-  return projects as Repository[];
+  return repos as Repository[];
 }
 
 export async function getRepositoryById(id: string) {

@@ -1,14 +1,18 @@
 "use server";
-import Link from "next/link";
-import { Card } from "~/components/ui/card";
-import { getOrganizations, getProjects } from "./action";
-import CreateProjectModal from "./create-project-modal";
-import SelectDemo from "./Select";
+import { type Repository } from "@prisma/client";
 import { RepoImport } from "~/components/sections/RepoImport";
+import RepositoryItem from "~/components/RepositoryItem";
+import SelectDemo from "./Select";
+import { getOrganizations, getRepositoryes } from "./action";
 
-export default async function Projects() {
-  const projects = await getProjects();
+export default async function RepositoryPage({
+  searchParams: { org },
+}: {
+  searchParams: { org: string };
+}) {
   const { organization, user } = await getOrganizations();
+  const aOrg = organization.find((i) => i?.name === org);
+  const repositorys = await getRepositoryes(aOrg?.id);
 
   // const userRepos = await getUserRepos();
   // console.log("userrepos: ", userRepos);
@@ -19,23 +23,9 @@ export default async function Projects() {
         <SelectDemo organization={organization} user={user} />
         <RepoImport />
       </div>
-      {/* <CreateProjectModal /> */}
       <div className="flex gap-2">
-        {projects.map((project) => (
-          <Card
-            role="button"
-            key={project.id}
-            className="relative flex flex-col items-center justify-center gap-y-2.5 p-8 text-center hover:bg-accent"
-          >
-            <h4 className="font-medium ">{project.name}</h4>
-            <p className=" text-muted-foreground">{project.fullName}</p>
-            <Link
-              href={`/dashboard/repo/${project.id}`}
-              className="absolute inset-0 "
-            >
-              <span className="sr-only">View project details</span>
-            </Link>
-          </Card>
+        {repositorys.map((repo: Repository) => (
+          <RepositoryItem key={repo.id} {...repo} />
         ))}
       </div>
     </div>
