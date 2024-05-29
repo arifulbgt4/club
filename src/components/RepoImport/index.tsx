@@ -14,7 +14,7 @@ import { getOrganizations, getUserRepos } from "./action";
 import RepoSearch from "./RepoSearch";
 import { type User } from "@prisma/client";
 
-export async function RepoImport() {
+export default async function RepoImport() {
   const { user } = await validateRequest();
   const organization = await getOrganizations();
   const repo = await getUserRepos();

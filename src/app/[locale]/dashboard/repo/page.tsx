@@ -1,7 +1,7 @@
 "use server";
 import { type Repository } from "@prisma/client";
-import { RepoImport } from "~/components/sections/RepoImport";
 import RepositoryItem from "~/components/RepositoryItem";
+import RepoImport from "~/components/RepoImport";
 import SelectDemo from "./Select";
 import { getOrganizations, getRepositoryes } from "./action";
 
