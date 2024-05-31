@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState, type FC } from "react";
 import { type GitIssueListProps } from "./Types";
 import GitIssueItem from "../GitIssueItem";
+import { Button } from "../ui/button";
 
 const GitIssueList: FC<GitIssueListProps> = ({ repoId, repoName }) => {
   const [issues, setIssues] = useState([]);
@@ -35,15 +36,20 @@ const GitIssueList: FC<GitIssueListProps> = ({ repoId, repoName }) => {
     return <h2>Error: {error}</h2>;
   }
   return (
-    <div>
-      {issues.length === 0 ? (
-        <h2>No issues found.</h2>
-      ) : (
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        issues.map((issue: any) => (
-          <GitIssueItem key={issue.id} {...issue} repoId={repoId} />
-        ))
-      )}
+    <div className="flex flex-col">
+      <div>
+        {issues.length === 0 ? (
+          <h2>No issues found.</h2>
+        ) : (
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          issues.map((issue: any) => (
+            <GitIssueItem key={issue.id} {...issue} repoId={repoId} />
+          ))
+        )}
+      </div>
+      <div className=" mt-6 flex justify-center">
+        <Button variant="outline">Load more</Button>
+      </div>
     </div>
   );
 };
