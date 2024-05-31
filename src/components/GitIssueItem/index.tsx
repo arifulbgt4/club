@@ -3,6 +3,17 @@ import { type FC, memo, useCallback, useEffect, useState } from "react";
 import { type GitIssueItemProps } from "./Types";
 import { Card } from "~/components/ui/card";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/components/ui/alert-dialog";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -13,9 +24,6 @@ import {
 } from "~/components/ui/dialog";
 import { Button } from "../ui/button";
 import { PlusCircleIcon } from "lucide-react";
-import { checkIssue } from "./action";
-import Loading from "../../app/[locale]/dashboard/repo/loading";
-import { json } from "stream/consumers";
 import Icons from "../shared/icons";
 import { useRouter } from "next/navigation";
 
@@ -56,6 +64,21 @@ const GitIssueItem: FC<GitIssueItemProps> = ({
       console.log(error);
     }
   };
+  const onUnPublish = async () => {
+    try {
+      setPubLoading(true);
+      const res = await fetch("/api/issue/unpublish", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+      setIsPublished(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     getCheck();
@@ -86,21 +109,34 @@ const GitIssueItem: FC<GitIssueItemProps> = ({
         )}
       </div>
 
-      {/* {assignee && (
-        <div className="flex items-center">
-          <img
-            src={assignee.avatar_url}
-            alt={assignee.login}
-            className="mr-2 h-8 w-8 rounded-full"
-          />
-          <span>{assignee.login}</span>
-        </div>
-      )} */}
-      {isPublished ? (
+      {loading ? (
         <Button>
-          <PlusCircleIcon className="mr-2 h-4 w-4" />
-          UnPublish
+          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
         </Button>
+      ) : isPublished ? (
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            {pubLoading ? (
+              <Button>
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              </Button>
+            ) : (
+              <Button variant="outline">Unpublish</Button>
+            )}
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              {/* <AlertDialogDescription>
+                The issue will unlisted to get solution
+              </AlertDialogDescription> */}
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>No</AlertDialogCancel>
+              <AlertDialogAction onClick={onUnPublish}>Yes</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       ) : (
         <Dialog>
           <DialogTrigger asChild>

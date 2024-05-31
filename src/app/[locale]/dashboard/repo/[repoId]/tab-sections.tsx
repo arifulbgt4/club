@@ -1,7 +1,6 @@
 "use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import DeleteCard from "./delete-card";
-import { publisheAnIssue } from "../action";
 import { useRouter } from "next/navigation";
 import GitIssueItem from "~/components/GitIssueItem";
 
@@ -30,22 +29,6 @@ export default function TabSections({
             repoId={repositoryId}
           />
         ))}
-        {/* <Button
-              size="sm"
-              variant="outline"
-              onClick={() =>
-                publishedIssue({
-                  title: item.title,
-                  issueNumber: item.number,
-                  body: item?.body,
-                  repoId: repositoryId,
-                  state: item?.state,
-                  id: item.id,
-                })
-              }
-            >
-              Publish
-            </Button> */}
       </TabsContent>
       <TabsContent value="settings">
         <DeleteCard id={repositoryId} />
