@@ -8,7 +8,7 @@ export default async function SingleProject({
 }: {
   params: { repoId: string };
 }) {
-  const { repository, issues } = await getRepositoryById(repoId);
+  const repository = await getRepositoryById(repoId);
   return (
     <div className="flex flex-col">
       <div className="mb-4 flex flex-col">
@@ -18,7 +18,7 @@ export default async function SingleProject({
           ) : (
             <LockOpen className="mr-2 h-[20px] w-[20px]" />
           )}
-          {repository.name}
+          {repository?.name}
         </span>
         <div className=" inline-flex">
           <Link
@@ -44,7 +44,7 @@ export default async function SingleProject({
           <span className=" mt-1 text-sm">{repository?.description}</span>
         )}
       </div>
-      <TabSections repositoryId={repoId} issues={issues} />
+      <TabSections repoName={repository?.name} repoId={repoId} />
     </div>
   );
 }

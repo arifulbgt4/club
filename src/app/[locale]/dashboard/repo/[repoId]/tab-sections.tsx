@@ -1,19 +1,15 @@
 "use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import GitIssueList from "~/components/GitIssueList";
 import DeleteCard from "./delete-card";
-import { useRouter } from "next/navigation";
-import GitIssueItem from "~/components/GitIssueItem";
 
 export default function TabSections({
-  repositoryId,
-  issues,
+  repoId,
+  repoName,
 }: {
-  repositoryId: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  issues: any[];
+  repoId: string;
+  repoName: string;
 }) {
-  const router = useRouter();
-
   return (
     <Tabs defaultValue="issues">
       <TabsList>
@@ -21,17 +17,10 @@ export default function TabSections({
         <TabsTrigger value="settings">Settings</TabsTrigger>
       </TabsList>
       <TabsContent value="issues">
-        {issues.map((issue) => (
-          <GitIssueItem
-            key={issue?.id}
-            {...issue}
-            id={issue?.id}
-            repoId={repositoryId}
-          />
-        ))}
+        <GitIssueList repoId={repoId} repoName={repoName} />
       </TabsContent>
       <TabsContent value="settings">
-        <DeleteCard id={repositoryId} />
+        <DeleteCard id={repoId} />
       </TabsContent>
     </Tabs>
   );

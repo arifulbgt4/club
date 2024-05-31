@@ -87,19 +87,7 @@ export async function getRepositoryById(id: string) {
       authorization: `token ${user?.accessToken}`,
     },
   });
-  const issues = await octo.request("GET /repos/{owner}/{repo}/issues", {
-    owner: user?.username as string,
-    repo: repository?.data?.name as string,
-    state: "open",
-    sort: "updated",
-    headers: {
-      authorization: `token ${user?.accessToken}`,
-    },
-  });
-  return {
-    repository: repository.data,
-    issues: issues.data.filter((i) => i?.author_association !== "NONE"),
-  };
+  return repository.data;
 }
 
 export async function updateProjectById(id: string, payload: Payload) {

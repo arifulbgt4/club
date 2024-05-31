@@ -1,5 +1,5 @@
 "use client";
-import { type FC, memo, useCallback, useEffect, useState } from "react";
+import { type FC, useCallback, useEffect, useState } from "react";
 import { type GitIssueItemProps } from "./Types";
 import { Card } from "~/components/ui/card";
 import {
@@ -173,4 +173,4 @@ const GitIssueItem: FC<GitIssueItemProps> = ({
   );
 };
 
-export default memo(GitIssueItem);
+export default GitIssueItem;
