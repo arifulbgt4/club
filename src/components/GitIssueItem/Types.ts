@@ -10,6 +10,7 @@ export interface GitIssueItemProps {
   number: number;
   state: string;
   repoId: string;
+  html_url: string;
   assignee?: {
     avatar_url: string;
     login: string;

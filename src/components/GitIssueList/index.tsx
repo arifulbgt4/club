@@ -34,7 +34,6 @@ const GitIssueList: FC<GitIssueListProps> = ({ repoId, repoName }) => {
   if (error) {
     return <h2>Error: {error}</h2>;
   }
-
   return (
     <div>
       {issues.length === 0 ? (

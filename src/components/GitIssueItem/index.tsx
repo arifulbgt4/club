@@ -26,6 +26,7 @@ import { Button } from "../ui/button";
 import { PlusCircleIcon } from "lucide-react";
 import Icons from "../shared/icons";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const GitIssueItem: FC<GitIssueItemProps> = ({
   id,
@@ -36,6 +37,7 @@ const GitIssueItem: FC<GitIssueItemProps> = ({
   number,
   state,
   repoId,
+  html_url,
 }) => {
   const router = useRouter();
   const [isPublished, setIsPublished] = useState<boolean>();
@@ -89,7 +91,13 @@ const GitIssueItem: FC<GitIssueItemProps> = ({
       className="mb-2 flex items-center justify-between p-4 shadow-lg"
     >
       <div className="w-[70%]">
-        <h2 className="mb-2 text-xl font-semibold">{title}</h2>
+        <Link
+          href={html_url}
+          target="_blank"
+          className="mb-2 text-xl font-semibold hover:underline"
+        >
+          {title}
+        </Link>
         <p className={`mb-4 text-gray-700 ${!body && " italic"}`}>
           {body ? body?.substring(0, 100) + " ..." : "No description provided."}
         </p>
