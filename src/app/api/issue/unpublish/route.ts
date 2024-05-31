@@ -2,18 +2,15 @@ import { NextResponse } from "next/server";
 import db from "~/lib/db";
 import { validateRequest } from "~/server/auth";
 
-export async function PUT(req: Request) {
-  const body = await req.json();
+export async function DELETE(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
   try {
     const { user } = await validateRequest();
-    await db.issue.update({
+    await db.issue.delete({
       where: {
-        id: BigInt(body?.id),
+        id: BigInt(id as string),
         userId: user?.id,
-      },
-
-      data: {
-        published: false,
       },
     });
     return NextResponse.json(true);

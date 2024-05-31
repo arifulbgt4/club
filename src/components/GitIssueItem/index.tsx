@@ -69,12 +69,8 @@ const GitIssueItem: FC<GitIssueItemProps> = ({
   const onUnPublish = async () => {
     try {
       setPubLoading(true);
-      const res = await fetch("/api/issue/unpublish", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id }),
+      await fetch(`/api/issue/unpublish?id=${id}`, {
+        method: "DELETE",
       });
       setIsPublished(false);
     } catch (error) {
