@@ -73,7 +73,7 @@ export async function getRepositoryes(page: number, orgId?: string) {
 
 export async function getRepositoryById(id: string) {
   const { user } = await validateRequest();
-  const repo = await db.repository.findFirst({
+  const repo = await db.repository.findUnique({
     where: {
       id,
       userId: user?.id,
