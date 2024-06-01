@@ -37,8 +37,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ],
     authors: [
       {
-        name: "moinulmoin",
-        url: "https://moinulmoin.com",
+        name: "ariful",
+        url: "https://ariful.com",
       },
     ],
     creator: "Moinul Moin",

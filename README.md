@@ -1,12 +1,12 @@
-![ChadNext – Quick Starter Template for your Next.js project](https://repository-images.githubusercontent.com/644861240/7dfaac30-9ee9-4e52-a4f2-daa2b1944d4f)
+![IssueClub – Quick Starter Template for your Next.js project](https://repository-images.githubusercontent.com/644861240/7dfaac30-9ee9-4e52-a4f2-daa2b1944d4f)
 
-# ChadNext ✨
+# IssueClub ✨
 
-ChadNext is a quick starter template for Next.js projects, designed to streamline development by providing essential features out of the box. 🚀
+IssueClub is a quick starter template for Next.js projects, designed to streamline development by providing essential features out of the box. 🚀
 
 ## Motivation 🌟
 
-ChadNext addresses common pain points, making it easier to:
+IssueClub addresses common pain points, making it easier to:
 
 - Prototype and test ideas swiftly
 - Access a beautifully designed UI library
@@ -37,7 +37,7 @@ Save time and effort, and build performant apps with an excellent developer expe
 
 ## License 📄
 
-MIT License. [LICENSE](https://github.com/moinulmoin/chadnext/blob/main/LICENSE)
+MIT License. [LICENSE](https://github.com/ariful/IssueClub/blob/main/LICENSE)
 
 ## Author ✍️
 
