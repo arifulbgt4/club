@@ -38,10 +38,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     authors: [
       {
         name: "ariful",
-        url: "https://ariful.com",
+        url: "https://ariful.io",
       },
     ],
-    creator: "Moinul Moin",
+    creator: "Ariful islam",
     openGraph: {
       type: "website",
       locale: locale,

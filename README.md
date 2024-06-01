@@ -1,4 +1,3 @@
-![IssueClub – Quick Starter Template for your Next.js project](https://repository-images.githubusercontent.com/644861240/7dfaac30-9ee9-4e52-a4f2-daa2b1944d4f)
 
 # IssueClub ✨
 
@@ -26,7 +25,7 @@ Save time and effort, and build performant apps with an excellent developer expe
 
 ### Or
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmoinulmoin%2Fchadnext&env=DB_PRISMA_URL,DB_URL_NON_POOLING,GITHUB_CLIENT_ID,GITHUB_CLIENT_SECRET,NEXTAUTH_SECRET,NEXT_PUBLIC_APP_URL,RESEND_API_KEY,UPLOADTHING_SECRET,UPLOADTHING_APP_ID,UPLOADTHING_URL)
+
 
 ## Contributing 🤝
 
@@ -37,8 +36,8 @@ Save time and effort, and build performant apps with an excellent developer expe
 
 ## License 📄
 
-MIT License. [LICENSE](https://github.com/ariful/IssueClub/blob/main/LICENSE)
+MIT License. [LICENSE](https://github.com/arifulbg4/club/blob/main/LICENSE)
 
 ## Author ✍️
 
-Moinul Moin ([@immoinulmoin](https://twitter.com/immoinulmoin))
+Ariful islam ([@arifulbgt4](https://x.com/arifulbgt4))
