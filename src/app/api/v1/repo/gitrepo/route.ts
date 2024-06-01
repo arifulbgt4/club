@@ -2,39 +2,59 @@ import { NextResponse } from "next/server";
 import { app } from "~/lib/octokit";
 import { validateRequest } from "~/server/auth";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: Request) {
   try {
     const { user } = await validateRequest();
-    const octo = await app.getInstallationOctokit(Number(user?.installId));
-    const repo = await octo.request("GET /installation/repositories", {
-      per_page: 100,
-      page: 1,
-      headers: {
-        authorization: `token ${user?.accessToken}`,
-      },
-    });
+    if (!user) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
 
-    if (repo.data.total_count <= 100) {
-      return repo.data.repositories;
-    }
-    const getval = [...repo.data.repositories];
-    for (
-      let index = 1;
-      index < Math.ceil(repo.data.total_count / 100);
-      index++
-    ) {
-      const a = await octo.request("GET /installation/repositories", {
-        per_page: 100,
-        page: 1 + index,
+    const octo = await app.getInstallationOctokit(Number(user.installId));
+    const perPage = 100;
+    const initialResponse = await octo.request(
+      "GET /installation/repositories",
+      {
+        per_page: perPage,
+        page: 1,
         headers: {
-          authorization: `token ${user?.accessToken}`,
+          authorization: `token ${user.accessToken}`,
         },
+      }
+    );
+
+    let repositories = initialResponse.data.repositories;
+    const totalRepos = initialResponse.data.total_count;
+
+    if (totalRepos > perPage) {
+      const totalPages = Math.ceil(totalRepos / perPage);
+      const fetchPromises = [];
+
+      for (let page = 2; page <= totalPages; page++) {
+        fetchPromises.push(
+          octo.request("GET /installation/repositories", {
+            per_page: perPage,
+            page: page,
+            headers: {
+              authorization: `token ${user.accessToken}`,
+            },
+          })
+        );
+      }
+
+      const responses = await Promise.all(fetchPromises);
+      responses.forEach((response) => {
+        repositories = repositories.concat(response.data.repositories);
       });
-      getval.push(...a.data.repositories);
     }
-    return NextResponse.json(getval.reverse());
+
+    return NextResponse.json(repositories.reverse());
   } catch (error) {
-    console.log(error);
-    return new Response(null, { status: 500 });
+    console.error("Error fetching repositories:", error);
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

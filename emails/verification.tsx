@@ -34,7 +34,7 @@ const VerificationTemp: React.FC<Readonly<VerificationTemplateProps>> = ({
             <Row>
               <Column align="right">
                 <Img
-                  src={`${siteUrl}/chad-next.png`}
+                  src={`${siteUrl}/logo-next.png`}
                   height="50"
                   alt="IssueClub logo"
                   className="inline-block "

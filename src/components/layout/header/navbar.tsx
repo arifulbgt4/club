@@ -27,7 +27,7 @@ export default function Navbar({
     <nav className="flex h-full items-center justify-between">
       <Link href="/" className="flex items-center text-2xl font-bold">
         <Image
-          src="/chad-next.png"
+          src="/logo-next.png"
           alt="IssueClub logo"
           width="30"
           height="30"

@@ -36,7 +36,7 @@ Save time and effort, and build performant apps with an excellent developer expe
 
 ## License 📄
 
-MIT License. [LICENSE](https://github.com/arifulbg4/club/blob/main/LICENSE)
+MIT License. [LICENSE](https://github.com/arifulbg4/club/blob/dev/LICENSE)
 
 ## Author ✍️
 
