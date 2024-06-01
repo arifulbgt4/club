@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type FC } from "react";
 import { type GitIssueListProps } from "./Types";
 import GitIssueItem from "../GitIssueItem";
 import { Button } from "../ui/button";
+import { Skeleton } from "../ui/skeleton";
 
 const GitIssueList: FC<GitIssueListProps> = ({ repoId, repoName }) => {
   const [issues, setIssues] = useState([]);
@@ -29,14 +30,20 @@ const GitIssueList: FC<GitIssueListProps> = ({ repoId, repoName }) => {
   }, [getIssues]);
 
   if (loading) {
-    return <h2>Loading...</h2>;
+    return (
+      <div className="mt-5 grid grid-cols-1 gap-2">
+        <Skeleton className="h-28 rounded-lg" />
+        <Skeleton className="h-28 rounded-lg" />
+        <Skeleton className="h-28 rounded-lg" />
+      </div>
+    );
   }
 
   if (error) {
     return <h2>Error: {error}</h2>;
   }
   return (
-    <div className="flex flex-col">
+    <div className="mt-5 flex flex-col">
       <div>
         {issues.length === 0 ? (
           <h2>No issues found.</h2>
