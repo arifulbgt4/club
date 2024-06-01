@@ -4,7 +4,6 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
-import { Button } from "~/components/ui/button";
 
 import {
   Select,
@@ -40,9 +39,9 @@ export default function SelectDemo({
         }
         router.push(`${path}?${SEARCH_PARAMS_NAME}=${v}`);
       }}
-      defaultValue={orgParams === null ? DEFAULT_USER : orgParams}
+      defaultValue={orgParams || DEFAULT_USER}
     >
-      <SelectTrigger className=" w-auto">
+      <SelectTrigger className=" w-auto min-w-[200px]">
         <SelectValue placeholder="Select a Organization" />
       </SelectTrigger>
       <SelectContent>

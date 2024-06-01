@@ -25,6 +25,7 @@ import {
 import { Button } from "~/components/ui/button";
 import { createRepo } from "./action";
 import { useRouter } from "next/navigation";
+import Icons from "../shared/icons";
 
 const DEFAULT_USER = "defaultuser";
 
@@ -32,11 +33,13 @@ const RepoSearch = ({
   organization,
   repo,
   user,
+  loading,
 }: {
   organization: Organization[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   repo: any[];
   user: User;
+  loading: boolean;
 }) => {
   const router = useRouter();
 
@@ -95,47 +98,53 @@ const RepoSearch = ({
           </div>
           <CommandList>
             <CommandGroup className=" p-0" heading="Repository">
-              {repo.map((item) => {
-                return (
-                  <React.Fragment key={item?.id}>
-                    <CommandSeparator />
+              {!loading ? (
+                <>
+                  {repo.map((item) => {
+                    return (
+                      <React.Fragment key={item?.id}>
+                        <CommandSeparator />
 
-                    <CommandItem className="flex justify-between py-3">
-                      <div className="mr-2 flex">
-                        <div className="mr-2 mt-2 h-4 w-4 ">
-                          {item?.private ? (
-                            <Lock className=" mr-2 h-5 w-5" />
-                          ) : (
-                            <LockOpen className=" mr-2 h-5 w-5" />
-                          )}
-                        </div>
-                        <div className="flex flex-col">
-                          <span className=" font-medium">{item?.name}</span>
-                          <span className=" text-xs font-light">
-                            {item?.full_name}
-                          </span>
-                        </div>
-                      </div>
-                      <Button
-                        onClick={() =>
-                          importRepo({
-                            name: item?.name,
-                            fullName: item?.full_name,
-                            language: item?.language,
-                            isPrivate: item?.private,
-                          })
-                        }
-                        size="sm"
-                        variant="outline"
-                      >
-                        Import
-                      </Button>
-                    </CommandItem>
-                  </React.Fragment>
-                );
-              })}
+                        <CommandItem className="flex justify-between py-3">
+                          <div className="mr-2 flex">
+                            <div className="mr-2 mt-2 h-4 w-4 ">
+                              {item?.private ? (
+                                <Lock className=" mr-2 h-5 w-5" />
+                              ) : (
+                                <LockOpen className=" mr-2 h-5 w-5" />
+                              )}
+                            </div>
+                            <div className="flex flex-col">
+                              <span className=" font-medium">{item?.name}</span>
+                              <span className=" text-xs font-light">
+                                {item?.full_name}
+                              </span>
+                            </div>
+                          </div>
+                          <Button
+                            onClick={() =>
+                              importRepo({
+                                name: item?.name,
+                                fullName: item?.full_name,
+                                language: item?.language,
+                                isPrivate: item?.private,
+                              })
+                            }
+                            size="sm"
+                            variant="outline"
+                          >
+                            Import
+                          </Button>
+                        </CommandItem>
+                      </React.Fragment>
+                    );
+                  })}
+                  <CommandEmpty>No Git Repositories Found</CommandEmpty>
+                </>
+              ) : (
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              )}
             </CommandGroup>
-            <CommandEmpty>No Git Repositories Found</CommandEmpty>
           </CommandList>
         </Command>
       </div>
