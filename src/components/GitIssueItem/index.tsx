@@ -44,7 +44,7 @@ const GitIssueItem: FC<GitIssueItemProps> = ({
   const [loading, setLoading] = useState(true);
   const [pubLoading, setPubLoading] = useState(false);
   const getCheck = useCallback(async () => {
-    const res = await fetch(`/api/issue/check?id=${id}`, { method: "GET" });
+    const res = await fetch(`/api/v1/issue/check?id=${id}`, { method: "GET" });
     const data = await res.json();
     setIsPublished(data);
     setLoading(false);
@@ -53,7 +53,7 @@ const GitIssueItem: FC<GitIssueItemProps> = ({
   const onPublish = async () => {
     try {
       setPubLoading(true);
-      const res = await fetch("/api/issue/publish", {
+      const res = await fetch("/api/v1/issue/publish", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -69,7 +69,7 @@ const GitIssueItem: FC<GitIssueItemProps> = ({
   const onUnPublish = async () => {
     try {
       setPubLoading(true);
-      await fetch(`/api/issue/unpublish?id=${id}`, {
+      await fetch(`/api/v1/issue/unpublish?id=${id}`, {
         method: "DELETE",
       });
       setIsPublished(false);

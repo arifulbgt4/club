@@ -10,7 +10,7 @@ const GitIssueList: FC<GitIssueListProps> = ({ repoId, repoName }) => {
 
   const getIssues = useCallback(async () => {
     try {
-      const res = await fetch(`/api/issue/gitissue?repo=${repoName}`);
+      const res = await fetch(`/api/v1/issue/gitissue?repo=${repoName}`);
       if (!res.ok) {
         throw new Error(`Error: ${res.status} ${res.statusText}`);
       }
