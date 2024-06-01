@@ -37,7 +37,7 @@ const Pagination = ({ page, totalPages }: PaginationProps) => {
     <PaginationContainer className="my-3">
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious href={page === 1 ? "/" : `?page=${page - 1}`} />
+          <PaginationPrevious href={page === 1 ? "" : `?page=${page - 1}`} />
         </PaginationItem>
         {pageNumbers.map((num) => (
           <PaginationItem key={num}>

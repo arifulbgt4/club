@@ -1,10 +1,8 @@
 "use server";
-import { type Repository } from "@prisma/client";
-import RepositoryItem from "~/components/RepositoryItem";
+import RepositoryList from "~/components/RepositoryList";
 import RepoImport from "~/components/RepoImport";
 import SelectDemo from "./Select";
-import { getOrganizations, getRepositoryes } from "./action";
-import Pagination from "~/components/sections/pagination";
+import { getOrganizations } from "./action";
 
 export default async function RepositoryPage({
   searchParams: { org, page },
@@ -13,12 +11,6 @@ export default async function RepositoryPage({
 }) {
   const { organization, user } = await getOrganizations();
   const aOrg = organization.find((i) => i?.name === org);
-  const { repositorys, take, total } = await getRepositoryes(
-    Number(page) || 1,
-    aOrg?.id
-  );
-
-  const totalPages = Math.ceil(total / take);
 
   return (
     <div className=" flex flex-col">
@@ -26,16 +18,7 @@ export default async function RepositoryPage({
         <SelectDemo organization={organization} user={user} />
         <RepoImport />
       </div>
-      <div>
-        <div className="flex gap-2">
-          {repositorys.map((repo: Repository) => (
-            <RepositoryItem key={repo.id} {...repo} />
-          ))}
-        </div>
-        {totalPages >= 2 && (
-          <Pagination page={Number(page) || 1} totalPages={totalPages} />
-        )}
-      </div>
+      <RepositoryList page={Number(page) || 1} orgId={aOrg?.id} />
     </div>
   );
 }
