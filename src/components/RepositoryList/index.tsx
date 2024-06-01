@@ -9,7 +9,7 @@ import { Skeleton } from "../ui/skeleton";
 const RepositoryList: FC<RepositoryListProps> = ({ page, orgId }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [res, setRes] = useState<any>();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const getRepositorys = useCallback(async () => {
     try {
       setLoading(true);
@@ -35,8 +35,7 @@ const RepositoryList: FC<RepositoryListProps> = ({ page, orgId }) => {
 
   if (loading)
     return (
-      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
-        <Skeleton className="h-36 rounded-lg" />
+      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-3">
         <Skeleton className="h-36 rounded-lg" />
         <Skeleton className="h-36 rounded-lg" />
         <Skeleton className="h-36 rounded-lg" />
