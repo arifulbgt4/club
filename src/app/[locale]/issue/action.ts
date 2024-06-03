@@ -1,24 +1,42 @@
+import { type IssueOptions } from "~/types";
 import db from "~/lib/db";
 import { app } from "~/lib/octokit";
 
 export async function getAnIssue(id: bigint) {
-  const issueDB = await db.issue.findUnique({
+  const dbIssue = await db.issue.findUnique({
     where: { id },
     include: { repo: true, user: true },
   });
   const octo = await app.getInstallationOctokit(
-    Number(issueDB?.user?.installId)
+    Number(dbIssue?.user?.installId)
   );
   const issue = await octo.request(
     "GET /repos/{owner}/{repo}/issues/{issue_number}",
     {
-      owner: issueDB?.user?.username as string,
-      repo: issueDB?.repo?.name as string,
-      issue_number: Number(issueDB?.issueNumber),
+      owner: dbIssue?.user?.username as string,
+      repo: dbIssue?.repo?.name as string,
+      issue_number: Number(dbIssue?.issueNumber),
       headers: {
-        authorization: `token ${issueDB?.user?.accessToken}`,
+        authorization: `token ${dbIssue?.user?.accessToken}`,
       },
     }
   );
-  return issue.data;
+
+  const comments = await octo.request(
+    "GET /repos/{owner}/{repo}/issues/{issue_number}/comments",
+    {
+      owner: dbIssue?.user?.username as string,
+      repo: dbIssue?.repo?.name as string,
+      issue_number: Number(dbIssue?.issueNumber),
+      headers: {
+        authorization: `token ${dbIssue?.user?.accessToken}`,
+      },
+    }
+  );
+  return {
+    issue: issue.data,
+    comments: comments.data,
+    // issue: {},
+    dbIssue: dbIssue as IssueOptions,
+  };
 }

@@ -59,5 +59,21 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("@tailwindcss/typography"),
+    function ({ addUtilities }) {
+      const newUtilities = {
+        ".clip-path-triangle": {
+          clipPath: "polygon(0 50%, 100% 0, 100% 100%)",
+        },
+        ".clip-path-diamond": {
+          clipPath: "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)",
+        },
+        // Add more custom utilities here
+      };
+
+      addUtilities(newUtilities, ["responsive", "hover"]);
+    },
+  ],
 };
