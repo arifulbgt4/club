@@ -1,7 +1,9 @@
+"use client";
 import { type FC } from "react";
 import { type IssueCommentProps } from "./Types";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { formatDistanceToNow } from "date-fns";
+import MarkdownPreview from "@uiw/react-markdown-preview";
 
 const IssueComment: FC<IssueCommentProps> = ({
   imgSrc,
@@ -37,7 +39,7 @@ const IssueComment: FC<IssueCommentProps> = ({
             </span>
           )}
         </div>
-        <div className="p-3">{body}</div>
+        <MarkdownPreview className=" rounded p-3" source={body} />
       </div>
     </div>
   );

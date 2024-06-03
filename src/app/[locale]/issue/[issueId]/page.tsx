@@ -4,6 +4,7 @@ import { formatDistanceToNow } from "date-fns";
 import { getAnIssue } from "../action";
 import IssueComment from "~/components/IssueComment";
 import Apply from "~/components/Apply";
+import Description from "./description";
 
 interface IssuePageProps {
   params: { issueId: string };
@@ -14,9 +15,7 @@ const IssuePage = async ({ params: { issueId } }: IssuePageProps) => {
   return (
     <div className="mt-6 flex flex-col">
       <div className=" border-b">
-        <h1 className=" mb-2 break-words text-3xl uppercase ">
-          {issue?.title}
-        </h1>
+        <h1 className=" mb-2 break-words text-3xl">{issue?.title}</h1>
         <p className=" mb-2 text-sm font-medium text-muted-foreground">
           <span className=" font-bold">{dbIssue?.user?.username}</span>{" "}
           published this issue{" "}
@@ -29,11 +28,13 @@ const IssuePage = async ({ params: { issueId } }: IssuePageProps) => {
       </div>
       <div className="my-5 flex">
         <div className=" mr-9 flex w-[70%] flex-col">
-          <div className=" mb-6 flex flex-1 rounded border p-3">
-            <span>{issue?.body || "No description provided."}</span>
+          <div className="mb-6 flex flex-auto">
+            <Description body={issue?.body as string} />
           </div>
           <div className="flex flex-col">
-            <span className=" mb-3 font-bold">Comments</span>
+            {!!issue?.comments && (
+              <span className=" mb-3 font-bold">Comments</span>
+            )}
             {comments?.map((com) => (
               <IssueComment
                 key={com?.id}
@@ -47,7 +48,7 @@ const IssuePage = async ({ params: { issueId } }: IssuePageProps) => {
             ))}
           </div>
         </div>
-        <div className="flex w-[30%]">
+        <div className="flex w-[30%] flex-auto">
           <Apply />
         </div>
       </div>
