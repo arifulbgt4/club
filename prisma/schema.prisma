@@ -99,7 +99,7 @@ model Request {
   user      User?    @relation(fields: [userId], references: [id])
   userId    String?
   issue     Issue?   @relation(fields: [issueId], references: [id])
+  issueId   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  issueId   String?
 }

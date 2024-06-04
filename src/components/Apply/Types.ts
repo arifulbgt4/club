@@ -1,1 +1,3 @@
-export interface ApplyProps {}
+export interface ApplyProps {
+  issueId: string;
+}

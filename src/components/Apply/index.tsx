@@ -1,3 +1,4 @@
+"use client";
 import { type FC } from "react";
 import { type ApplyProps } from "./Types";
 import {
@@ -10,7 +11,15 @@ import {
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
-const Apply: FC<ApplyProps> = () => {
+const Apply: FC<ApplyProps> = ({ issueId }) => {
+  async function onApply() {
+    const res = await fetch("/api/v1/issue/request", {
+      method: "POST",
+      body: JSON.stringify({ issueId }),
+    });
+    const data = await res.json();
+    console.log("data: ", data);
+  }
   return (
     <Card>
       <CardHeader className=" border-b">
@@ -35,6 +44,7 @@ const Apply: FC<ApplyProps> = () => {
         </div>
         <Button
           // disabled
+          onClick={onApply}
           className=" self-end bg-green-500"
         >
           Apply
