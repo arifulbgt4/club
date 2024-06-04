@@ -8,11 +8,11 @@ export async function POST(req: Request) {
     const { user } = await validateRequest();
     const issue = await db.issue.upsert({
       where: {
-        id: BigInt(body?.id),
+        id: String(body?.id),
         userId: user?.id,
       },
       create: {
-        id: BigInt(body?.id),
+        id: String(body?.id),
         issueNumber: Number(body?.issueNumber),
         state: body?.state,
         repo: {

@@ -11,7 +11,7 @@ interface IssuePageProps {
 }
 
 const IssuePage = async ({ params: { issueId } }: IssuePageProps) => {
-  const { issue, dbIssue, comments } = await getAnIssue(BigInt(issueId));
+  const { issue, dbIssue, comments } = await getAnIssue(issueId);
   return (
     <div className="mt-6 flex flex-col">
       <div className=" border-b">

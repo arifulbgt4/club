@@ -3,7 +3,7 @@ interface IssueLabelOption {
   name?: string;
 }
 export interface GitIssueItemProps {
-  id: bigint;
+  id: string;
   title: string;
   body?: string;
   labels?: IssueLabelOption[];

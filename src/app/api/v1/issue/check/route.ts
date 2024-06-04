@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   const id = searchParams.get("id");
 
   const isPublished = await db.issue.findUnique({
-    where: { id: BigInt(id as string), published: true },
+    where: { id: String(id), published: true },
   });
   return NextResponse.json(!!isPublished);
 }

@@ -13,40 +13,6 @@ interface Payload {
   domain: string;
 }
 
-export async function createProject(payload: Payload) {
-  const { user } = await validateRequest();
-
-  await db.project.create({
-    data: {
-      ...payload,
-      user: {
-        connect: {
-          id: user?.id,
-        },
-      },
-    },
-  });
-
-  revalidatePath(`/dashboard/repo`);
-}
-
-export async function checkIfFreePlanLimitReached() {
-  const { user } = await validateRequest();
-  const subscriptionPlan = await getUserSubscriptionPlan(user?.id as string);
-
-  // If user is on a free plan.
-  // Check if user has reached limit of 3 projects.
-  if (subscriptionPlan?.isPro) return false;
-
-  const count = await db.project.count({
-    where: {
-      userId: user?.id,
-    },
-  });
-
-  return count >= 3;
-}
-
 export async function getRepositoryById(id: string) {
   const { user } = await validateRequest();
   const repo = await db.repository.findUnique({
@@ -64,18 +30,6 @@ export async function getRepositoryById(id: string) {
     },
   });
   return repository.data;
-}
-
-export async function updateProjectById(id: string, payload: Payload) {
-  const { user } = await validateRequest();
-  await db.project.update({
-    where: {
-      id,
-      userId: user?.id,
-    },
-    data: payload,
-  });
-  revalidatePath(`/dashboard/repo`);
 }
 
 export async function deleteRepositoryById(id: string) {

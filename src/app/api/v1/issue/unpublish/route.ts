@@ -9,7 +9,7 @@ export async function DELETE(req: Request) {
     const { user } = await validateRequest();
     await db.issue.delete({
       where: {
-        id: BigInt(id as string),
+        id: id as string,
         userId: user?.id,
       },
     });

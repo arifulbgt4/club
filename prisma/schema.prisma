@@ -42,10 +42,10 @@ model User {
   updatedAt               DateTime                 @updatedAt
   emailVerificationTokens EmailVerificationToken[]
   organizations           Organization[]
-  projects                Project[]
   sessions                Session[]
   Repository              Repository[]
   Issue                   Issue[]
+  Request                 Request[]
 }
 
 model Organization {
@@ -57,7 +57,6 @@ model Organization {
   token      String?
   userId     String?
   user       User?        @relation(fields: [userId], references: [id])
-  projects   Project[]
   Repository Repository[]
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
@@ -80,7 +79,7 @@ model Repository {
 }
 
 model Issue {
-  id          BigInt      @unique
+  id          String      @unique
   issueNumber Int?
   state       String?
   published   Boolean?    @default(true)
@@ -90,16 +89,17 @@ model Issue {
   userId      String?
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+  Request     Request[]
 }
 
-model Project {
-  id             String        @id @default(cuid())
-  name           String
-  domain         String
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         String
-  organization   Organization? @relation(fields: [organizationId], references: [id])
-  organizationId String?
+model Request {
+  id        String   @id @unique @default(cuid())
+  days      Int
+  approved  Boolean  @default(false)
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+  issue     Issue?   @relation(fields: [issueId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  issueId   String?
 }
