@@ -1,5 +1,5 @@
 "use client";
-import { type FC } from "react";
+import { useCallback, useEffect, useState, type FC } from "react";
 import { type ApplyProps } from "./Types";
 import {
   Card,
@@ -10,16 +10,35 @@ import {
 } from "../ui/card";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import Icons from "../shared/icons";
 
 const Apply: FC<ApplyProps> = ({ issueId }) => {
+  const [applyed, setApplyed] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const isApplyed = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/v1/issue/checkApply?issueId=${issueId}`, {
+        method: "GET",
+      });
+      const data = await res.json();
+      setApplyed(data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }, [issueId]);
   async function onApply() {
-    const res = await fetch("/api/v1/issue/request", {
+    await fetch("/api/v1/issue/request", {
       method: "POST",
       body: JSON.stringify({ issueId }),
     });
-    const data = await res.json();
-    console.log("data: ", data);
+    setApplyed(true);
   }
+  useEffect(() => {
+    isApplyed();
+  }, [isApplyed]);
+
   return (
     <Card>
       <CardHeader className=" border-b">
@@ -42,13 +61,19 @@ const Apply: FC<ApplyProps> = ({ issueId }) => {
           />{" "}
           <span>days</span>
         </div>
-        <Button
-          // disabled
-          onClick={onApply}
-          className=" self-end bg-green-500"
-        >
-          Apply
-        </Button>
+        {!loading ? (
+          <Button
+            disabled={applyed}
+            onClick={onApply}
+            className=" self-end bg-green-500"
+          >
+            {applyed ? "Applyed" : "Apply"}
+          </Button>
+        ) : (
+          <Button className=" self-end bg-green-500">
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );
