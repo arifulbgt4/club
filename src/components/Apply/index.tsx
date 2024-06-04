@@ -13,7 +13,7 @@ import { Input } from "../ui/input";
 import Icons from "../shared/icons";
 
 const Apply: FC<ApplyProps> = ({ issueId }) => {
-  const [applyed, setApplyed] = useState(false);
+  const [applyed, setApplyed] = useState<boolean>();
   const [loading, setLoading] = useState(true);
   const isApplyed = useCallback(async () => {
     try {
@@ -28,16 +28,20 @@ const Apply: FC<ApplyProps> = ({ issueId }) => {
       setLoading(false);
     }
   }, [issueId]);
+
+  useEffect(() => {
+    isApplyed();
+  }, [isApplyed]);
+
   async function onApply() {
+    setLoading(true);
     await fetch("/api/v1/issue/request", {
       method: "POST",
       body: JSON.stringify({ issueId }),
     });
     setApplyed(true);
+    setLoading(false);
   }
-  useEffect(() => {
-    isApplyed();
-  }, [isApplyed]);
 
   return (
     <Card>
@@ -54,7 +58,7 @@ const Apply: FC<ApplyProps> = ({ issueId }) => {
             I will submit the task within{" "}
           </span>
           <Input
-            // disabled
+            disabled={applyed || loading}
             placeholder="EX: 2"
             className=" mx-3 h-8 w-[78px] border-yellow-100"
             type="number"

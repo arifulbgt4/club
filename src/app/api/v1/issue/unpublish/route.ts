@@ -7,12 +7,18 @@ export async function DELETE(req: Request) {
   const id = searchParams.get("id");
   try {
     const { user } = await validateRequest();
+    await db.request.deleteMany({
+      where: {
+        issueId: id as string,
+      },
+    });
     await db.issue.delete({
       where: {
         id: id as string,
         userId: user?.id,
       },
     });
+
     return NextResponse.json(true);
   } catch (error) {
     console.log(error);
