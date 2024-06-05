@@ -31,6 +31,7 @@ model User {
   picture                 String?
   accessToken             String?
   installId               Int?
+  available               Boolean?                 @default(true)
   activate                Boolean?                 @default(true)
   githubId                Int?                     @unique
   username                String?                  @unique
@@ -44,8 +45,9 @@ model User {
   organizations           Organization[]
   sessions                Session[]
   Repository              Repository[]
-  Issue                   Issue[]
   Request                 Request[]
+  AssignedIssues          Issue[]                  @relation("AssignedIssues")
+  Issue                   Issue[]
 }
 
 model Organization {
@@ -82,19 +84,26 @@ model Issue {
   id          String      @unique
   issueNumber Int?
   state       String?
+  status      String?
   published   Boolean?    @default(true)
   repo        Repository? @relation(fields: [repoId], references: [id])
   repoId      String?
   user        User?       @relation(fields: [userId], references: [id])
   userId      String?
+  assigned    User?       @relation("AssignedIssues", fields: [assignedId], references: [id])
+  assignedId  String?
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   Request     Request[]
+
+  @@index([repoId])
+  @@index([userId])
+  @@index([assignedId])
 }
 
 model Request {
   id        String   @id @unique @default(cuid())
-  days      Int
+  days      Int?
   approved  Boolean  @default(false)
   user      User?    @relation(fields: [userId], references: [id])
   userId    String?

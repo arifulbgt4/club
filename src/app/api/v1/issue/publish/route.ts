@@ -15,6 +15,7 @@ export async function POST(req: Request) {
         id: String(body?.id),
         issueNumber: Number(body?.issueNumber),
         state: body?.state,
+        status: "published",
         repo: {
           connect: {
             id: body?.repoId,
