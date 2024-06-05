@@ -15,7 +15,11 @@ import { Button } from "../ui/button";
 
 const Published: FC<PublishedProps> = ({ src }) => {
   return (
-    <Sheet>
+    <Sheet
+      onOpenChange={(open) => {
+        console.log("open: ", open);
+      }}
+    >
       <SheetTrigger asChild>
         <div className=" mb-3 flex cursor-pointer flex-col rounded border bg-zinc-900 px-2.5 py-1.5">
           <div className="mb-2 flex items-center">
@@ -37,7 +41,7 @@ const Published: FC<PublishedProps> = ({ src }) => {
           <p className=" text-lg">Sign in form page</p>
         </div>
       </SheetTrigger>
-      <SheetContent className=" w-full sm:max-w-[600px]">
+      <SheetContent>
         <SheetHeader>
           <SheetTitle>Edit profile</SheetTitle>
           <SheetDescription>
@@ -45,13 +49,38 @@ const Published: FC<PublishedProps> = ({ src }) => {
           </SheetDescription>
         </SheetHeader>
         <div className="grid gap-4 py-4">
-          <h3>Hey</h3>
+          <div className=" flex items-center space-x-4 rounded-md border p-4">
+            <Avatar className=" h-9 w-9">
+              <AvatarImage src={src} title="arifulbgt4" />
+            </Avatar>
+            <div className="flex-1 space-y-1">
+              <p className="text-sm font-medium leading-none">@arifulbgt4</p>
+              <p className="text-sm text-muted-foreground">
+                Request for 2 days
+              </p>
+            </div>
+            <Button variant="secondary">Accept</Button>
+          </div>
+          <div className=" flex items-center space-x-4 rounded-md border p-4">
+            <Avatar className="">
+              <AvatarImage src={src} title="arifulbgt4" />
+            </Avatar>
+            <div className="flex-1 space-y-1">
+              <p className="text-sm font-medium leading-none">
+                Push Notifications
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Request for 2 days
+              </p>
+            </div>
+            <Button>Accept</Button>
+          </div>
         </div>
-        <SheetFooter>
+        {/* <SheetFooter>
           <SheetClose asChild>
             <Button type="submit">Save changes</Button>
           </SheetClose>
-        </SheetFooter>
+        </SheetFooter> */}
       </SheetContent>
     </Sheet>
   );
