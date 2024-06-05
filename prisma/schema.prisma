@@ -82,6 +82,7 @@ model Repository {
 
 model Issue {
   id          String      @unique
+  title       String?
   issueNumber Int?
   state       String?
   status      String?
@@ -94,7 +95,7 @@ model Issue {
   assignedId  String?
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
-  Request     Request[]
+  request     Request[]
 
   @@index([repoId])
   @@index([userId])

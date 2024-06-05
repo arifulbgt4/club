@@ -21,7 +21,7 @@ export default function TabSections({
         <TabsTrigger value="settings">Settings</TabsTrigger>
       </TabsList>
       <TabsContent value="board">
-        <Board src={src} />
+        <Board src={src} repoId={repoId} />
       </TabsContent>
       <TabsContent value="issues">
         <GitIssueList repoId={repoId} repoName={repoName} />

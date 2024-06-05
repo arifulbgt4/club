@@ -58,7 +58,7 @@ const GitIssueItem: FC<GitIssueItemProps> = ({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id, issueNumber: number, state, repoId }),
+        body: JSON.stringify({ id, issueNumber: number, state, repoId, title }),
       });
       const data = await res.json();
       router.push(`/issue/${data?.id}`);

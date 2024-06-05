@@ -1,4 +1,5 @@
-import React, { type FC } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useCallback, useEffect, useState, type FC } from "react";
 import { type BoardProps } from "./Types";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import Published from "./Published";
@@ -6,7 +7,19 @@ import Assigned from "./Assigned";
 import Submitted from "./Submited";
 import Completed from "./Completed";
 
-const Board: FC<BoardProps> = ({ src }) => {
+const Board: FC<BoardProps> = ({ src, repoId }) => {
+  const [published, setPublished] = useState([]);
+  const getIssueList = useCallback(async () => {
+    const res = await fetch(`/api/v1/issue/publishedList?repoId=${repoId}`);
+    const data = await res.json();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const pub = data?.filter((i: any) => i?.status === "published");
+    setPublished(pub);
+  }, [repoId]);
+
+  useEffect(() => {
+    getIssueList();
+  }, []);
   return (
     <div className="mt-5 flex gap-3 ">
       <div className="flex w-[25%] flex-col rounded border bg-black px-3 py-2">
@@ -14,7 +27,14 @@ const Board: FC<BoardProps> = ({ src }) => {
           <span className=" text-x font-medium">Published</span>
           <p className="text-sm text-gray-500">Published issues list</p>
         </div>
-        <Published src={src} />
+        {published?.map((p: any) => (
+          <Published
+            key={p?.id}
+            id={p?.id}
+            title={p?.title}
+            request={p?.request}
+          />
+        ))}
       </div>
       <div className="flex w-[25%] flex-col rounded border bg-black px-3 py-2">
         <div className="mb-3">

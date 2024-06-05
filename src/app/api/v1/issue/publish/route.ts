@@ -13,6 +13,7 @@ export async function POST(req: Request) {
       },
       create: {
         id: String(body?.id),
+        title: body?.title,
         issueNumber: Number(body?.issueNumber),
         state: body?.state,
         status: "published",
