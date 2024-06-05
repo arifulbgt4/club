@@ -44,10 +44,10 @@ model User {
   emailVerificationTokens EmailVerificationToken[]
   organizations           Organization[]
   sessions                Session[]
-  Repository              Repository[]
-  Request                 Request[]
-  AssignedIssues          Issue[]                  @relation("AssignedIssues")
-  Issue                   Issue[]
+  repository              Repository[]
+  request                 Request[]
+  assignedIssues          Issue[]                  @relation("AssignedIssues")
+  issue                   Issue[]
 }
 
 model Organization {
@@ -59,9 +59,11 @@ model Organization {
   token      String?
   userId     String?
   user       User?        @relation(fields: [userId], references: [id])
-  Repository Repository[]
+  repository Repository[]
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
+
+  @@index([userId])
 }
 
 model Repository {
@@ -75,9 +77,12 @@ model Repository {
   userId    String?
   org       Organization? @relation(fields: [orgId], references: [id])
   orgId     String?
-  Issue     Issue[]
+  issue     Issue[]
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
+
+  @@index([userId])
+  @@index([orgId])
 }
 
 model Issue {
@@ -112,4 +117,7 @@ model Request {
   issueId   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([issueId])
 }
