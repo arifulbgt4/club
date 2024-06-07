@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { type FC, useCallback, useEffect, useMemo, useState } from "react";
 import {
   Sheet,
   SheetClose,
@@ -9,18 +9,45 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "~/components/ui/sheet";
-import { type PublishedProps } from "./Types";
+import { type RequestsProps, type PublishedProps } from "./Types";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import Icons from "../shared/icons";
+import Loading from "../../app/[locale]/dashboard/repo/[repoId]/loading";
 
 const Published: FC<PublishedProps> = ({ id, title, request }) => {
+  const [open, setOpen] = useState(false);
+  const [reqData, setReqData] = useState([]);
+  const onAccept = useCallback(async () => {
+    try {
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const getData = useMemo(
+    () => (!!reqData?.length ? request : reqData),
+    [reqData, request]
+  );
+
+  const getRequests = useCallback(async () => {
+    try {
+      if (open && request?.length < 8) {
+        const res = await fetch(`/api/v1/request/list?issueId=${id}`);
+        const data = await res.json();
+        setReqData(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [open, request, setReqData, id]);
+
+  useEffect(() => {
+    getRequests();
+  }, [getRequests]);
+
   return (
-    <Sheet
-      onOpenChange={(open) => {
-        console.log("open: ", open);
-      }}
-    >
+    <Sheet onOpenChange={(open) => setOpen(open)}>
       <SheetTrigger asChild>
         <div className=" mb-3 flex cursor-pointer flex-col rounded border bg-zinc-900 px-2.5 py-1.5">
           <div className="mb-2 flex items-center">
@@ -61,36 +88,13 @@ const Published: FC<PublishedProps> = ({ id, title, request }) => {
             Make changes to your profile here. Click save when youre done.
           </SheetDescription>
         </SheetHeader>
-        <div className="grid gap-4 py-4">
-          {request?.length < 8 &&
-            request?.map((r) => (
-              <div
-                key={r?.id}
-                className=" flex items-center space-x-4 rounded-md border p-4"
-              >
-                <Avatar className="">
-                  <AvatarImage
-                    src={r?.user?.picture}
-                    title={r?.user?.username}
-                  />
-                  <AvatarFallback>
-                    <Icons.spinner className=" animate-spin" />
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 space-y-1">
-                  <p className="text-sm font-medium leading-none">
-                    @{r?.user?.username}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    request for {r?.days} days
-                  </p>
-                </div>
-                <Button size="sm" variant="secondary">
-                  Accept
-                </Button>
-              </div>
-            ))}
-        </div>
+        {open && (
+          <div className="grid gap-4 py-4">
+            {getData?.length < 8 &&
+              getData?.map((r) => <Request key={r?.id} {...r} issueId={id} />)}
+          </div>
+        )}
+
         {/* <SheetFooter>
           <SheetClose asChild>
             <Button type="submit">Save changes</Button>
@@ -100,5 +104,45 @@ const Published: FC<PublishedProps> = ({ id, title, request }) => {
     </Sheet>
   );
 };
+
+function Request({ id, days, user, issueId }: RequestsProps) {
+  const [loading, setLoading] = useState(false);
+  async function onAccept() {
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/v1/request/accept`, {
+        method: "PUT",
+        body: JSON.stringify({ id, issueId, userId: user?.id }),
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+  return (
+    <div className=" flex items-center space-x-4 rounded-md border p-4">
+      <Avatar className="">
+        <AvatarImage src={user?.picture} title={user?.username} />
+        <AvatarFallback>
+          <Icons.spinner className=" animate-spin" />
+        </AvatarFallback>
+      </Avatar>
+      <div className="flex-1 space-y-1">
+        <p className="text-sm font-medium leading-none">@{user?.username}</p>
+        <p className="text-sm text-muted-foreground">request for {days} days</p>
+      </div>
+      {loading ? (
+        <Button size="sm" variant="secondary">
+          <Icons.spinner className=" animate-spin" />
+        </Button>
+      ) : (
+        <Button size="sm" variant="secondary" onClick={onAccept}>
+          Accept
+        </Button>
+      )}
+    </div>
+  );
+}
 
 export default Published;

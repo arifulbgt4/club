@@ -9,6 +9,10 @@ interface Request {
   user: User;
 }
 
+export interface RequestsProps extends Request {
+  issueId: string;
+}
+
 export interface BoardProps {
   src: string;
   repoId: string;
@@ -19,6 +23,8 @@ export interface PublishedProps {
   request: Request[];
 }
 export interface AssignedProps {
+  id: string;
+  title?: string;
   src: string;
 }
 export interface SubmittedProps {

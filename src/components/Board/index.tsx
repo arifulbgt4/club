@@ -9,12 +9,15 @@ import Completed from "./Completed";
 
 const Board: FC<BoardProps> = ({ src, repoId }) => {
   const [published, setPublished] = useState([]);
+  const [inProgress, setInProgress] = useState([]);
   const getIssueList = useCallback(async () => {
     const res = await fetch(`/api/v1/issue/publishedList?repoId=${repoId}`);
     const data = await res.json();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const pub = data?.filter((i: any) => i?.status === "published");
+    const inpro = data?.filter((i: any) => i?.status === "inprogress");
     setPublished(pub);
+    setInProgress(inpro);
   }, [repoId]);
 
   useEffect(() => {
@@ -43,10 +46,7 @@ const Board: FC<BoardProps> = ({ src, repoId }) => {
             This is actively being worked on
           </p>
         </div>
-        <Assigned src={src} />
-        <Assigned src={src} />
-        <Assigned src={src} />
-        <Assigned src={src} />
+        {inProgress?.map((p: any) => <Assigned key={p?.id} {...p} src={src} />)}
       </div>
       <div className="flex w-[25%] flex-col rounded border bg-black px-3 py-2">
         <div className="mb-3">
