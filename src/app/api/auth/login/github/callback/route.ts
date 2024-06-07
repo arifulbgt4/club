@@ -82,7 +82,7 @@ export const GET = async (request: NextRequest) => {
 
       if (setup_action !== "install" && existingUser.accessToken === null) {
         return Response.redirect(
-          `https://github.com/apps/issueclub/installations/new/permissions?target_id=${existingUser.githubId}`
+          `https://github.com/apps/Otask/installations/new/permissions?target_id=${existingUser.githubId}`
         );
       }
 
@@ -208,7 +208,7 @@ export const GET = async (request: NextRequest) => {
     }
 
     return Response.redirect(
-      `https://github.com/apps/issueclub/installations/new/permissions?target_id=${newUser.githubId}`
+      `https://github.com/apps/Otask/installations/new/permissions?target_id=${newUser.githubId}`
     );
   } catch (e) {
     console.log(e);

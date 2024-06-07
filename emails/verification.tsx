@@ -13,7 +13,7 @@ import {
   Text,
 } from "@react-email/components";
 
-const siteUrl = process.env.NEXT_PUBLIC_URL ?? "https://IssueClub.ariful.com";
+const siteUrl = process.env.NEXT_PUBLIC_URL ?? "https://Otask.ariful.com";
 
 interface VerificationTemplateProps {
   userName: string;
@@ -36,12 +36,12 @@ const VerificationTemp: React.FC<Readonly<VerificationTemplateProps>> = ({
                 <Img
                   src={`${siteUrl}/logo-next.png`}
                   height="50"
-                  alt="IssueClub logo"
+                  alt="Otask logo"
                   className="inline-block "
                 />
               </Column>
               <Column align="left">
-                <Text className="ml-2 text-lg font-bold">IssueClub</Text>
+                <Text className="ml-2 text-lg font-bold">Otask</Text>
               </Column>
             </Row>
           </Section>
@@ -63,7 +63,7 @@ const VerificationTemp: React.FC<Readonly<VerificationTemplateProps>> = ({
           <Text className="mt-8 ">
             Best,
             <br />
-            IssueClub team
+            Otask team
           </Text>
         </Container>
       </Body>

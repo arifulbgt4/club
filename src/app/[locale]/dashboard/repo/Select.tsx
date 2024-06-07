@@ -73,7 +73,7 @@ export default function SelectDemo({
           ))}
           <Link
             target="_blank"
-            href="https://github.com/apps/issueclub/installations/select_target"
+            href="https://github.com/apps/Otask/installations/select_target"
             className=" mt-2 flex items-center justify-center rounded border p-2 text-sm font-semibold hover:bg-accent"
           >
             <Plus className="mr-1 h-4 w-4" />

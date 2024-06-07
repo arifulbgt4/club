@@ -1,11 +1,11 @@
 
-# IssueClub ✨
+# Otask ✨
 
-IssueClub is a quick starter template for Next.js projects, designed to streamline development by providing essential features out of the box. 🚀
+Otask is a quick starter template for Next.js projects, designed to streamline development by providing essential features out of the box. 🚀
 
 ## Motivation 🌟
 
-IssueClub addresses common pain points, making it easier to:
+Otask addresses common pain points, making it easier to:
 
 - Prototype and test ideas swiftly
 - Access a beautifully designed UI library

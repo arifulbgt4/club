@@ -11,7 +11,7 @@ export default function Footer() {
           <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
             Copyright © {new Date().getFullYear()}{" "}
             <Link href="/" className="font-medium underline underline-offset-4">
-              issueClub
+              Otask
             </Link>{" "}
             All rights reserved
           </p>

@@ -1,9 +1,9 @@
 ---
-title: Introducing IssueClub
+title: Introducing Otask
 date: 2023-05-25
 ---
 
-I have created IssueClub to help developers build and deploy their ideas quickly. I didn't find any template combining all of these together. That's why I connected the dots and made IssueClub.
+I have created Otask to help developers build and deploy their ideas quickly. I didn't find any template combining all of these together. That's why I connected the dots and made Otask.
 
 - **[Next.js](https://nextjs.org/)** for Fullstack Development.
 - **[Tailwind CSS](https://tailwindcss.com/)** for Styling.

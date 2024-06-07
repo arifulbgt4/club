@@ -10,8 +10,8 @@ export default function OpenSource() {
             Proudly Open Source
           </h2>
           <p className="max-w-[85%] text-balance leading-normal text-muted-foreground sm:text-lg sm:leading-7">
-            IssueClub is open source and powered by open source software. The
-            code is available on GitHub.
+            Otask is open source and powered by open source software. The code
+            is available on GitHub.
           </p>
           <Link
             className="underline underline-offset-4"

@@ -11,12 +11,12 @@ export const sendWelcomeEmail = async ({
   toMail,
   userName,
 }: SendWelcomeEmailProps) => {
-  const subject = "Thanks for using IssueClub!";
+  const subject = "Thanks for using Otask!";
   const temp = ThanksTemp({ userName });
 
   //@ts-expect-error text field is required
   await resend.emails.send({
-    from: `IssueClub App <IssueClub@ariful.com>`,
+    from: `Otask App <Otask@ariful.com>`,
     to: toMail,
     subject: subject,
     headers: {
@@ -31,12 +31,12 @@ export const sendVerificationEmail = async ({
   verificationUrl,
   userName,
 }: sendVerificationEmailProps) => {
-  const subject = "Email Verification for IssueClub";
+  const subject = "Email Verification for Otask";
   const temp = VerificationTemp({ userName, verificationUrl });
 
   //@ts-expect-error text field is required
   await resend.emails.send({
-    from: `IssueClub App <IssueClub@ariful.com>`,
+    from: `Otask App <Otask@ariful.com>`,
     to: toMail,
     subject: subject,
     headers: {
