@@ -27,13 +27,13 @@ export default function Navbar({
     <nav className="flex h-full items-center justify-between">
       <Link href="/" className="flex items-center text-2xl font-bold">
         <Image
-          src="/logo-next.png"
+          src="/logo.png"
           alt="Otask logo"
-          width="30"
-          height="30"
-          className="mr-2 rounded-sm object-contain"
+          width="24"
+          height="24"
+          className=" rounded-sm object-contain"
         />
-        <p>Otask</p>
+        <p className="text-xl font-bold  italic">Task</p>
       </Link>
       <div className="hidden items-center gap-12 lg:flex 2xl:gap-16">
         <div className="space-x-4 text-center text-sm leading-loose text-muted-foreground md:text-left">

@@ -34,7 +34,7 @@ const VerificationTemp: React.FC<Readonly<VerificationTemplateProps>> = ({
             <Row>
               <Column align="right">
                 <Img
-                  src={`${siteUrl}/logo-next.png`}
+                  src={`${siteUrl}/logo.png`}
                   height="50"
                   alt="Otask logo"
                   className="inline-block "

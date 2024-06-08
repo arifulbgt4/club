@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { RenderIMGEl } from "~/components/OGImgEl";
 import { siteUrl } from "~/config/site";
-import Logo from "../../../../public/logo-next.png";
+import Logo from "../../../../public/logo.png";
 
 export const runtime = "edge";
 
