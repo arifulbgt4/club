@@ -13,26 +13,18 @@ import { type RequestsProps, type PublishedProps } from "./Types";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import Icons from "../shared/icons";
-import Loading from "../../app/[locale]/dashboard/repo/[repoId]/loading";
 
 const Published: FC<PublishedProps> = ({ id, title, request }) => {
   const [open, setOpen] = useState(false);
-  const [reqData, setReqData] = useState([]);
-  const onAccept = useCallback(async () => {
-    try {
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  const [reqData, setReqData] = useState();
 
-  const getData = useMemo(
-    () => (!!reqData?.length ? request : reqData),
-    [reqData, request]
-  );
+  const getData = useMemo(() => {
+    return reqData || request;
+  }, [reqData, request]);
 
   const getRequests = useCallback(async () => {
     try {
-      if (open && request?.length < 8) {
+      if (open && request?.length === 8) {
         const res = await fetch(`/api/v1/request/list?issueId=${id}`);
         const data = await res.json();
         setReqData(data);
@@ -90,8 +82,7 @@ const Published: FC<PublishedProps> = ({ id, title, request }) => {
         </SheetHeader>
         {open && (
           <div className="grid gap-4 py-4">
-            {getData?.length < 8 &&
-              getData?.map((r) => <Request key={r?.id} {...r} issueId={id} />)}
+            {getData?.map((r) => <Request key={r?.id} {...r} issueId={id} />)}
           </div>
         )}
 

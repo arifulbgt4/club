@@ -15,10 +15,14 @@ export async function GET(req: Request) {
       },
       include: {
         request: {
+          where: {
+            user: {
+              available: true,
+            },
+          },
           take: 8,
           include: {
             user: {
-              where: { available: true },
               select: { id: true, picture: true, username: true },
             },
           },
