@@ -7,6 +7,7 @@ export async function getIssues(page: number = 1) {
   const issues = await db.issue.findMany({
     where: {
       state: "open",
+      status: "published",
       published: true,
     },
     orderBy: {
