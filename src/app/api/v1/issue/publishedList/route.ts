@@ -16,9 +16,9 @@ export async function GET(req: Request) {
       include: {
         request: {
           where: {
-            user: {
-              available: true,
-            },
+            // user: {
+            //   available: true,
+            // },
           },
           take: 8,
           include: {

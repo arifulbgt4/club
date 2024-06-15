@@ -10,9 +10,9 @@ export async function PUT(req: Request) {
         issueId: body?.issueId,
         userId: body?.userId,
         approved: false,
-        user: {
-          available: true,
-        },
+        // user: {
+        //   available: true,
+        // },
       },
       data: {
         approved: true,
