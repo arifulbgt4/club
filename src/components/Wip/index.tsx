@@ -13,7 +13,7 @@ async function Wip(props: WipProps) {
         <h1 className=" mb-2 break-words text-3xl">{issue?.title}</h1>
         <p className=" mb-2 text-sm font-medium text-muted-foreground">
           <span className=" font-bold">{inprogress?.userName}</span> assigned
-          you in this issue about{" "}
+          you in this issue{" "}
           {formatDistanceToNow(new Date(inprogress?.updatedAt as Date), {
             addSuffix: true,
             includeSeconds: true,
