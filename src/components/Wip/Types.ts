@@ -1,3 +1,5 @@
 export interface WipProps {}
 
-export interface SubmitProps {}
+export interface SubmitProps {
+  requestId: string;
+}

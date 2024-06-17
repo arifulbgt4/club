@@ -5,6 +5,7 @@ import Description from "~/app/[locale]/issue/[issueId]/description";
 import { formatDistanceToNow } from "date-fns";
 import IssueComment from "../IssueComment";
 import Submit from "./Submit";
+import { Suspense } from "react";
 
 async function Wip(props: WipProps) {
   const { issue, inprogress, comments } = await getInProgress();
@@ -45,7 +46,9 @@ async function Wip(props: WipProps) {
           </div>
         </div>
         <div className="flex w-[30%] flex-auto">
-          <Submit />
+          <Suspense>
+            <Submit requestId={inprogress?.id as string} />
+          </Suspense>
         </div>
       </div>
     </div>

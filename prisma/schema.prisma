@@ -107,16 +107,25 @@ model Issue {
   @@index([assignedId])
 }
 
+enum RequestState {
+  open
+  inprogress
+  inreview
+  completed
+  failed
+}
+
 model Request {
-  id        String   @id @unique @default(cuid())
+  id        String       @id @unique @default(cuid())
   days      Int?
-  approved  Boolean  @default(false)
-  user      User?    @relation(fields: [userId], references: [id])
+  approved  Boolean?     @default(false)
+  state     RequestState @default(open)
+  user      User?        @relation(fields: [userId], references: [id])
   userId    String?
-  issue     Issue?   @relation(fields: [issueId], references: [id])
+  issue     Issue?       @relation(fields: [issueId], references: [id])
   issueId   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 
   @@index([userId])
   @@index([issueId])
