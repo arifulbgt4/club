@@ -13,9 +13,9 @@ export async function GET(req: Request) {
         issue: {
           userId: user?.id,
         },
-        // user: {
-        //   available: true,
-        // },
+        user: {
+          available: true,
+        },
       },
       include: {
         user: true,

@@ -1,3 +1,4 @@
+import { IssueState } from "@prisma/client";
 import db from "~/lib/db";
 import { type IssueOptions } from "~/types";
 
@@ -6,8 +7,7 @@ const TAKE = 10;
 export async function getIssues(page: number = 1) {
   const issues = await db.issue.findMany({
     where: {
-      state: "open",
-      status: "published",
+      state: IssueState.published,
       published: true,
     },
     orderBy: {
@@ -22,7 +22,7 @@ export async function getIssues(page: number = 1) {
   });
   const total = await db.issue.count({
     where: {
-      state: "open",
+      state: IssueState.published,
       published: true,
     },
   });

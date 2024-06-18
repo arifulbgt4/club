@@ -11,7 +11,7 @@ export async function POST(req: Request) {
         days: 1,
         issue: {
           connect: {
-            id: String(body?.issueId),
+            id: body?.issueId,
           },
         },
         user: {

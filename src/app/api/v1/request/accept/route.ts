@@ -1,3 +1,4 @@
+import { IssueState } from "@prisma/client";
 import { NextResponse } from "next/server";
 import db from "~/lib/db";
 
@@ -10,9 +11,9 @@ export async function PUT(req: Request) {
         issueId: body?.issueId,
         userId: body?.userId,
         approved: false,
-        // user: {
-        //   available: true,
-        // },
+        user: {
+          available: true,
+        },
       },
       data: {
         approved: true,
@@ -23,7 +24,7 @@ export async function PUT(req: Request) {
         },
         issue: {
           update: {
-            status: "inprogress",
+            state: IssueState.inprogress,
             assigned: {
               connect: {
                 id: body?.userId,

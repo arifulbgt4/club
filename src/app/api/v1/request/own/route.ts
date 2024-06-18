@@ -1,3 +1,4 @@
+import { IssueState } from "@prisma/client";
 import { NextResponse } from "next/server";
 import db from "~/lib/db";
 import { validateRequest } from "~/server/auth";
@@ -6,7 +7,7 @@ export async function GET(req: Request) {
   try {
     const { user } = await validateRequest();
     const res = await db.request.findMany({
-      where: { userId: user?.id, issue: { status: "published" } },
+      where: { userId: user?.id, issue: { state: IssueState.published } },
       include: {
         issue: {
           include: {

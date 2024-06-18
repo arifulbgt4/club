@@ -1,4 +1,4 @@
-import { RequestState } from "@prisma/client";
+import { IssueState, RequestState } from "@prisma/client";
 import { NextResponse } from "next/server";
 import db from "~/lib/db";
 import { validateRequest } from "~/server/auth";
@@ -17,7 +17,7 @@ export async function PUT(req: Request) {
         state: RequestState.inreview,
         issue: {
           update: {
-            status: "inreview",
+            state: IssueState.inreview,
           },
         },
         user: {

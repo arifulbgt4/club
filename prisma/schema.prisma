@@ -85,12 +85,18 @@ model Repository {
   @@index([orgId])
 }
 
+enum IssueState {
+  published
+  inprogress
+  inreview
+  done
+}
+
 model Issue {
   id          String      @unique
   title       String?
   issueNumber Int?
-  state       String?
-  status      String?
+  state       IssueState  @default(published)
   published   Boolean?    @default(true)
   repo        Repository? @relation(fields: [repoId], references: [id])
   repoId      String?
