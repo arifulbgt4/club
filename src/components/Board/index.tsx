@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useEffect, useState, type FC } from "react";
 import { type BoardProps } from "./Types";
-import { Avatar, AvatarImage } from "../ui/avatar";
 import Published from "./Published";
 import Assigned from "./Assigned";
 import Submitted from "./Submited";
 import Completed from "./Completed";
+import { IssueState } from "@prisma/client";
 
 const Board: FC<BoardProps> = ({ src, repoId }) => {
   const [published, setPublished] = useState([]);
@@ -14,8 +14,8 @@ const Board: FC<BoardProps> = ({ src, repoId }) => {
     const res = await fetch(`/api/v1/issue/publishedList?repoId=${repoId}`);
     const data = await res.json();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const pub = data?.filter((i: any) => i?.status === "published");
-    const inpro = data?.filter((i: any) => i?.status === "inprogress");
+    const pub = data?.filter((i: any) => i?.state === IssueState.published);
+    const inpro = data?.filter((i: any) => i?.status === IssueState.inprogress);
     setPublished(pub);
     setInProgress(inpro);
   }, [repoId]);
