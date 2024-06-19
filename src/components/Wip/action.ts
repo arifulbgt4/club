@@ -28,6 +28,7 @@ export async function getInProgress() {
       },
     },
   });
+  if (!inprogress) return {};
 
   const octo = await app.getInstallationOctokit(
     Number(inprogress?.issue?.user?.installId)

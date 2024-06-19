@@ -17,6 +17,7 @@ export async function PUT(req: Request) {
         state: RequestState.inreview,
         issue: {
           update: {
+            prNumber: Number(body?.prNumber),
             state: IssueState.inreview,
           },
         },

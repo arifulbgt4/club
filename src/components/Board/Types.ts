@@ -28,6 +28,8 @@ export interface AssignedProps {
   src: string;
 }
 export interface SubmittedProps {
+  id: string;
+  title?: string;
   src: string;
 }
 export interface CompletedProps {

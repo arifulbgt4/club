@@ -49,7 +49,7 @@ const prNumberSchema = z.object({
 
 type PRValues = z.infer<typeof prNumberSchema>;
 
-const Submit: FC<SubmitProps> = ({ requestId }) => {
+const Submit: FC<SubmitProps> = ({ requestId, issueId }) => {
   const [loading, setLoading] = useState(false);
   const [pending, startTransition] = useTransition();
 
@@ -66,7 +66,11 @@ const Submit: FC<SubmitProps> = ({ requestId }) => {
     startTransition(() => {
       return fetch("/api/v1/request/submit", {
         method: "PUT",
-        body: JSON.stringify({ id: requestId }),
+        body: JSON.stringify({
+          id: requestId,
+          issueId,
+          prNumber: data.prNumber,
+        }),
       })
         .then(() => {
           toast({
@@ -81,14 +85,6 @@ const Submit: FC<SubmitProps> = ({ requestId }) => {
         });
     });
   }
-  //   async function onSubmit() {
-  //     setLoading(true);
-  //     // await fetch("/api/v1/issue/request", {
-  //     //   method: "POST",
-  //     //   body: JSON.stringify({ issueId }),
-  //     // });
-  //     setLoading(false);
-  //   }
 
   return (
     <Card>

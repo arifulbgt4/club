@@ -96,6 +96,7 @@ model Issue {
   id          String      @unique
   title       String?
   issueNumber Int?
+  prNumber    Int?
   state       IssueState  @default(published)
   published   Boolean?    @default(true)
   repo        Repository? @relation(fields: [repoId], references: [id])

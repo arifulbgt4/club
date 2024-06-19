@@ -9,6 +9,12 @@ import { Suspense } from "react";
 
 async function Wip(props: WipProps) {
   const { issue, inprogress, comments } = await getInProgress();
+  if (!inprogress)
+    return (
+      <div>
+        <span>No task in progress</span>
+      </div>
+    );
   return (
     <div className="mt-6 flex flex-col">
       <div className=" border-b">
@@ -47,7 +53,10 @@ async function Wip(props: WipProps) {
         </div>
         <div className="flex w-[30%] flex-auto">
           <Suspense>
-            <Submit requestId={inprogress?.id as string} />
+            <Submit
+              requestId={inprogress?.id as string}
+              issueId={String(issue?.id)}
+            />
           </Suspense>
         </div>
       </div>
