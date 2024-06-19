@@ -1,11 +1,5 @@
 "use client";
-import {
-  useCallback,
-  useEffect,
-  useState,
-  useTransition,
-  type FC,
-} from "react";
+import { useTransition, type FC } from "react";
 import { type SubmitProps } from "./Types";
 import {
   Card,
@@ -20,10 +14,8 @@ import { Button } from "../ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "~/components/ui/form";
 import { Loader2 } from "lucide-react";
@@ -32,7 +24,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Input } from "../ui/input";
-import Icons from "../shared/icons";
+import { useRouter } from "next/navigation";
 
 const prNumberSchema = z.object({
   prNumber: z
@@ -49,16 +41,16 @@ const prNumberSchema = z.object({
 
 type PRValues = z.infer<typeof prNumberSchema>;
 
-const Submit: FC<SubmitProps> = ({ requestId, issueId }) => {
-  const [loading, setLoading] = useState(false);
+const Submit: FC<SubmitProps> = ({ requestId }) => {
   const [pending, startTransition] = useTransition();
+  const router = useRouter();
 
   const form = useForm<PRValues>({
     resolver: zodResolver(prNumberSchema),
     mode: "onChange",
   });
 
-  const { formState, getFieldState } = form;
+  const { formState } = form;
 
   function onSubmit(data: PRValues) {
     if (!formState.isDirty) return;
@@ -68,7 +60,6 @@ const Submit: FC<SubmitProps> = ({ requestId, issueId }) => {
         method: "PUT",
         body: JSON.stringify({
           id: requestId,
-          issueId,
           prNumber: data.prNumber,
         }),
       })
@@ -76,6 +67,7 @@ const Submit: FC<SubmitProps> = ({ requestId, issueId }) => {
           toast({
             title: "PR submit successfully!",
           });
+          router.refresh();
         })
         .catch(() => {
           toast({
@@ -98,12 +90,6 @@ const Submit: FC<SubmitProps> = ({ requestId, issueId }) => {
         </p>
       </CardContent>
       <CardFooter aria-disabled="true" className="flex px-3">
-        {/* <Input
-              disabled={loading}
-              placeholder="# Pull request number"
-              className="mr-2"
-              type="number"
-            /> */}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex">
             <FormField
@@ -131,15 +117,6 @@ const Submit: FC<SubmitProps> = ({ requestId, issueId }) => {
                 "Submit"
               )}
             </Button>
-            {/* {!loading ? (
-              <Button onClick={onSubmit} className=" self-end bg-green-500">
-                Submit
-              </Button>
-            ) : (
-              <Button className=" self-end bg-green-500">
-                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-              </Button>
-            )} */}
           </form>
         </Form>
       </CardFooter>

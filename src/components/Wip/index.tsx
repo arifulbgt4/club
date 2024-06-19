@@ -53,10 +53,7 @@ async function Wip(props: WipProps) {
         </div>
         <div className="flex w-[30%] flex-auto">
           <Suspense>
-            <Submit
-              requestId={inprogress?.id as string}
-              issueId={String(issue?.id)}
-            />
+            <Submit requestId={inprogress?.id as string} />
           </Suspense>
         </div>
       </div>
