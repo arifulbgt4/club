@@ -14,7 +14,6 @@ export interface RequestsProps extends Request {
 }
 
 export interface BoardProps {
-  src: string;
   repoId: string;
 }
 export interface PublishedProps {
@@ -25,13 +24,15 @@ export interface PublishedProps {
 export interface AssignedProps {
   id: string;
   title?: string;
-  src: string;
+  assigned: User;
 }
 export interface SubmittedProps {
   id: string;
   title?: string;
-  src: string;
+  assigned: User;
 }
 export interface CompletedProps {
-  src: string;
+  id: string;
+  title?: string;
+  assigned: User;
 }

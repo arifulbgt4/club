@@ -2,7 +2,7 @@ import { type FC } from "react";
 import { type SubmittedProps } from "./Types";
 import { Avatar, AvatarImage } from "../ui/avatar";
 
-const Submitted: FC<SubmittedProps> = ({ src, title }) => {
+const Submitted: FC<SubmittedProps> = ({ assigned, title }) => {
   return (
     <div className=" mb-3 flex cursor-pointer flex-col rounded border bg-zinc-900 px-2.5 py-1.5">
       <div className="mb-2 flex items-center">
@@ -11,7 +11,7 @@ const Submitted: FC<SubmittedProps> = ({ src, title }) => {
         </span>
         <div className=" ml-2 flex items-center">
           <Avatar className=" -mr-2 h-6 w-6 border border-black">
-            <AvatarImage src={src} title="arifulbgt4" />
+            <AvatarImage src={assigned?.picture} title={assigned?.username} />
           </Avatar>
         </div>
       </div>

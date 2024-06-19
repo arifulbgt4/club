@@ -27,6 +27,9 @@ export async function GET(req: Request) {
             },
           },
         },
+        assigned: {
+          select: { id: true, picture: true, username: true },
+        },
       },
       orderBy: {
         createdAt: "desc",

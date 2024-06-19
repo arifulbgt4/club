@@ -7,11 +7,9 @@ import Board from "~/components/Board";
 export default function TabSections({
   repoId,
   repoName,
-  src,
 }: {
   repoId: string;
   repoName: string;
-  src: string;
 }) {
   return (
     <Tabs defaultValue="board">
@@ -21,7 +19,7 @@ export default function TabSections({
         <TabsTrigger value="settings">Settings</TabsTrigger>
       </TabsList>
       <TabsContent value="board">
-        <Board src={src} repoId={repoId} />
+        <Board repoId={repoId} />
       </TabsContent>
       <TabsContent value="issues">
         <GitIssueList repoId={repoId} repoName={repoName} />

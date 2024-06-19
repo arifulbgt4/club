@@ -7,21 +7,23 @@ import Submitted from "./Submited";
 import Completed from "./Completed";
 import { IssueState } from "@prisma/client";
 
-const Board: FC<BoardProps> = ({ src, repoId }) => {
+const Board: FC<BoardProps> = ({ repoId }) => {
   const [published, setPublished] = useState([]);
   const [inProgress, setInProgress] = useState([]);
   const [inReview, setInReview] = useState([]);
+  const [done, setDone] = useState([]);
   const getIssueList = useCallback(async () => {
     const res = await fetch(`/api/v1/issue/publishedList?repoId=${repoId}`);
     const data = await res.json();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-
     const pub = data?.filter((i: any) => i?.state === IssueState.published);
     const inpro = data?.filter((i: any) => i?.state === IssueState.inprogress);
     const inrev = data?.filter((i: any) => i?.state === IssueState.inreview);
+    const indone = data?.filter((i: any) => i?.state === IssueState.done);
     setPublished(pub);
     setInProgress(inpro);
     setInReview(inrev);
+    setDone(indone);
   }, [repoId]);
 
   useEffect(() => {
@@ -50,21 +52,21 @@ const Board: FC<BoardProps> = ({ src, repoId }) => {
             This is actively being worked on
           </p>
         </div>
-        {inProgress?.map((p: any) => <Assigned key={p?.id} {...p} src={src} />)}
+        {inProgress?.map((p: any) => <Assigned key={p?.id} {...p} />)}
       </div>
       <div className="flex w-[25%] flex-col rounded border bg-black px-3 py-2">
         <div className="mb-3">
           <span className=" text-xl  font-medium">In Review</span>
           <p className="text-sm text-gray-500">Published issue list</p>
         </div>
-        {inReview?.map((p: any) => <Submitted key={p?.id} {...p} src={src} />)}
+        {inReview?.map((p: any) => <Submitted key={p?.id} {...p} />)}
       </div>
       <div className="flex w-[25%] flex-col rounded border bg-black px-3 py-2">
         <div className="mb-3">
           <span className=" text-x font-medium">Done</span>
           <p className="text-sm text-gray-500">This has been completed</p>
         </div>
-        <Completed src={src} />
+        {done?.map((p: any) => <Completed key={p?.id} {...p} />)}
       </div>
     </div>
   );

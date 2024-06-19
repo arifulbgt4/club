@@ -44,11 +44,7 @@ export default async function SingleProject({
           <span className=" mt-1 text-sm">{repository?.description}</span>
         )}
       </div>
-      <TabSections
-        src={repository?.owner?.avatar_url}
-        repoName={repository?.name}
-        repoId={repoId}
-      />
+      <TabSections repoName={repository?.name} repoId={repoId} />
     </div>
   );
 }
