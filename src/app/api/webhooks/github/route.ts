@@ -1,3 +1,4 @@
+import { IssueState } from "@prisma/client";
 import { headers } from "next/headers";
 import { type NextRequest } from "next/server";
 import db from "~/lib/db";
@@ -16,6 +17,9 @@ export async function POST(req: NextRequest) {
   // * ☝️ id, sender, requester ...
   const eventData = data[eventType];
   const sender = data.sender;
+
+  console.log("first: ", eventType);
+  console.log("first: ", data);
 
   try {
     switch (eventType) {
@@ -59,6 +63,33 @@ export async function POST(req: NextRequest) {
                 active: false,
               },
             });
+          }
+        }
+        break;
+      case "pull_request_review":
+        if (action === "submitted") {
+          const reviewData = data?.review;
+          if (reviewData.state === "changes_requested") {
+            const issue = await db.issue.findFirst({
+              where: {
+                repo: {
+                  fullName: data?.repository?.full_name,
+                },
+                user: {
+                  username: data?.repository?.login,
+                },
+                prNumber: data?.pull_request?.number,
+              },
+            });
+            await db.issue.update({
+              where: {
+                id: issue?.id,
+              },
+              data: {
+                state: IssueState.inprogress,
+              },
+            });
+            break;
           }
         }
         break;
