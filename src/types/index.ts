@@ -57,3 +57,11 @@ export interface IssueOptions extends Issue {
   user?: User;
   repo?: Repository;
 }
+
+export enum TASK_TABS {
+  wip = "wip",
+  requests = "requests",
+  str = "str",
+  completed = "completed",
+  failed = "failed",
+}

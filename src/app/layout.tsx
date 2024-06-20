@@ -21,8 +21,9 @@ export default function RootLayout({
 }) {
   const locale = cookies().get("Next-Locale")?.value || "en";
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning={true}>
       <body
+        suppressHydrationWarning={true}
         className={cn(
           "font-sans antialiased",
           fontSans.variable,
