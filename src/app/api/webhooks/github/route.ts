@@ -69,26 +69,37 @@ export async function POST(req: NextRequest) {
       case "pull_request_review":
         if (action === "submitted") {
           const reviewData = data?.review;
-          if (reviewData.state === "changes_requested") {
-            const issue = await db.issue.findFirst({
-              where: {
-                repo: {
-                  fullName: data?.repository?.full_name,
-                },
-                user: {
-                  username: data?.repository?.login,
-                },
-                prNumber: data?.pull_request?.number,
-                state: IssueState.inreview,
+          const issue = await db.issue.findFirst({
+            where: {
+              repo: {
+                fullName: data?.repository?.full_name,
               },
-            });
-            if (!issue) break;
+              user: {
+                username: data?.repository?.login,
+              },
+              prNumber: data?.pull_request?.number,
+              state: IssueState.inreview,
+            },
+          });
+          if (!issue) break;
+          if (reviewData.state === "changes_requested") {
             await db.issue.update({
               where: {
                 id: issue?.id,
               },
               data: {
                 state: IssueState.inprogress,
+              },
+            });
+            break;
+          }
+          if (reviewData.state === "approved") {
+            await db.issue.update({
+              where: {
+                id: issue?.id,
+              },
+              data: {
+                state: IssueState.done,
               },
             });
             break;
