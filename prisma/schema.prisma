@@ -88,6 +88,7 @@ model Repository {
 enum IssueState {
   published
   inprogress
+  reassign
   inreview
   done
 }
@@ -117,6 +118,7 @@ model Issue {
 enum RequestState {
   open
   inprogress
+  reassign
   inreview
   completed
   failed

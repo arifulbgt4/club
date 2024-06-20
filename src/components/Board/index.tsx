@@ -17,7 +17,10 @@ const Board: FC<BoardProps> = ({ repoId }) => {
     const data = await res.json();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const pub = data?.filter((i: any) => i?.state === IssueState.published);
-    const inpro = data?.filter((i: any) => i?.state === IssueState.inprogress);
+    const inpro = data?.filter(
+      (i: any) =>
+        i?.state === IssueState.inprogress || i?.state === IssueState.reassign
+    );
     const inrev = data?.filter((i: any) => i?.state === IssueState.inreview);
     const indone = data?.filter((i: any) => i?.state === IssueState.done);
     setPublished(pub);

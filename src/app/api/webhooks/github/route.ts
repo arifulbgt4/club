@@ -1,4 +1,4 @@
-import { IssueState } from "@prisma/client";
+import { IssueState, RequestState } from "@prisma/client";
 import { headers } from "next/headers";
 import { type NextRequest } from "next/server";
 import db from "~/lib/db";
@@ -88,7 +88,17 @@ export async function POST(req: NextRequest) {
                 id: issue?.id,
               },
               data: {
-                state: IssueState.inprogress,
+                state: IssueState.reassign,
+                request: {
+                  update: {
+                    where: {
+                      id: issue?.assignedId as string,
+                    },
+                    data: {
+                      state: RequestState.reassign,
+                    },
+                  },
+                },
               },
             });
             break;
@@ -100,6 +110,16 @@ export async function POST(req: NextRequest) {
               },
               data: {
                 state: IssueState.done,
+                request: {
+                  update: {
+                    where: {
+                      id: issue?.assignedId as string,
+                    },
+                    data: {
+                      state: RequestState.completed,
+                    },
+                  },
+                },
               },
             });
             break;
