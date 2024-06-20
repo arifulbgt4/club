@@ -79,8 +79,10 @@ export async function POST(req: NextRequest) {
                   username: data?.repository?.login,
                 },
                 prNumber: data?.pull_request?.number,
+                state: IssueState.inreview,
               },
             });
+            if (!issue) break;
             await db.issue.update({
               where: {
                 id: issue?.id,
