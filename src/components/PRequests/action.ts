@@ -2,9 +2,11 @@ import { RequestState } from "@prisma/client";
 import db from "~/lib/db";
 import { validateRequest } from "~/server/auth";
 
-export async function getList() {
+const TAKE = 10;
+
+export async function getList(page: number = 1) {
   const { user } = await validateRequest();
-  const count = await db.request.count({
+  const total = await db.request.count({
     where: { userId: user?.id, state: RequestState.open },
   });
   const requests = await db.request.findMany({
@@ -22,8 +24,8 @@ export async function getList() {
         },
       },
     },
-    take: 10,
-    skip: 0,
+    take: TAKE,
+    skip: (page - 1) * TAKE,
   });
-  return { requests, count };
+  return { requests, total, take: TAKE, page };
 }

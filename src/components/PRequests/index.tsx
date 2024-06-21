@@ -7,16 +7,20 @@ import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { formatDistanceToNow } from "date-fns";
 import Icons from "../shared/icons";
+import Pagination from "../sections/pagination";
+import { TASK_TABS } from "~/types";
 
-const PRequests: FC<PRequestsProps> = async () => {
-  const { requests, count } = await getList();
-  if (!count)
+const PRequests: FC<PRequestsProps> = async ({ pagination }) => {
+  const { requests, total, take, page } = await getList(pagination);
+  if (!total)
     return (
       <EmptyState
         title="Request List Currently Empty Now"
         description="Your applied issue list is empty. Explore and apply additional issues to get started"
       />
     );
+
+  const totalPages = Math.ceil(total / take);
   return (
     <div className="flex flex-col">
       <span className=" border-b py-3 font-medium">Applyed</span>
@@ -53,6 +57,13 @@ const PRequests: FC<PRequestsProps> = async () => {
           </div>
         </Link>
       ))}
+      <div className="mt-3">
+        <Pagination
+          page={page}
+          more={`?t=${TASK_TABS.requests}`}
+          totalPages={totalPages}
+        />
+      </div>
     </div>
   );
 };

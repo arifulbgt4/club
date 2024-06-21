@@ -11,9 +11,10 @@ import {
 interface PaginationProps {
   page: number;
   totalPages: number;
+  more?: string;
 }
 
-const Pagination = ({ page, totalPages }: PaginationProps) => {
+const Pagination = ({ page, totalPages, more }: PaginationProps) => {
   const maxPagesToShow = 6;
   const halfRange = Math.floor(maxPagesToShow / 2);
 
@@ -37,18 +38,35 @@ const Pagination = ({ page, totalPages }: PaginationProps) => {
     <PaginationContainer className="my-3">
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious href={page === 1 ? "" : `?page=${page - 1}`} />
+          <PaginationPrevious
+            href={
+              page === 1
+                ? ""
+                : more
+                  ? more + `&page=${page - 1}`
+                  : `?page=${page - 1}`
+            }
+          />
         </PaginationItem>
         {pageNumbers.map((num) => (
           <PaginationItem key={num}>
-            <PaginationLink href={`?page=${num}`} isActive={page === num}>
+            <PaginationLink
+              href={more ? more + `&page=${num}` : `?page=${num}`}
+              isActive={page === num}
+            >
               {num}
             </PaginationLink>
           </PaginationItem>
         ))}
         <PaginationItem>
           <PaginationNext
-            href={page === totalPages ? "" : `?page=${page + 1}`}
+            href={
+              page === totalPages
+                ? ""
+                : more
+                  ? more + `&page=${page + 1}`
+                  : `?page=${page + 1}`
+            }
           />
         </PaginationItem>
       </PaginationContent>

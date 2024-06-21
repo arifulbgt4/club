@@ -10,10 +10,14 @@ import Triggers from "./Triggers";
 import { TASK_TABS } from "~/types";
 import ReAssigned from "~/components/ReAssigned";
 
-async function TaskPage({ searchParams }: { searchParams: { p: string } }) {
+async function TaskPage({
+  searchParams,
+}: {
+  searchParams: { t: string; page?: string };
+}) {
   const total = await getCounts();
   return (
-    <Tabs defaultValue={searchParams?.p || TASK_TABS.wip}>
+    <Tabs defaultValue={searchParams?.t || TASK_TABS.wip}>
       <Triggers total={total} />
       <div>
         <TabsContent value={TASK_TABS.wip}>
@@ -23,7 +27,7 @@ async function TaskPage({ searchParams }: { searchParams: { p: string } }) {
           <ReAssigned />
         </TabsContent>
         <TabsContent value={TASK_TABS.requests}>
-          <PRequests />
+          <PRequests pagination={Number(searchParams?.page || 1)} />
         </TabsContent>
         <TabsContent value={TASK_TABS.str}>
           <Str />

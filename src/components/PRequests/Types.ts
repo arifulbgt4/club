@@ -1,1 +1,3 @@
-export interface PRequestsProps {}
+export interface PRequestsProps {
+  pagination?: number;
+}
