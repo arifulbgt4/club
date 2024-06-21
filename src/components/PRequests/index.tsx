@@ -26,7 +26,7 @@ const PRequests: FC<PRequestsProps> = async () => {
           href={`/issue/${d?.issueId}`}
           className=" flex flex-col rounded border-b border-l border-r px-5 py-4 hover:bg-accent"
         >
-          <span className="mb-0.5 text-sm text-muted-foreground">
+          <span className="mb-1 text-sm text-muted-foreground">
             applyed{" "}
             {formatDistanceToNow(new Date(d?.updatedAt), {
               addSuffix: true,
@@ -34,20 +34,22 @@ const PRequests: FC<PRequestsProps> = async () => {
             })}
           </span>
           <span className=" text-xl">{d?.issue?.title}</span>
-          <div className="mt-2 flex items-center">
-            <Avatar className=" h-5 w-5">
-              <AvatarImage
-                src={d?.issue?.user?.picture as string}
-                alt={d?.issue?.user?.username as string}
-                title={d?.issue?.user?.name as string}
-              />
-              <AvatarFallback>
-                <Icons.spinner className=" animate-spin" />
-              </AvatarFallback>
-            </Avatar>
-            <span className=" ml-1 text-sm font-semibold">
-              {d?.issue?.user?.username}
-            </span>
+          <div className="mt-3 flex ">
+            <div className="box-border flex items-center  rounded-full border pr-2">
+              <Avatar className=" h-5 w-5">
+                <AvatarImage
+                  src={d?.issue?.user?.picture as string}
+                  alt={d?.issue?.user?.username as string}
+                  title={d?.issue?.user?.name as string}
+                />
+                <AvatarFallback>
+                  <Icons.spinner className=" animate-spin" />
+                </AvatarFallback>
+              </Avatar>
+              <span className=" ml-1.5 text-sm font-semibold text-muted-foreground">
+                {d?.issue?.user?.username}
+              </span>
+            </div>
           </div>
         </Link>
       ))}

@@ -1,4 +1,4 @@
-import { IssueState } from "@prisma/client";
+import { IssueState, RequestState } from "@prisma/client";
 import { NextResponse } from "next/server";
 import db from "~/lib/db";
 
@@ -11,12 +11,14 @@ export async function PUT(req: Request) {
         issueId: body?.issueId,
         userId: body?.userId,
         approved: false,
+        state: RequestState.open,
         user: {
           available: true,
         },
       },
       data: {
         approved: true,
+        state: RequestState.inprogress,
         user: {
           update: {
             available: false,

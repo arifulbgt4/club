@@ -1,4 +1,4 @@
-import { IssueState } from "@prisma/client";
+import { IssueState, RequestState } from "@prisma/client";
 import db from "~/lib/db";
 import { app } from "~/lib/octokit";
 import { validateRequest } from "~/server/auth";
@@ -9,6 +9,7 @@ export async function getInProgress() {
     where: {
       userId: user?.id,
       approved: true,
+      state: RequestState.inprogress,
       issue: { assignedId: user?.id, state: IssueState.inprogress },
     },
     include: {
