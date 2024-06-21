@@ -4,7 +4,7 @@ import Icons from "./icons";
 
 interface EmptyStateProps {
   title: string;
-  description: string;
+  description?: string;
   onActionClick?: () => void;
   actionText?: string;
 }
@@ -20,7 +20,9 @@ const EmptyState: FC<EmptyStateProps> = ({
       <Icons.emptyIllustration width={150} height={150} />
       <span className=" mt-4 text-2xl font-bold">{title}</span>
 
-      <span className=" mt-2 text-muted-foreground"> {description}</span>
+      {description && (
+        <span className=" mt-2 text-muted-foreground">{description}</span>
+      )}
 
       {onActionClick && (
         <Button onClick={onActionClick} className=" mt-6">

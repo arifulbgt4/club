@@ -6,14 +6,16 @@ import { formatDistanceToNow } from "date-fns";
 import IssueComment from "../IssueComment";
 import Submit from "./Submit";
 import { Suspense } from "react";
+import EmptyState from "../shared/empty-state";
 
 async function Wip(props: WipProps) {
   const { issue, inprogress, comments } = await getInProgress();
   if (!inprogress)
     return (
-      <div>
-        <span>No task in progress</span>
-      </div>
+      <EmptyState
+        title="Currently no issues in progress"
+        description="Currently, there are no active issue. To start working on one, discover and apply more issues."
+      />
     );
   return (
     <div className="mt-6 flex flex-col">
