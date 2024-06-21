@@ -1,1 +1,3 @@
-export interface StrProps {}
+export interface StrProps {
+  pagination?: number;
+}

@@ -1,1 +1,3 @@
-export interface FailedProps {}
+export interface FailedProps {
+  pagination?: number;
+}

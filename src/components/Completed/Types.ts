@@ -1,1 +1,3 @@
-export interface CompletedProps {}
+export interface CompletedProps {
+  pagination?: number;
+}

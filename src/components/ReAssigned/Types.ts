@@ -1,1 +1,3 @@
-export interface ReAssignedProps {}
+export interface ReAssignedProps {
+  pagination?: number;
+}
