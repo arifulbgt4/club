@@ -62,6 +62,7 @@ export enum TASK_TABS {
   wip = "wip",
   requests = "requests",
   str = "str",
+  reassign = "reassign",
   completed = "completed",
   failed = "failed",
 }

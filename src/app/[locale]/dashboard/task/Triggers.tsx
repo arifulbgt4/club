@@ -7,7 +7,11 @@ import { TASK_TABS } from "~/types";
 
 interface TriggersProps {
   total?: {
-    total_request: number;
+    reassigned: number;
+    requests: number;
+    inreview: number;
+    completed: number;
+    failed: number;
   };
 }
 
@@ -19,21 +23,28 @@ const Triggers: FC<TriggersProps> = ({ total }) => {
         onClick={() => router.push("/dashboard/task")}
         value={TASK_TABS.wip}
       >
-        Work in progress{" "}
+        Work in progress
+      </TabsTrigger>
+      <TabsTrigger
+        onClick={() => router.push(`/dashboard/task?p=${TASK_TABS.reassign}`)}
+        value={TASK_TABS.reassign}
+      >
+        Re-assigned
+        <Badge className=" ml-2 bg-fuchsia-500">{total?.reassigned}</Badge>
       </TabsTrigger>
       <TabsTrigger
         onClick={() => router.push(`/dashboard/task?p=${TASK_TABS.requests}`)}
         value={TASK_TABS.requests}
       >
         Pending requests
-        <Badge className=" ml-2  bg-yellow-500">{total?.total_request}</Badge>
+        <Badge className=" ml-2  bg-yellow-500">{total?.requests}</Badge>
       </TabsTrigger>
       <TabsTrigger
         onClick={() => router.push(`/dashboard/task?p=${TASK_TABS.str}`)}
         value={TASK_TABS.str}
       >
         Submitted to review
-        <Badge className=" ml-2 bg-purple-500">0</Badge>
+        <Badge className=" ml-2 bg-purple-500">{total?.inreview}</Badge>
       </TabsTrigger>
 
       <TabsTrigger
@@ -41,14 +52,14 @@ const Triggers: FC<TriggersProps> = ({ total }) => {
         value={TASK_TABS.completed}
       >
         Completed
-        <Badge className=" ml-2  bg-green-500">0</Badge>
+        <Badge className=" ml-2  bg-green-500">{total?.completed}</Badge>
       </TabsTrigger>
       <TabsTrigger
         onClick={() => router.push(`/dashboard/task?p=${TASK_TABS.failed}`)}
         value={TASK_TABS.failed}
       >
         Failed
-        <Badge className=" ml-2  bg-red-500">0</Badge>
+        <Badge className=" ml-2  bg-red-500">{total?.failed}</Badge>
       </TabsTrigger>
     </TabsList>
   );

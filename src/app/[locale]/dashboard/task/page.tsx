@@ -8,6 +8,7 @@ import Failed from "~/components/Failed";
 import { getCounts } from "./action";
 import Triggers from "./Triggers";
 import { TASK_TABS } from "~/types";
+import ReAssigned from "~/components/ReAssigned";
 
 async function TaskPage({ searchParams }: { searchParams: { p: string } }) {
   const total = await getCounts();
@@ -18,11 +19,14 @@ async function TaskPage({ searchParams }: { searchParams: { p: string } }) {
         <TabsContent value={TASK_TABS.wip}>
           <Wip />
         </TabsContent>
-        <TabsContent value={TASK_TABS.str}>
-          <Str />
+        <TabsContent value={TASK_TABS.reassign}>
+          <ReAssigned />
         </TabsContent>
         <TabsContent value={TASK_TABS.requests}>
           <PRequests />
+        </TabsContent>
+        <TabsContent value={TASK_TABS.str}>
+          <Str />
         </TabsContent>
         <TabsContent value={TASK_TABS.completed}>
           <Completed />
