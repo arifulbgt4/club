@@ -29,7 +29,7 @@ const Triggers: FC<TriggersProps> = ({ total }) => {
         onClick={() => router.push(`/dashboard/task?p=${TASK_TABS.reassign}`)}
         value={TASK_TABS.reassign}
       >
-        Re-assigned
+        Request changes
         <Badge className=" ml-2 bg-fuchsia-500">{total?.reassigned}</Badge>
       </TabsTrigger>
       <TabsTrigger
