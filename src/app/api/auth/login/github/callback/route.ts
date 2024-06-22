@@ -5,6 +5,7 @@ import db from "~/lib/db";
 import { github, lucia } from "~/lib/lucia";
 // import { sendWelcomeEmail } from "~/server/mail";
 import { app, privateKey } from "~/lib/octokit";
+import { stripe } from "~/lib/stripe";
 
 export const GET = async (request: NextRequest) => {
   const url = new URL(request.url);
@@ -153,12 +154,17 @@ export const GET = async (request: NextRequest) => {
       });
     }
 
+    const customer = await stripe.customers.create({
+      email: githubUser?.email,
+    });
+
     const newUser = await db.user.create({
       data: {
         githubId: githubUser.id,
         name: githubUser.name || githubUser.login,
         email: githubUser.email,
         username: githubUser.login,
+        stripeCustomerId: customer.id,
         picture: githubUser.avatar_url,
         ...(setup_action === "install" &&
           install.type === "User" && {

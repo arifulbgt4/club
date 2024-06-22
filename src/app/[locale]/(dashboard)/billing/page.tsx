@@ -1,4 +1,5 @@
 import { AlertTriangleIcon } from "lucide-react";
+import AttachPaymentMethod from "~/components/AttachPaymentMethod";
 import { BillingForm } from "~/components/billing-form";
 import { Alert, AlertDescription } from "~/components/ui/alert";
 import { stripe } from "~/lib/stripe";
@@ -49,6 +50,7 @@ export default async function Billing() {
           isCanceled,
         }}
       />
+      <AttachPaymentMethod />
     </div>
   );
 }

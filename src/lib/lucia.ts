@@ -20,6 +20,7 @@ export const lucia = new Lucia(adapter, {
       accessToken: attributes.accessToken,
       username: attributes.username,
       installId: attributes.installId,
+      stripeCustomerId: attributes.stripeCustomerId,
     };
   },
 });

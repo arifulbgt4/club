@@ -11,5 +11,6 @@ declare module "lucia" {
     accessToken: string;
     username: string;
     installId: number;
+    stripeCustomerId: string;
   }
 }
