@@ -143,19 +143,12 @@ export const GET = async (request: NextRequest) => {
             },
           });
         }
-
-        return new Response(null, {
-          status: 302,
-          headers: {
-            Location: "/dashboard",
-          },
-        });
       }
 
       return new Response(null, {
         status: 302,
         headers: {
-          Location: "/dashboard",
+          Location: "/profile",
         },
       });
     }
@@ -202,7 +195,7 @@ export const GET = async (request: NextRequest) => {
       return new Response(null, {
         status: 302,
         headers: {
-          Location: "/dashboard",
+          Location: "/profile",
         },
       });
     }

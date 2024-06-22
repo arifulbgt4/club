@@ -90,34 +90,27 @@ export default function Navbar({
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem
-                    className=" cursor-pointer"
-                    onClick={() => router.push("/repo")}
-                  >
+                  <DropdownMenuItem onClick={() => router.push("/profile")}>
+                    {/* <Icons.projectPlus className="mr-2 h-4 w-4" /> */}
+                    <span>Profile</span>
+                    <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push("/repo")}>
                     {/* <Icons.projectPlus className="mr-2 h-4 w-4" /> */}
                     <span>Repository</span>
                     <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className=" cursor-pointer"
-                    onClick={() => router.push("/task")}
-                  >
+                  <DropdownMenuItem onClick={() => router.push("/task")}>
                     {/* <Icons.projectPlus className="mr-2 h-4 w-4" /> */}
                     <span>Task</span>
                     <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className=" cursor-pointer"
-                    onClick={() => router.push("/billing")}
-                  >
+                  <DropdownMenuItem onClick={() => router.push("/billing")}>
                     {/* <Icons.projectPlus className="mr-2 h-4 w-4" /> */}
                     <span>Billing</span>
                     <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className=" cursor-pointer"
-                    onClick={() => router.push("/settings")}
-                  >
+                  <DropdownMenuItem onClick={() => router.push("/settings")}>
                     {/* <Icons.projectPlus className="mr-2 h-4 w-4" /> */}
                     <span>Settings</span>
                     <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
