@@ -5,15 +5,6 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  redirects: async () => {
-    return [
-      {
-        source: "/dashboard",
-        destination: "/dashboard/repo",
-        permanent: false,
-      },
-    ];
-  },
   images: {
     remotePatterns: [
       {

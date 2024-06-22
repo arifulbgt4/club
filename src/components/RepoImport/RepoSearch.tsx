@@ -50,7 +50,7 @@ const RepoSearch = ({
     isPrivate: boolean;
   }) => {
     const repoID = await createRepo(data);
-    router.push(`/dashboard/repo/${repoID}`);
+    router.push(`/repo/${repoID}`);
   };
   return (
     <div className=" flex flex-col">

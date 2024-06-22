@@ -3,7 +3,7 @@ import { validateRequest } from "~/server/auth";
 import Navbar from "./navbar";
 
 export default async function Header() {
-  const { session } = await validateRequest();
+  const { session, user } = await validateRequest();
   const scopedT = await getScopedI18n("header");
   const headerText = {
     changelog: scopedT("changelog"),
@@ -14,7 +14,7 @@ export default async function Header() {
   return (
     <header className="h-20 w-full">
       <div className="container h-full">
-        <Navbar headerText={headerText} session={session!} />
+        <Navbar headerText={headerText} session={session!} user={user!} />
       </div>
     </header>
   );

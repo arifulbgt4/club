@@ -42,8 +42,8 @@ export async function deleteRepositoryById(id: string) {
       userId: user?.id,
     },
   });
-  revalidatePath(`/dashboard/repo`);
-  redirect("/dashboard/repo");
+  revalidatePath(`/repo`);
+  redirect("/repo");
 }
 
 export async function getOrganizations() {

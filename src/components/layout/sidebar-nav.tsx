@@ -10,22 +10,22 @@ import LogoutButton from "../shared/logout-button";
 const navItems = [
   {
     title: "Repository",
-    href: "/dashboard/repo",
+    href: "/repo",
     icon: Icons.projectPlus,
   },
   {
     title: "Task",
-    href: "/dashboard/task",
+    href: "/task",
     icon: Icons.billing,
   },
   {
     title: "Billing",
-    href: "/dashboard/billing",
+    href: "/billing",
     icon: Icons.billing,
   },
   {
     title: "Settings",
-    href: "/dashboard/settings",
+    href: "/settings",
     icon: Icons.settings,
   },
 ];

@@ -12,7 +12,7 @@ export const updateUser = async (id: string, payload: payload) => {
     data: { ...payload },
   });
 
-  revalidatePath("/dashboard/settings");
+  revalidatePath("/settings");
 };
 
 export async function removeUserOldImageFromCDN(
@@ -33,7 +33,7 @@ export async function removeUserOldImageFromCDN(
       const currentImageFileKey = getImageKeyFromUrl(currentImageUrl);
 
       await utapi.deleteFiles(currentImageFileKey as string);
-      revalidatePath("/dashboard/settings");
+      revalidatePath("/settings");
     }
   } catch (e) {
     if (e instanceof Error) {

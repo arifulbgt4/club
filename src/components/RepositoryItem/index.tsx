@@ -18,7 +18,7 @@ const RepositoryItem: FC<RepositoryItemProps> = ({
     >
       <h4 className="font-medium ">{name}</h4>
       <p className=" text-muted-foreground">{fullName}</p>
-      <Link href={`/dashboard/repo/${id}`} className="absolute inset-0 ">
+      <Link href={`/repo/${id}`} className="absolute inset-0 ">
         <span className="sr-only">View project details</span>
       </Link>
     </Card>
