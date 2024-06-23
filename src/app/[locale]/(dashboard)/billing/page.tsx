@@ -102,10 +102,8 @@ export default async function Billing() {
             </div>
           )}
         </CardContent>
-        <CardFooter className="p-0">
-          <Button variant="secondary">
-            <PlusCircleIcon className="mr-2 h-5 w-5" /> Add a billing method
-          </Button>
+        <CardFooter className="flex-1 flex-col items-start justify-start p-0">
+          <AttachPaymentMethod />
         </CardFooter>
       </CardHeader>
       {/* <Alert>
@@ -135,7 +133,6 @@ export default async function Billing() {
         }}
       />
       */}
-      <AttachPaymentMethod />
     </Card>
   );
 }
