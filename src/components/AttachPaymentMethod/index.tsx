@@ -13,7 +13,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -49,7 +48,7 @@ const AttachPaymentMethod = () => {
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: "card",
       card: cardNumber,
-      // TODO
+      // TODO: add billing details
       // billing_details:{
       //   address: elements.getElement(AddressElement)
       // }
@@ -147,17 +146,15 @@ const AttachPaymentMethod = () => {
           </DialogDescription>
         </DialogHeader>
         <form className=" flex flex-1 flex-col" onSubmit={handleSubmit}>
-          {message && <div id="payment-message">{message}</div>}
+          {/* {message && <div id="payment-message">{message}</div>} */}
           <div className=" mb-4 flex flex-col">
             <label htmlFor="card-number">Card Number</label>
-            <div className="card-input">
-              <CardNumberElement
-                id="card-number"
-                options={inputStyle}
-                className=" rounded border p-3 shadow-sm"
-                onChange={handleCardNumberChange}
-              />
-            </div>
+            <CardNumberElement
+              id="card-number"
+              options={inputStyle}
+              className=" rounded border p-3 shadow-sm"
+              onChange={handleCardNumberChange}
+            />
             {cardErrors.cardNumber && (
               <div className=" text-destructive">{cardErrors.cardNumber}</div>
             )}
@@ -165,30 +162,26 @@ const AttachPaymentMethod = () => {
           <div className="mb-6 flex">
             <div className=" flex w-[60%] flex-col">
               <label htmlFor="card-expiry">Expiration Date</label>
-              <div className="card-input">
-                <CardExpiryElement
-                  id="card-expiry"
-                  options={inputStyle}
-                  onChange={handleCardExpiryChange}
-                  className=" rounded border p-3 shadow-sm"
-                />
-              </div>
+              <CardExpiryElement
+                id="card-expiry"
+                options={inputStyle}
+                onChange={handleCardExpiryChange}
+                className=" rounded border p-3 shadow-sm"
+              />
               {cardErrors.cardExpiry && (
-                <div className="error-message">{cardErrors.cardExpiry}</div>
+                <div className=" text-destructive">{cardErrors.cardExpiry}</div>
               )}
             </div>
             <div className=" ml-3 flex w-[40%] flex-col">
               <label htmlFor="card-cvc">CVC</label>
-              <div className="card-input">
-                <CardCvcElement
-                  id="card-cvc"
-                  options={inputStyle}
-                  onChange={handleCardCvcChange}
-                  className=" rounded border p-3 shadow-sm"
-                />
-              </div>
+              <CardCvcElement
+                id="card-cvc"
+                options={inputStyle}
+                onChange={handleCardCvcChange}
+                className=" rounded border p-3 shadow-sm"
+              />
               {cardErrors.cardCvc && (
-                <div className="error-message">{cardErrors.cardCvc}</div>
+                <div className=" text-destructive">{cardErrors.cardCvc}</div>
               )}
             </div>
           </div>
@@ -198,7 +191,6 @@ const AttachPaymentMethod = () => {
           <Button
             type="submit"
             variant="secondary"
-            // className="mt-4"
             disabled={!stripe || loading}
           >
             {!stripe || loading ? (
