@@ -63,9 +63,9 @@ export default async function Billing() {
 
             <div
               key={primary?.id}
-              className=" flex max-w-96 items-center justify-between rounded border p-2.5 pl-4"
+              className=" flex max-w-96 flex-col items-center justify-between rounded border p-2.5 pl-4 sm:flex-row"
             >
-              <div className="flex items-center">
+              <div className="mb-2 flex items-center sm:mb-0">
                 <div className=" scale-150">
                   {getPaymentMethodIcon(primary?.brand as string)()}
                 </div>
@@ -90,7 +90,7 @@ export default async function Billing() {
             {additional?.map((c) => (
               <div
                 key={c?.id}
-                className=" flex max-w-[600px] items-center justify-between border-b p-5"
+                className=" flex max-w-[600px] flex-col items-center justify-between border-b p-5 sm:flex-row"
               >
                 <div className="flex items-center">
                   <div className=" scale-150">
