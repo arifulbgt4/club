@@ -27,6 +27,7 @@ import { PlusCircleIcon } from "lucide-react";
 import Icons from "../shared/icons";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Payment from "../Payment";
 
 const GitIssueItem: FC<GitIssueItemProps> = ({
   id,
@@ -39,6 +40,7 @@ const GitIssueItem: FC<GitIssueItemProps> = ({
   repoId,
   html_url,
 }) => {
+  const [open, setOpen] = useState(false);
   const router = useRouter();
   const [isPublished, setIsPublished] = useState<boolean>();
   const [loading, setLoading] = useState(true);
@@ -142,13 +144,14 @@ const GitIssueItem: FC<GitIssueItemProps> = ({
           </AlertDialogContent>
         </AlertDialog>
       ) : (
-        <Dialog>
+        <Dialog onOpenChange={(o) => setOpen(o)}>
           <DialogTrigger asChild>
             <Button>
               <PlusCircleIcon className="mr-2 h-4 w-4" />
               Publish
             </Button>
           </DialogTrigger>
+
           <DialogContent className="sm:max-w-[525px]">
             <DialogHeader>
               <DialogTitle className=" leading-snug">
@@ -163,6 +166,9 @@ const GitIssueItem: FC<GitIssueItemProps> = ({
                 issue.
               </DialogDescription>
             </DialogHeader>
+
+            <Payment />
+
             {pubLoading ? (
               <Button>
                 <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

@@ -1,6 +1,11 @@
+"use client";
 import GoBack from "~/components/go-back";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
-export default async function SingleProjectLayout({
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
+
+export default function SingleProjectLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -10,7 +15,7 @@ export default async function SingleProjectLayout({
       <div className="mb-5 flex items-center">
         <GoBack />
       </div>
-      {children}
+      <Elements stripe={stripePromise}>{children}</Elements>
     </>
   );
 }

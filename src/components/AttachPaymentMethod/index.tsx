@@ -22,7 +22,11 @@ import Icons from "../shared/icons";
 import { PlusCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-const AttachPaymentMethod = () => {
+const AttachPaymentMethod = ({
+  onUpdate,
+}: {
+  onUpdate?: (v: boolean) => void;
+}) => {
   const [open, setOpen] = useState(false);
   const stripe = useStripe() as any;
   const elements = useElements();
@@ -68,6 +72,7 @@ const AttachPaymentMethod = () => {
     setMessage("Payment method created successfully!");
     setLoading(false);
     setOpen(false);
+    onUpdate && onUpdate(true);
     router.refresh();
   };
 
