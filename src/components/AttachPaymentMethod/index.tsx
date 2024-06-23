@@ -35,7 +35,30 @@ const AttachPaymentMethod = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <CardElement />
+      <CardElement
+        options={{
+          style: {
+            base: {
+              iconColor: "#c4f0ff",
+              color: "#fff",
+              fontWeight: "500",
+              fontFamily: "Roboto, Open Sans, Segoe UI, sans-serif",
+              fontSize: "16px",
+              fontSmoothing: "antialiased",
+              ":-webkit-autofill": {
+                color: "#fce883",
+              },
+              "::placeholder": {
+                color: "#87BBFD",
+              },
+            },
+            invalid: {
+              iconColor: "#FFC7EE",
+              color: "#FFC7EE",
+            },
+          },
+        }}
+      />
       <button type="submit" disabled={!stripe || loading}>
         Pay
       </button>
