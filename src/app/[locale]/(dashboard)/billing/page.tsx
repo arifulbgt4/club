@@ -18,6 +18,7 @@ import { validateRequest } from "~/server/auth";
 import { getPaymentMethods } from "./action";
 import getPaymentMethodIcon from "~/components/shared/payment-method-icons";
 import Remove from "./Remove";
+import SetPrimary from "./SetPrimary";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -92,8 +93,10 @@ export default async function Billing() {
                       {c?.last4}
                     </span>
                   </div>
-                  <span>Set as primary</span>
-                  <Remove id={c?.id} />
+                  <div className="flex">
+                    <SetPrimary id={c?.id} />
+                    <Remove id={c?.id} />
+                  </div>
                 </div>
               ))}
             </div>

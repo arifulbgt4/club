@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// TODO: need to add all stripe payment methods svg icons
 const icons: any = {
   visa: () => (
     <svg
