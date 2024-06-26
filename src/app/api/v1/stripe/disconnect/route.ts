@@ -1,9 +1,8 @@
-import type { NextRequest } from "next/server";
 import db from "~/lib/db";
 import { stripe } from "~/lib/stripe";
 import { validateRequest } from "~/server/auth";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const { session, user } = await validateRequest();
     if (!session || !user?.stripeCustomerId) {
@@ -24,14 +23,8 @@ export async function GET(req: NextRequest) {
 
     await db.stripeAccount.delete({ where: { id: account.id } });
 
-    return new Response(null, {
-      status: 302,
-      headers: {
-        Location: "/payment",
-      },
-    });
+    return new Response("success", { status: 200 });
   } catch (error) {
-    console.log("error: ", error);
-    return new Response(JSON.stringify(error), { status: 500 });
+    return new Response("Internal Server Error", { status: 500 });
   }
 }

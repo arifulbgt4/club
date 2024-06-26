@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { stripe } from "~/lib/stripe";
 import { validateRequest } from "~/server/auth";
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const { session, user } = await validateRequest();
     if (!session || !user?.stripeCustomerId) {
