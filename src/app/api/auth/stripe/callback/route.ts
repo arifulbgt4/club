@@ -1,8 +1,9 @@
+import type { NextRequest } from "next/server";
 import db from "~/lib/db";
 import { stripe } from "~/lib/stripe";
 import { validateRequest } from "~/server/auth";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
   if (!code) {
