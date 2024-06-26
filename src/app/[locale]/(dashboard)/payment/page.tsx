@@ -1,18 +1,10 @@
-"use client";
-import { Button } from "~/components/ui/button";
+import Connection from "./connect";
+import { checkConnect } from "./action";
+import DisConnection from "./disconnect";
 
-const PaymentPage = () => {
-  async function connect() {
-    const res = await fetch("/api/auth/stripe/link", { method: "GET" });
-    const url = await res.json();
-    console.log("first:1", url);
-    window.location.href = url;
-  }
-  return (
-    <div>
-      <Button onClick={connect}>Connect Stripe account</Button>
-    </div>
-  );
+const PaymentPage = async () => {
+  const isConnect = await checkConnect();
+  return <div>{!isConnect ? <Connection /> : <DisConnection />}</div>;
 };
 
 export default PaymentPage;

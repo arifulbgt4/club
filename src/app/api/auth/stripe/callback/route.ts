@@ -21,7 +21,6 @@ export async function GET(req: NextRequest) {
       code,
     });
 
-    console.log("response:q ", response);
     await db.stripeAccount.create({
       data: {
         user: {
