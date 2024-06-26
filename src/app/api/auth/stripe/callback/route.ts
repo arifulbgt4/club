@@ -37,7 +37,12 @@ export async function GET(req: Request) {
         stripePublishableKey: response.stripe_publishable_key!,
       },
     });
-    return new Response("success", { status: 200 });
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: "/payment",
+      },
+    });
   } catch (error) {
     return new Response("Internal Server Error", { status: 500 });
   }
