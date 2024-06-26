@@ -20,7 +20,7 @@ export async function GET(req: Request) {
       code,
     });
 
-    console.log("response: ", response);
+    console.log("response:q ", response);
     await db.stripeAccount.create({
       data: {
         user: {
@@ -44,6 +44,7 @@ export async function GET(req: Request) {
       },
     });
   } catch (error) {
+    console.log("error: ", error);
     return new Response("Internal Server Error", { status: 500 });
   }
 }
