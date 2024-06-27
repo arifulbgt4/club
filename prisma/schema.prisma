@@ -119,6 +119,8 @@ model Issue {
   prNumber    Int?
   state       IssueState  @default(published)
   published   Boolean?    @default(true)
+  price       Float?
+  currency    String?     @default("usd")
   repo        Repository? @relation(fields: [repoId], references: [id])
   repoId      String?
   user        User?       @relation(fields: [userId], references: [id])
