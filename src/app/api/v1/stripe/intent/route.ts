@@ -9,6 +9,7 @@ export async function POST(req: Request) {
     if (!session) {
       return new Response("Unauthorized", { status: 401 });
     }
+
     const issue = await db.issue.findUnique({ where: { id: body?.id } });
     if (!issue) {
       return new Response("Issue not found", { status: 404 });
