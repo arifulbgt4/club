@@ -27,7 +27,7 @@ import { PlusCircleIcon } from "lucide-react";
 import Icons from "../shared/icons";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Payment from "../Payment";
+import PublishForm from "./PublishForm";
 
 const GitIssueItem: FC<GitIssueItemProps> = ({
   id,
@@ -167,7 +167,14 @@ const GitIssueItem: FC<GitIssueItemProps> = ({
               </DialogDescription>
             </DialogHeader>
 
-            <Payment />
+            <PublishForm
+              issueId={id}
+              issueNumber={number}
+              repoId={repoId}
+              title={title}
+            />
+
+            {/* <Payment />
 
             {pubLoading ? (
               <Button>
@@ -175,7 +182,7 @@ const GitIssueItem: FC<GitIssueItemProps> = ({
               </Button>
             ) : (
               <Button onClick={onPublish}>Publish</Button>
-            )}
+            )} */}
           </DialogContent>
         </Dialog>
       )}

@@ -19,10 +19,12 @@ export async function GET() {
       customer?.invoice_settings?.default_payment_method
     );
     return NextResponse.json({
+      id: paymentMethod.id,
       brand: paymentMethod?.card?.brand,
       last4: paymentMethod?.card?.last4,
     });
   } catch (error) {
+    console.log(error);
     return new Response("Internal Server Error", { status: 500 });
   }
 }

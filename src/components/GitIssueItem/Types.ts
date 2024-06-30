@@ -16,3 +16,10 @@ export interface GitIssueItemProps {
     login: string;
   };
 }
+
+export interface PublishFormProps {
+  issueId: string;
+  issueNumber: number;
+  repoId: string;
+  title: string;
+}

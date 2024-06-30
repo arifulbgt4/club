@@ -1,11 +1,16 @@
+import { IssueState } from "@prisma/client";
 import { NextResponse } from "next/server";
 import db from "~/lib/db";
 import { validateRequest } from "~/server/auth";
 
 export async function POST(req: Request) {
   const body = await req.json();
+  const price = Number(body?.price) >= 3 ? Number(body?.price) : 0;
   try {
-    const { user } = await validateRequest();
+    const { user, session } = await validateRequest();
+    if (!session) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     const issue = await db.issue.upsert({
       where: {
         id: String(body?.id),
@@ -15,6 +20,8 @@ export async function POST(req: Request) {
         id: String(body?.id),
         title: body?.title,
         issueNumber: Number(body?.issueNumber),
+        price: price,
+        state: IssueState.published,
         repo: {
           connect: {
             id: body?.repoId,
