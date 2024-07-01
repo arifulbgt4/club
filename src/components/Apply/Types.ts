@@ -4,4 +4,5 @@ export interface ApplyProps {
   issueId: string;
   price: number;
   issueType: IssueType;
+  disabled: boolean;
 }

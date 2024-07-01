@@ -1,8 +1,10 @@
 import { type IssueOptions } from "~/types";
 import db from "~/lib/db";
 import { app } from "~/lib/octokit";
+import { validateRequest } from "~/server/auth";
 
 export async function getAnIssue(id: string) {
+  const { session, user } = await validateRequest();
   const dbIssue = await db.issue.findUnique({
     where: { id },
     include: { repo: true, user: true },
@@ -36,7 +38,8 @@ export async function getAnIssue(id: string) {
   return {
     issue: issue.data,
     comments: comments.data,
-    // issue: {},
+    isOwn: user?.id === dbIssue?.userId,
+    isAuthenticated: !!session,
     dbIssue: dbIssue as IssueOptions,
   };
 }

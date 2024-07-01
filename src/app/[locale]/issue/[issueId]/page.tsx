@@ -12,7 +12,8 @@ interface IssuePageProps {
 }
 
 const IssuePage = async ({ params: { issueId } }: IssuePageProps) => {
-  const { issue, dbIssue, comments } = await getAnIssue(issueId);
+  const { issue, dbIssue, comments, isOwn, isAuthenticated } =
+    await getAnIssue(issueId);
   return (
     <div className="mt-6 flex flex-col">
       <div className=" border-b">
@@ -54,6 +55,7 @@ const IssuePage = async ({ params: { issueId } }: IssuePageProps) => {
             issueId={issueId}
             price={dbIssue?.price as number}
             issueType={dbIssue.type as IssueType}
+            disabled={isOwn || !isAuthenticated}
           />
         </div>
       </div>

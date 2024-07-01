@@ -13,7 +13,7 @@ import { Input } from "../ui/input";
 import Icons from "../shared/icons";
 import { IssueType } from "@prisma/client";
 
-const Apply: FC<ApplyProps> = ({ issueId, price, issueType }) => {
+const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
   const [applyed, setApplyed] = useState<boolean>();
   const [loading, setLoading] = useState(true);
   const isApplyed = useCallback(async () => {
@@ -31,7 +31,11 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType }) => {
   }, [issueId]);
 
   useEffect(() => {
-    isApplyed();
+    if (!disabled) {
+      isApplyed();
+    } else {
+      setLoading(false);
+    }
   }, [isApplyed]);
 
   async function onApply() {
@@ -57,20 +61,20 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType }) => {
 
   return (
     <Card>
-      <CardHeader className=" border-b">
+      <CardHeader className=" mb-6 border-b">
         <CardTitle className=" text-green-500">{getPrice}</CardTitle>
       </CardHeader>
-      <CardContent className="py-4">
+      {/* <CardContent>
         <p>To apply for a paid issue, you must first complete 30 free tasks</p>
         <span className="mt-2 block text-gray-600">Completed 5/30</span>
-      </CardContent>
+      </CardContent> */}
       <CardFooter aria-disabled="true" className=" flex-col">
         <div className="mb-5 flex items-center self-end">
           <span className=" text-sm font-semibold">
             I will submit the task within{" "}
           </span>
           <Input
-            disabled={applyed || loading}
+            disabled={applyed || loading || disabled}
             placeholder="EX: 2"
             className=" mx-3 h-8 w-[78px] border-yellow-100"
             type="number"
@@ -79,14 +83,14 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType }) => {
         </div>
         {!loading ? (
           <Button
-            disabled={applyed}
+            disabled={applyed || disabled}
             onClick={onApply}
             className=" self-end bg-green-500"
           >
             {applyed ? "Applyed" : "Apply"}
           </Button>
         ) : (
-          <Button className=" self-end bg-green-500">
+          <Button disabled className=" self-end bg-green-500">
             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
           </Button>
         )}
