@@ -45,7 +45,7 @@ export default async function PublishedIssueItem({
           <Avatar className="mr-1 h-[15px] w-[15px] rounded-sm">
             <AvatarImage src={user?.picture as string} />
           </Avatar>
-          <p className="  font-medium text-muted-foreground">
+          <p className=" ml-0.5 font-medium text-muted-foreground">
             {user?.username}
           </p>
         </div>
@@ -67,7 +67,7 @@ export default async function PublishedIssueItem({
                 borderColor: hexToRgba(`#${label?.color}`, 0.6),
                 color: `#${label?.color}`,
               }}
-              className={`mb-2 mr-2 rounded-full border px-2.5 py-0.5 text-sm font-medium text-gray-800`}
+              className={`mb-2 mr-2 rounded-full border px-2.5 py-0.5 text-xs font-medium text-gray-800`}
             >
               {label?.name}
             </span>
@@ -76,6 +76,26 @@ export default async function PublishedIssueItem({
       ) : (
         ""
       )}
+      <div className=" flex flex-wrap">
+        <span className=" m-1 rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground">
+          Next.js
+        </span>
+        <span className=" m-1 rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground">
+          Typescript
+        </span>
+        <span className=" m-1 rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground">
+          Node.js
+        </span>
+        <span className=" m-1 rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground">
+          React
+        </span>
+        <span className=" m-1 rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground">
+          Prisma
+        </span>
+        <span className=" m-1 rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground">
+          Webhooks
+        </span>
+      </div>
     </Link>
   );
 }
