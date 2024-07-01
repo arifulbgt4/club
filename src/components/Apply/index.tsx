@@ -61,7 +61,7 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType }) => {
         <CardTitle className=" text-green-500">{getPrice}</CardTitle>
       </CardHeader>
       <CardContent className="py-4">
-        <p>To apply a paid issue you need to complete 30 free task before</p>
+        <p>To apply for a paid issue, you must first complete 30 free tasks</p>
         <span className="mt-2 block text-gray-600">Completed 5/30</span>
       </CardContent>
       <CardFooter aria-disabled="true" className=" flex-col">
