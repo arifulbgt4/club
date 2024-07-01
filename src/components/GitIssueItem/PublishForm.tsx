@@ -12,6 +12,7 @@ import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { useRouter } from "next/navigation";
 import { useStripe } from "@stripe/react-stripe-js";
+import { IssueType } from "@prisma/client";
 
 type FormValues = {
   option: "free" | "paid";
@@ -103,6 +104,7 @@ const PublishForm: FC<PublishFormProps> = ({
               issueNumber,
               repoId,
               title,
+              type: IssueType.paid,
               price: price,
             }),
           });
@@ -122,7 +124,7 @@ const PublishForm: FC<PublishFormProps> = ({
           issueNumber,
           repoId,
           title,
-          price: 0,
+          type: IssueType.free,
         }),
       });
       const data = await res.json();

@@ -5,6 +5,7 @@ import { getAnIssue } from "../action";
 import IssueComment from "~/components/IssueComment";
 import Apply from "~/components/Apply";
 import Description from "./description";
+import { type IssueType } from "@prisma/client";
 
 interface IssuePageProps {
   params: { issueId: string };
@@ -49,7 +50,11 @@ const IssuePage = async ({ params: { issueId } }: IssuePageProps) => {
           </div>
         </div>
         <div className="flex w-[30%] flex-auto">
-          <Apply issueId={issueId} price={dbIssue?.price as number} />
+          <Apply
+            issueId={issueId}
+            price={dbIssue?.price as number}
+            issueType={dbIssue.type as IssueType}
+          />
         </div>
       </div>
     </div>

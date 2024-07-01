@@ -1,11 +1,11 @@
-import { IssueState } from "@prisma/client";
+import { IssueState, IssueType } from "@prisma/client";
 import { NextResponse } from "next/server";
 import db from "~/lib/db";
 import { validateRequest } from "~/server/auth";
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const price = Number(body?.price) >= 3 ? Number(body?.price) : 0;
+  const price = Number(body?.price || 0) >= 3 ? Number(body?.price) : 0;
   try {
     const { user, session } = await validateRequest();
     if (!session) {
@@ -20,8 +20,9 @@ export async function POST(req: Request) {
         id: String(body?.id),
         title: body?.title,
         issueNumber: Number(body?.issueNumber),
-        price: price,
+        ...(body.type === IssueType.paid && { price: price }),
         state: IssueState.published,
+        type: body.type as IssueType,
         repo: {
           connect: {
             id: body?.repoId,

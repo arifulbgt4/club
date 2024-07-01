@@ -112,15 +112,20 @@ enum IssueState {
   done
 }
 
+enum IssueType {
+  free
+  paid
+}
+
 model Issue {
   id          String      @unique
   title       String?
   issueNumber Int?
   prNumber    Int?
+  type        IssueType?
   state       IssueState  @default(published)
   published   Boolean?    @default(true)
   price       Float?
-  currency    String?     @default("usd")
   repo        Repository? @relation(fields: [repoId], references: [id])
   repoId      String?
   user        User?       @relation(fields: [userId], references: [id])

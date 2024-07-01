@@ -11,8 +11,9 @@ import {
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import Icons from "../shared/icons";
+import { IssueType } from "@prisma/client";
 
-const Apply: FC<ApplyProps> = ({ issueId, price }) => {
+const Apply: FC<ApplyProps> = ({ issueId, price, issueType }) => {
   const [applyed, setApplyed] = useState<boolean>();
   const [loading, setLoading] = useState(true);
   const isApplyed = useCallback(async () => {
@@ -44,7 +45,7 @@ const Apply: FC<ApplyProps> = ({ issueId, price }) => {
   }
 
   const getPrice = useMemo(() => {
-    if (price === 0 || price < 3) {
+    if (price === 0 || price < 3 || issueType === IssueType.free) {
       return (
         <span>
           Free <span className=" text-sm text-muted-foreground">$0.00</span>
@@ -52,7 +53,7 @@ const Apply: FC<ApplyProps> = ({ issueId, price }) => {
       );
     }
     return `$${price.toFixed(2)}`;
-  }, [price]);
+  }, [price, issueType]);
 
   return (
     <Card>
