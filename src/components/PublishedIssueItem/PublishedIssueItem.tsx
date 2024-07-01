@@ -21,7 +21,7 @@ export default async function PublishedIssueItem({
     user?.installId as number,
     user?.accessToken as string
   );
-  console.log(issue?.labels);
+
   return (
     <Link
       href={`/issue/${id}`}
