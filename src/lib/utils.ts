@@ -53,3 +53,16 @@ export class FreePlanLimitError extends Error {
     super(message);
   }
 }
+
+export function hexToRgba(hex: string, alpha: number = 1): string {
+  // Remove the leading '#' if it's present
+  hex = hex.replace(/^#/, "");
+
+  // Parse the r, g, b values
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  // Return the rgba color code
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
