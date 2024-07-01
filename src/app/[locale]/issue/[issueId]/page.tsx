@@ -49,7 +49,7 @@ const IssuePage = async ({ params: { issueId } }: IssuePageProps) => {
           </div>
         </div>
         <div className="flex w-[30%] flex-auto">
-          <Apply issueId={issueId} />
+          <Apply issueId={issueId} price={dbIssue?.price as number} />
         </div>
       </div>
     </div>

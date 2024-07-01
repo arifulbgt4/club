@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState, type FC } from "react";
+import { useCallback, useEffect, useMemo, useState, type FC } from "react";
 import { type ApplyProps } from "./Types";
 import {
   Card,
@@ -12,7 +12,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import Icons from "../shared/icons";
 
-const Apply: FC<ApplyProps> = ({ issueId }) => {
+const Apply: FC<ApplyProps> = ({ issueId, price }) => {
   const [applyed, setApplyed] = useState<boolean>();
   const [loading, setLoading] = useState(true);
   const isApplyed = useCallback(async () => {
@@ -43,10 +43,21 @@ const Apply: FC<ApplyProps> = ({ issueId }) => {
     setLoading(false);
   }
 
+  const getPrice = useMemo(() => {
+    if (price === 0 || price < 3) {
+      return (
+        <span>
+          Free <span className=" text-sm text-muted-foreground">$0.00</span>
+        </span>
+      );
+    }
+    return `$${price.toFixed(2)}`;
+  }, [price]);
+
   return (
     <Card>
       <CardHeader className=" border-b">
-        <CardTitle className=" text-green-500">$250.00</CardTitle>
+        <CardTitle className=" text-green-500">{getPrice}</CardTitle>
       </CardHeader>
       <CardContent className="py-4">
         <p>To apply a paid issue you need to complete 30 free task before</p>
