@@ -6,6 +6,7 @@ import { type PublishedIssueItemProps } from "./Types";
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
 import { getIssue } from "./action";
 import { hexToRgba } from "~/lib/utils";
+import { IssueType } from "@prisma/client";
 
 export default async function PublishedIssueItem({
   id,
@@ -13,6 +14,8 @@ export default async function PublishedIssueItem({
   user,
   repo,
   updatedAt,
+  price,
+  type,
 }: PublishedIssueItemProps) {
   const issue = await getIssue(
     repo?.name as string,
@@ -29,16 +32,23 @@ export default async function PublishedIssueItem({
     >
       <div className="flex w-full flex-col">
         <div className="mb-1 flex items-center">
-          <div className="flex items-center gap-2">
+          <div className="mb-0.5 flex flex-col">
+            <div className="text-xs text-muted-foreground">
+              {formatDistanceToNow(new Date(updatedAt), {
+                addSuffix: true,
+                includeSeconds: true,
+              })}
+            </div>
             <span className=" text-xl font-semibold">{issue?.title}</span>
             {/* // TODO: If a issue visit then the dot will not show */}
             {/* <span className="flex h-2 w-2 rounded-full bg-blue-600" /> */}
           </div>
-          <div className="ml-auto text-xs text-muted-foreground">
-            {formatDistanceToNow(new Date(updatedAt), {
-              addSuffix: true,
-              includeSeconds: true,
-            })}
+          <div className="ml-auto text-base text-green-500">
+            {type === IssueType.paid ? (
+              `$ ${price?.toFixed(2)}`
+            ) : (
+              <span className=" text-muted-foreground">open-source</span>
+            )}
           </div>
         </div>
         <div className="mb-2 flex items-center">
@@ -51,7 +61,7 @@ export default async function PublishedIssueItem({
         </div>
         {/* <div className="text-xs font-medium">{user?.username}</div> */}
       </div>
-      <p className={`mb-4 text-gray-700 ${!issue?.body && " italic"}`}>
+      <p className={`mb-4 text-gray-500 ${!issue?.body && " italic"}`}>
         {issue?.body
           ? issue?.body?.substring(0, 100) + " ..."
           : "No description provided."}
