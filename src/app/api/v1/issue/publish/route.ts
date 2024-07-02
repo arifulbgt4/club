@@ -11,6 +11,11 @@ export async function POST(req: Request) {
     if (!session) {
       return new Response("Unauthorized", { status: 401 });
     }
+    if (body?.tags?.length > 10 || !body?.tags?.length) {
+      return new Response("An issue can have a maximum of 10 tags", {
+        status: 401,
+      });
+    }
     const issue = await db.issue.upsert({
       where: {
         id: String(body?.id),
@@ -23,6 +28,7 @@ export async function POST(req: Request) {
         ...(body.type === IssueType.paid && { price: price }),
         state: IssueState.published,
         type: body.type as IssueType,
+        tag: [...body?.tags],
         repo: {
           connect: {
             id: body?.repoId,
