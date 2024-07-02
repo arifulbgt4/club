@@ -100,8 +100,7 @@ model Repository {
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
 
-  @@index([userId])
-  @@index([orgId])
+  @@index([userId, orgId])
 }
 
 enum IssueState {
@@ -122,6 +121,7 @@ model Issue {
   title       String?
   issueNumber Int?
   prNumber    Int?
+  tag         String[]
   type        IssueType?
   state       IssueState  @default(published)
   published   Boolean?    @default(true)
@@ -136,9 +136,7 @@ model Issue {
   updatedAt   DateTime    @updatedAt
   request     Request[]
 
-  @@index([repoId])
-  @@index([userId])
-  @@index([assignedId])
+  @@index([repoId, userId, assignedId])
 }
 
 enum RequestState {
@@ -162,6 +160,5 @@ model Request {
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
 
-  @@index([userId])
-  @@index([issueId])
+  @@index([userId, issueId])
 }
