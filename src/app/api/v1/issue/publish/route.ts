@@ -12,7 +12,7 @@ export async function POST(req: Request) {
       return new Response("Unauthorized", { status: 401 });
     }
     if (body?.tags?.length > 10 || !body?.tags?.length) {
-      return new Response("An issue can have a maximum of 10 tags", {
+      return new Response("An issue can have a maximum of 9 tags", {
         status: 401,
       });
     }

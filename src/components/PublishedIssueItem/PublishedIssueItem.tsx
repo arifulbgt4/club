@@ -16,6 +16,7 @@ export default async function PublishedIssueItem({
   updatedAt,
   price,
   type,
+  tag,
 }: PublishedIssueItemProps) {
   const issue = await getIssue(
     repo?.name as string,
@@ -86,26 +87,20 @@ export default async function PublishedIssueItem({
       ) : (
         ""
       )}
-      <div className=" flex flex-wrap">
-        <span className=" m-1 rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground">
-          Next.js
-        </span>
-        <span className=" m-1 rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground">
-          Typescript
-        </span>
-        <span className=" m-1 rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground">
-          Node.js
-        </span>
-        <span className=" m-1 rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground">
-          React
-        </span>
-        <span className=" m-1 rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground">
-          Prisma
-        </span>
-        <span className=" m-1 rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground">
-          Webhooks
-        </span>
-      </div>
+      {tag?.length ? (
+        <div className=" flex flex-wrap">
+          {tag?.map((t, i) => (
+            <span
+              key={i}
+              className=" m-1 rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      ) : (
+        ""
+      )}
     </Link>
   );
 }

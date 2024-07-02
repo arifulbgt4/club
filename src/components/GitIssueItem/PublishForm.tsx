@@ -1,7 +1,7 @@
 "use client";
 import { useState, type FC } from "react";
 import type { PublishFormProps } from "./Types";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { cn } from "~/lib/utils";
 import CurrencyInput from "react-currency-input-field";
 import Payment from "../Payment";
@@ -13,15 +13,22 @@ import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { useRouter } from "next/navigation";
 import { useStripe } from "@stripe/react-stripe-js";
 import { IssueType } from "@prisma/client";
+import { TagsInput } from "react-tag-input-component";
+import { Button } from "../ui/button";
 
 type FormValues = {
   option: "free" | "paid";
   price?: string;
+  tags: string[];
 };
 
 const pubSchema = z.object({
   option: z.string(),
   price: z.string({ required_error: "Pleasee" }),
+  tags: z
+    .array(z.string())
+    .min(1, "At least one tag is required")
+    .max(9, "Maximum 9 tags are allowed"),
 });
 
 const PublishForm: FC<PublishFormProps> = ({
@@ -34,13 +41,14 @@ const PublishForm: FC<PublishFormProps> = ({
   const [minimum, setMinimum] = useState(false);
   const [payError, setPayError] = useState(false);
   const router = useRouter();
-  const { register, handleSubmit, watch, setValue, formState } =
+  const { register, handleSubmit, watch, setValue, formState, control } =
     useForm<FormValues>({
       resolver: zodResolver(pubSchema),
       mode: "onChange",
     });
   const selectedOption = watch("option", "paid");
   const wPrice = watch("price", "0.00");
+  const wTags = watch("tags", []);
   const onSubmit = async (value: FormValues) => {
     if (value?.option === "paid") {
       if (!value.price) {
@@ -64,7 +72,6 @@ const PublishForm: FC<PublishFormProps> = ({
     }
     const price = Number(value.price?.slice(1));
     try {
-      console.log(price);
       if (value.option === "paid") {
         const paymentMethodRes = await fetch("/api/v1/stripe/primary", {
           method: "GET",
@@ -106,6 +113,7 @@ const PublishForm: FC<PublishFormProps> = ({
               title,
               type: IssueType.paid,
               price: price,
+              tags: value?.tags,
             }),
           });
           const data = await pub.json();
@@ -125,6 +133,7 @@ const PublishForm: FC<PublishFormProps> = ({
           repoId,
           title,
           type: IssueType.free,
+          tags: value?.tags,
         }),
       });
       const data = await res.json();
@@ -204,21 +213,57 @@ const PublishForm: FC<PublishFormProps> = ({
           </div>
         </div>
       </div>
-
-      <button
+      <Controller
+        name="tags"
+        control={control}
+        rules={{
+          validate: (value) => {
+            if (!value?.length) return "At least one tag is required";
+            if (value?.length >= 9) return "The first 9 tags will apply";
+          },
+        }}
+        render={({ field }) => (
+          <div className=" my-2">
+            <label className="mb-1 block font-medium">Add tags</label>
+            <TagsInput
+              {...field}
+              value={field.value || []}
+              onChange={(value) => {
+                if (value.length <= 9) {
+                  field.onChange(value);
+                }
+              }}
+              placeHolder="enter tags"
+              classNames={{
+                input: " text-lg",
+                tag: "!bg-accent-foreground !text-accent font-medium",
+              }}
+            />
+            <em className=" text-xs">press enter to add new tag</em>
+            {formState.errors.tags && (
+              <p className=" text-destructive">
+                {formState.errors.tags.message}
+              </p>
+            )}
+          </div>
+        )}
+      />
+      <Button
         type="submit"
-        className="w-full rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+        className="w-full"
+        size="lg"
         disabled={
           (selectedOption !== "free" &&
             (wPrice === "$0.00" ||
               wPrice === "$0" ||
               !wPrice ||
               !formState.isDirty)) ||
-          formState.isSubmitting
+          formState.isSubmitting ||
+          wTags.length === 0
         }
       >
         Submit
-      </button>
+      </Button>
     </form>
   );
 };
