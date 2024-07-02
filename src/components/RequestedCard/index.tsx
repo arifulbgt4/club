@@ -11,7 +11,7 @@ import {
 } from "~/components/ui/card";
 import EmptyState from "../shared/empty-state";
 import { getApplyed } from "./action";
-import { Backpack } from "lucide-react";
+import { CircleDot } from "lucide-react";
 
 const RequestedCard = async () => {
   const { request, total } = await getApplyed();
@@ -30,7 +30,7 @@ const RequestedCard = async () => {
               key={r.id}
             >
               <div className="mr-1 mt-1 h-4 w-4">
-                <Backpack className="h-4 w-4" />
+                <CircleDot className="h-4 w-4" />
               </div>
               <span>{r?.issue?.title}</span>
             </Link>

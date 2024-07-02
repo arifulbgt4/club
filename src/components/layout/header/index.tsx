@@ -14,7 +14,16 @@ export default async function Header() {
   return (
     <header className="h-20 w-full">
       <div className="container h-full">
-        <Navbar headerText={headerText} session={session!} user={user!} />
+        <Navbar
+          headerText={headerText}
+          session={session!}
+          user={{
+            id: user?.id as string,
+            name: user?.name as string,
+            username: user?.username as string,
+            picture: user?.picture as string,
+          }}
+        />
       </div>
     </header>
   );

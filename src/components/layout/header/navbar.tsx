@@ -1,14 +1,13 @@
 "use client";
 
-import { type User, type Session } from "lucia";
+import { type Session } from "lucia";
 import { MenuIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Icons from "~/components/shared/icons";
 import LogoutButton from "~/components/shared/logout-button";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Avatar, AvatarImage } from "~/components/ui/avatar";
 import { Button, buttonVariants } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -21,13 +20,12 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
-import { cn } from "~/lib/utils";
 export default function Navbar({
   session,
   user,
   headerText,
 }: {
-  user: User;
+  user: { id: string; name: string; username: string; picture: string };
   session: Session;
   headerText: {
     changelog: string;
@@ -82,58 +80,42 @@ export default function Navbar({
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">shadcn</p>
+                    <p className="text-sm font-medium leading-none">
+                      {user?.name}
+                    </p>
                     <p className="text-xs leading-none text-muted-foreground">
-                      m@example.com
+                      @{user?.username}
                     </p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem onClick={() => router.push("/profile")}>
-                    {/* <Icons.projectPlus className="mr-2 h-4 w-4" /> */}
                     <span>Profile</span>
                     <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push("/repo")}>
-                    {/* <Icons.projectPlus className="mr-2 h-4 w-4" /> */}
                     <span>Repository</span>
                     <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push("/task")}>
-                    {/* <Icons.projectPlus className="mr-2 h-4 w-4" /> */}
                     <span>Task</span>
                     <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push("/billing")}>
-                    {/* <Icons.projectPlus className="mr-2 h-4 w-4" /> */}
                     <span>Billing</span>
                     <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push("/settings")}>
-                    {/* <Icons.projectPlus className="mr-2 h-4 w-4" /> */}
                     <span>Settings</span>
                     <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                {/* <DropdownMenuItem> */}
                 <LogoutButton className=" flex-1" />
-                {/* <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut> */}
-                {/* </DropdownMenuItem> */}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            // <Link
-            //   href=""
-            //   className={cn(
-            //     buttonVariants({ variant: "outline" }),
-            //     "bg-secondary"
-            //   )}
-            //   onClick={() => setIsModalOpen(false)}
-            // >
-            //   {headerText.dashboard}
-            // </Link>
             <Link href="/login" className={buttonVariants()}>
               {headerText.login}
             </Link>
