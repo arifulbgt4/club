@@ -1,5 +1,6 @@
 "use server";
 import Link from "next/link";
+import { TASK_TABS } from "~/types";
 import {
   Card,
   CardContent,
@@ -15,7 +16,7 @@ import { Backpack } from "lucide-react";
 const RequestedCard = async () => {
   const { request, total } = await getApplyed();
   return (
-    <Card className="bg-accent">
+    <Card>
       <CardHeader>
         <CardTitle className="text-xl">Applyed ({total})</CardTitle>
         <CardDescription>Your applied issue list</CardDescription>
@@ -45,7 +46,7 @@ const RequestedCard = async () => {
       <CardFooter>
         <Link
           className=" font-medium text-lime-500 hover:underline"
-          href="/task/?t=requests"
+          href={`/task/?t=${TASK_TABS.requests}`}
         >
           See all
         </Link>

@@ -7,6 +7,9 @@ import Pagination from "~/components/sections/pagination";
 import RequestedCard from "~/components/RequestedCard";
 import { validateRequest } from "~/server/auth";
 import InReviewCard from "~/components/InReviewCard";
+import SignUpPromotion from "~/components/SignUpPromotion";
+import RequestChangesCard from "~/components/RequestChangesCard";
+import EmptyState from "~/components/shared/empty-state";
 
 export default async function Home({
   searchParams,
@@ -20,29 +23,38 @@ export default async function Home({
   const totalPages = Math.ceil(total / take);
   return (
     <div className="container">
-      <div className="mt-3 flex">
-        <div className="flex w-[70%] flex-col pr-3">
+      <div className="mb-9 mt-3 flex">
+        <div className=" flex w-[70%] flex-col pr-3">
           <div className="mb-3 flex  w-full items-center space-x-2">
             <Input type="search" placeholder="Search..." />
             <Button size="icon" variant="outline">
               <Search />
             </Button>
           </div>
-          {issues.map((issue) => (
-            <PublishedIssueItem key={issue.id} {...issue} />
-          ))}
-          {totalPages >= 2 && (
-            <Pagination page={page} totalPages={totalPages} />
+          {!!issues?.length ? (
+            <>
+              {issues.map((issue) => (
+                <PublishedIssueItem key={issue.id} {...issue} />
+              ))}
+              <Pagination page={page} totalPages={totalPages} />
+            </>
+          ) : (
+            <EmptyState title="No issues founded" />
           )}
         </div>
         <div className="flex w-[30%] flex-col pl-6">
-          {!!session && (
+          {!!session ? (
             <>
               <div className="mb-6">
                 <RequestedCard />
               </div>
-              <InReviewCard />
+              <div className="mb-6">
+                <InReviewCard />
+              </div>
+              <RequestChangesCard />
             </>
+          ) : (
+            <SignUpPromotion />
           )}
         </div>
       </div>

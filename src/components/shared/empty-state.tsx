@@ -22,7 +22,7 @@ const EmptyState: FC<EmptyStateProps> = ({
     <div
       className={cn(
         size === "sm" ? "px-3" : "border p-16",
-        " flex flex-1 flex-col items-center justify-center rounded text-center"
+        " flex flex-col items-center justify-center rounded text-center"
       )}
     >
       <Icons.emptyIllustration

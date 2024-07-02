@@ -149,7 +149,7 @@ export const GET = async (request: NextRequest) => {
       return new Response(null, {
         status: 302,
         headers: {
-          Location: "/profile",
+          Location: "/",
         },
       });
     }
@@ -201,7 +201,7 @@ export const GET = async (request: NextRequest) => {
       return new Response(null, {
         status: 302,
         headers: {
-          Location: "/profile",
+          Location: "/",
         },
       });
     }

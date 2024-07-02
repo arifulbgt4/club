@@ -1,5 +1,6 @@
 "use server";
 import Link from "next/link";
+import { TASK_TABS } from "~/types";
 import {
   Card,
   CardContent,
@@ -9,17 +10,16 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import EmptyState from "../shared/empty-state";
-import { getInreview } from "./action";
+import { getReassign } from "./action";
 import { Backpack } from "lucide-react";
-import { TASK_TABS } from "~/types";
 
-const InReviewCard = async () => {
-  const { list, total } = await getInreview();
+const RequestChangesCard = async () => {
+  const { list, total } = await getReassign();
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-xl">In Review ({total})</CardTitle>
-        <CardDescription>Your submitted to review issue list</CardDescription>
+        <CardTitle className="text-xl">Request Changes ({total})</CardTitle>
+        <CardDescription>Reassignments of your review</CardDescription>
       </CardHeader>
       <CardContent>
         {!!total ? (
@@ -37,8 +37,8 @@ const InReviewCard = async () => {
           ))
         ) : (
           <EmptyState
-            title="No Issues Submitted for Review"
-            description="The review queue is currently empty. This indicates there are no submissions pending your assessment"
+            title="Reassignments Empty"
+            description="No issues have been reassigned to you for review"
             size="sm"
           />
         )}
@@ -46,7 +46,7 @@ const InReviewCard = async () => {
       <CardFooter>
         <Link
           className=" font-medium text-lime-500 hover:underline"
-          href={`/task/?t=${TASK_TABS.str}`}
+          href={`/task/?t=${TASK_TABS.reassign}`}
         >
           See all
         </Link>
@@ -55,4 +55,4 @@ const InReviewCard = async () => {
   );
 };
 
-export default InReviewCard;
+export default RequestChangesCard;
