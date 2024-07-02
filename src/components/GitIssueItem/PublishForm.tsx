@@ -19,16 +19,16 @@ import { Button } from "../ui/button";
 type FormValues = {
   option: "free" | "paid";
   price?: string;
-  tags: string[];
+  topics: string[];
 };
 
 const pubSchema = z.object({
   option: z.string(),
   price: z.string({ required_error: "Pleasee" }),
-  tags: z
+  topics: z
     .array(z.string())
-    .min(1, "At least one tag is required")
-    .max(9, "Maximum 9 tags are allowed"),
+    .min(1, "At least one topics is required")
+    .max(9, "Maximum 9 topics are allowed"),
 });
 
 const PublishForm: FC<PublishFormProps> = ({
@@ -48,7 +48,7 @@ const PublishForm: FC<PublishFormProps> = ({
     });
   const selectedOption = watch("option", "paid");
   const wPrice = watch("price", "0.00");
-  const wTags = watch("tags", []);
+  const wTags = watch("topics", []);
   const onSubmit = async (value: FormValues) => {
     if (value?.option === "paid") {
       if (!value.price) {
@@ -113,7 +113,7 @@ const PublishForm: FC<PublishFormProps> = ({
               title,
               type: IssueType.paid,
               price: price,
-              tags: value?.tags,
+              topics: value?.topics,
             }),
           });
           const data = await pub.json();
@@ -133,7 +133,7 @@ const PublishForm: FC<PublishFormProps> = ({
           repoId,
           title,
           type: IssueType.free,
-          tags: value?.tags,
+          topics: value?.topics,
         }),
       });
       const data = await res.json();
@@ -175,7 +175,7 @@ const PublishForm: FC<PublishFormProps> = ({
           "my-2"
         )}
       >
-        {selectedOption !== "free" && minimum && (
+        {selectedOption !== "free" && (minimum || payError) && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Minimum $3 required</AlertTitle>
@@ -214,17 +214,17 @@ const PublishForm: FC<PublishFormProps> = ({
         </div>
       </div>
       <Controller
-        name="tags"
+        name="topics"
         control={control}
         rules={{
           validate: (value) => {
-            if (!value?.length) return "At least one tag is required";
-            if (value?.length >= 9) return "The first 9 tags will apply";
+            if (!value?.length) return "At least one topics is required";
+            if (value?.length >= 9) return "The first 9 topics will apply";
           },
         }}
         render={({ field }) => (
           <div className=" my-2">
-            <label className="mb-1 block font-medium">Add tags</label>
+            <label className="mb-1 block font-medium">Add topics</label>
             <TagsInput
               {...field}
               value={field.value || []}
@@ -240,9 +240,9 @@ const PublishForm: FC<PublishFormProps> = ({
               }}
             />
             <em className=" text-xs">press enter to add new tag</em>
-            {formState.errors.tags && (
+            {formState.errors.topics && (
               <p className=" text-destructive">
-                {formState.errors.tags.message}
+                {formState.errors.topics.message}
               </p>
             )}
           </div>

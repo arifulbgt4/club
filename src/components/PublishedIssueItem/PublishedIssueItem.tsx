@@ -16,7 +16,7 @@ export default async function PublishedIssueItem({
   updatedAt,
   price,
   type,
-  tag,
+  topics,
 }: PublishedIssueItemProps) {
   const issue = await getIssue(
     repo?.name as string,
@@ -87,9 +87,9 @@ export default async function PublishedIssueItem({
       ) : (
         ""
       )}
-      {tag?.length ? (
+      {topics?.length ? (
         <div className=" flex flex-wrap">
-          {tag?.map((t, i) => (
+          {topics?.map((t, i) => (
             <span
               key={i}
               className=" m-1 rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground"

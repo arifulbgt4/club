@@ -66,11 +66,11 @@ const IssuePage = async ({ params: { issueId } }: IssuePageProps) => {
             disabled={isOwn || !isAuthenticated}
           />
           <div className="mb-6">
-            {dbIssue?.tag?.length ? (
+            {dbIssue?.topics?.length ? (
               <div className="flex flex-col">
                 <span className=" pb-2 text-sm font-medium">Topics</span>
                 <div className=" flex flex-wrap">
-                  {dbIssue?.tag?.map((t, i) => (
+                  {dbIssue?.topics?.map((t, i) => (
                     <span
                       key={i}
                       className=" m-1 rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground"

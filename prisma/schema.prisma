@@ -121,7 +121,7 @@ model Issue {
   title       String?
   issueNumber Int?
   prNumber    Int?
-  tag         String[]
+  topics      String[]
   type        IssueType?
   state       IssueState  @default(published)
   published   Boolean?    @default(true)

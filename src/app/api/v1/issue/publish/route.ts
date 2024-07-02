@@ -11,8 +11,8 @@ export async function POST(req: Request) {
     if (!session) {
       return new Response("Unauthorized", { status: 401 });
     }
-    if (body?.tags?.length > 10 || !body?.tags?.length) {
-      return new Response("An issue can have a maximum of 9 tags", {
+    if (body?.topics?.length > 10 || !body?.topics?.length) {
+      return new Response("An issue can have a maximum of 9 topics", {
         status: 401,
       });
     }
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
         ...(body.type === IssueType.paid && { price: price }),
         state: IssueState.published,
         type: body.type as IssueType,
-        tag: [...body?.tags],
+        topics: [...body?.topics],
         repo: {
           connect: {
             id: body?.repoId,
