@@ -17,7 +17,10 @@ export default function AuthForm() {
       ) : (
         <Link
           href="/api/auth/login/github"
-          className={cn(buttonVariants({ variant: "outline" }))}
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "hover:bg-accent-foreground hover:text-accent"
+          )}
           onClick={() => setIsGithubLoading(true)}
         >
           Continue with <Icons.gitHub className="ml-2 h-4 w-4" />

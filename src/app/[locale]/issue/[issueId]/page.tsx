@@ -6,6 +6,7 @@ import IssueComment from "~/components/IssueComment";
 import Apply from "~/components/Apply";
 import Description from "./description";
 import { type IssueType } from "@prisma/client";
+import SignUpPromotion from "~/components/SignUpPromotion";
 
 interface IssuePageProps {
   params: { issueId: string };
@@ -29,7 +30,7 @@ const IssuePage = async ({ params: { issueId } }: IssuePageProps) => {
         </p>
       </div>
       <div className="my-5 flex">
-        <div className=" mr-9 flex w-[70%] flex-col">
+        <div className=" mr-9 flex w-[75%] flex-col">
           <div className="mb-6 flex flex-auto">
             <Description body={issue?.body as string} />
           </div>
@@ -50,7 +51,12 @@ const IssuePage = async ({ params: { issueId } }: IssuePageProps) => {
             ))}
           </div>
         </div>
-        <div className="flex w-[30%] flex-auto">
+        <div className="flex w-[25%] flex-col">
+          {!isAuthenticated && (
+            <div className="mb-6">
+              <SignUpPromotion />
+            </div>
+          )}
           <Apply
             issueId={issueId}
             price={dbIssue?.price as number}
