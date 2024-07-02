@@ -6,6 +6,7 @@ import { Search } from "lucide-react";
 import Pagination from "~/components/sections/pagination";
 import RequestedCard from "~/components/RequestedCard";
 import { validateRequest } from "~/server/auth";
+import InReviewCard from "~/components/InReviewCard";
 
 export default async function Home({
   searchParams,
@@ -35,7 +36,14 @@ export default async function Home({
           )}
         </div>
         <div className="flex w-[30%] flex-col pl-6">
-          {!!session && <RequestedCard />}
+          {!!session && (
+            <>
+              <div className="mb-6">
+                <RequestedCard />
+              </div>
+              <InReviewCard />
+            </>
+          )}
         </div>
       </div>
     </div>
