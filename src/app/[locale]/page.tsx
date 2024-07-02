@@ -4,12 +4,15 @@ import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { Search } from "lucide-react";
 import Pagination from "~/components/sections/pagination";
+import RequestedCard from "~/components/RequestedCard";
+import { validateRequest } from "~/server/auth";
 
 export default async function Home({
   searchParams,
 }: {
   searchParams: { page: string };
 }) {
+  const { session } = await validateRequest();
   const { issues, total, take, page } = await getIssues(
     Number(searchParams.page) || 1
   );
@@ -31,7 +34,9 @@ export default async function Home({
             <Pagination page={page} totalPages={totalPages} />
           )}
         </div>
-        <div className="flex w-[30%] p-3">card</div>
+        <div className="flex w-[30%] flex-col pl-6">
+          {!!session && <RequestedCard />}
+        </div>
       </div>
     </div>
   );
