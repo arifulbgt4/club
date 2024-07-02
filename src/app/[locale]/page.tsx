@@ -39,7 +39,7 @@ export default async function Home({
               <Pagination page={page} totalPages={totalPages} />
             </>
           ) : (
-            <EmptyState title="No issues founded" />
+            <EmptyState title="No issues found" />
           )}
         </div>
         <div className="flex w-[30%] flex-col pl-6">
