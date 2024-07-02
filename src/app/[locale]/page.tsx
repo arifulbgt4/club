@@ -14,11 +14,14 @@ import EmptyState from "~/components/shared/empty-state";
 export default async function Home({
   searchParams,
 }: {
-  searchParams: { page: string };
+  searchParams: { page: string; topics: string };
 }) {
   const { session } = await validateRequest();
+  const topics =
+    (!!searchParams?.topics && searchParams?.topics?.split(",")) || [];
   const { issues, total, take, page } = await getIssues(
-    Number(searchParams.page) || 1
+    Number(searchParams.page) || 1,
+    topics
   );
   const totalPages = Math.ceil(total / take);
   return (

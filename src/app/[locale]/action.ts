@@ -4,11 +4,16 @@ import { type IssueOptions } from "~/types";
 
 const TAKE = 10;
 
-export async function getIssues(page: number = 1) {
+export async function getIssues(page: number = 1, topics?: string[]) {
   const issues = await db.issue.findMany({
     where: {
       state: IssueState.published,
       published: true,
+      ...(!!topics?.length && {
+        topics: {
+          hasSome: topics,
+        },
+      }),
     },
     orderBy: {
       createdAt: "desc",
