@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -7,6 +8,7 @@ import Apply from "~/components/Apply";
 import Description from "./description";
 import { type IssueType } from "@prisma/client";
 import SignUpPromotion from "~/components/SignUpPromotion";
+import { hexToRgba } from "~/lib/utils";
 
 interface IssuePageProps {
   params: { issueId: string };
@@ -63,6 +65,47 @@ const IssuePage = async ({ params: { issueId } }: IssuePageProps) => {
             issueType={dbIssue.type as IssueType}
             disabled={isOwn || !isAuthenticated}
           />
+          <div className="mb-6">
+            {dbIssue?.tag?.length ? (
+              <div className="flex flex-col">
+                <span className=" pb-2 text-sm font-medium">Topics</span>
+                <div className=" flex flex-wrap">
+                  {dbIssue?.tag?.map((t, i) => (
+                    <span
+                      key={i}
+                      className=" m-1 rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
+          {issue?.labels?.length ? (
+            <div className="flex flex-col">
+              <span className=" pb-3 text-sm font-medium">Labels</span>
+              <div className="flex flex-wrap">
+                {issue?.labels?.map((label: any) => (
+                  <span
+                    key={label?.id}
+                    style={{
+                      background: hexToRgba(`#${label?.color}`, 0.3),
+                      borderColor: hexToRgba(`#${label?.color}`, 0.6),
+                      color: `#${label?.color}`,
+                    }}
+                    className={`mb-2 mr-2 rounded-full border px-2.5 py-0.5 text-xs font-medium text-gray-800`}
+                  >
+                    {label?.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>

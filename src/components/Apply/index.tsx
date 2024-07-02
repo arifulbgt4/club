@@ -60,7 +60,7 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
   }, [price, issueType]);
 
   return (
-    <Card>
+    <Card className="mb-6">
       <CardHeader className=" mb-6 border-b">
         <CardTitle className=" text-green-500">{getPrice}</CardTitle>
       </CardHeader>
