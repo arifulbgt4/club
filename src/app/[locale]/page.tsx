@@ -27,7 +27,7 @@ export default async function Home({
       <div className="mb-9 mt-3 flex">
         <div className=" flex w-[70%] flex-col pr-3">
           <div className="mb-3 flex  w-full items-center space-x-2">
-            <SearchByTopics params={topics} />
+            <SearchByTopics params={topics} isAuthenticate={!!session} />
           </div>
           {!!issues?.length ? (
             <>

@@ -7,8 +7,12 @@ import Icons from "../shared/icons";
 import { Search, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { cn } from "~/lib/utils";
 
-const SearchByTopics: FC<SearchByTopicsProps> = ({ params }) => {
+const SearchByTopics: FC<SearchByTopicsProps> = ({
+  params,
+  isAuthenticate,
+}) => {
   const [inputValue, setInputValue] = useState("");
   const router = useRouter();
   const loadOptions = async (inputValue: string) => {
@@ -34,7 +38,12 @@ const SearchByTopics: FC<SearchByTopicsProps> = ({ params }) => {
   };
 
   return (
-    <div className="flex w-full items-center gap-2 rounded-lg border px-2 py-1">
+    <div
+      className={cn(
+        !isAuthenticate && "pointer-events-none",
+        "flex w-full items-center gap-2 rounded-lg border px-2 py-1"
+      )}
+    >
       <Search className="h-5 w-5" />
       <div className="flex">
         {params?.map((p, i) => (
@@ -69,7 +78,7 @@ const SearchByTopics: FC<SearchByTopicsProps> = ({ params }) => {
           );
         }}
         inputValue={inputValue}
-        placeholder="Search by topics"
+        placeholder={isAuthenticate ? "Search by topics" : "Login and search"}
         noOptionsMessage={() => <p>Search topics</p>}
         loadingMessage={() => (
           <div className=" flex justify-center">
