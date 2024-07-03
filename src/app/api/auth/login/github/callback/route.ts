@@ -70,6 +70,14 @@ export const GET = async (request: NextRequest) => {
     }
 
     if (existingUser) {
+      await db.user.update({
+        where: {
+          id: existingUser.id,
+        },
+        data: {
+          userAccessToken: tokens.accessToken,
+        },
+      });
       if (!existingUser.activate) {
         await db.user.update({
           where: {
@@ -164,6 +172,7 @@ export const GET = async (request: NextRequest) => {
         name: githubUser.name || githubUser.login,
         email: githubUser.email,
         username: githubUser.login,
+        userAccessToken: tokens.accessToken,
         stripeCustomerId: customer.id,
         picture: githubUser.avatar_url,
         ...(setup_action === "install" &&
