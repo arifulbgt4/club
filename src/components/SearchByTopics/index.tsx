@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useState, type FC } from "react";
+import { useEffect, useState, type FC } from "react";
 import type { SearchByTopicsProps } from "./Types";
 import Select from "react-select/async";
 import Icons from "../shared/icons";
@@ -13,6 +13,7 @@ const SearchByTopics: FC<SearchByTopicsProps> = ({
   params,
   isAuthenticate,
 }) => {
+  const [isMounted, setIsMounted] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const router = useRouter();
   const loadOptions = async (inputValue: string) => {
@@ -36,12 +37,13 @@ const SearchByTopics: FC<SearchByTopicsProps> = ({
     }
     router.push(`/?topics=${params.filter((v) => v !== t).join(",")}`);
   };
+  useEffect(() => setIsMounted(true), []);
 
   return (
     <div
       className={cn(
         !isAuthenticate && "pointer-events-none",
-        "flex w-full items-center gap-2 rounded-lg border px-2 py-1"
+        "flex min-h-12 w-full items-center gap-2 rounded-lg border px-2 py-1"
       )}
     >
       <Search className="h-5 w-5" />
@@ -58,38 +60,41 @@ const SearchByTopics: FC<SearchByTopicsProps> = ({
           </Button>
         ))}
       </div>
-      <Select
-        value=""
-        className="  bg-transparent"
-        classNames={{
-          indicatorsContainer: () => "w-0 !hidden",
-          control: () => "!bg-transparent !border-0 !shadow-none !cursor-text",
-          valueContainer: () => "!p-0",
-          input: () => "!text-inherit !p-0",
-          menu: () => "!bg-accent !text-inherit !w-[240px]",
-          option: ({ isFocused }) =>
-            isFocused
-              ? "!bg-accent-foreground !text-accent"
-              : "!bg-transparent !text-inherit",
-        }}
-        onChange={(v: any) => {
-          router.push(
-            `/?topics=${!!params?.length ? params.join(",") + "," + v?.value : v?.value}`
-          );
-        }}
-        inputValue={inputValue}
-        placeholder={isAuthenticate ? "Search by topics" : "Login and search"}
-        noOptionsMessage={() => <p>Search topics</p>}
-        loadingMessage={() => (
-          <div className=" flex justify-center">
-            <Icons.spinner className=" animate-spin" />
-          </div>
-        )}
-        onInputChange={(newValue) => setInputValue(newValue)}
-        loadOptions={loadOptions}
-        defaultOptions={false}
-        cacheOptions
-      />
+      {isMounted ? (
+        <Select
+          value=""
+          className="  bg-transparent"
+          classNames={{
+            indicatorsContainer: () => "w-0 !hidden",
+            control: () =>
+              "!bg-transparent !border-0 !shadow-none !cursor-text",
+            valueContainer: () => "!p-0",
+            input: () => "!text-inherit !p-0",
+            menu: () => "!bg-accent !text-inherit !w-[240px]",
+            option: ({ isFocused }) =>
+              isFocused
+                ? "!bg-accent-foreground !text-accent"
+                : "!bg-transparent !text-inherit",
+          }}
+          onChange={(v: any) => {
+            router.push(
+              `/?topics=${!!params?.length ? params.join(",") + "," + v?.value : v?.value}`
+            );
+          }}
+          inputValue={inputValue}
+          placeholder={isAuthenticate ? "Search by topics" : "Login and search"}
+          noOptionsMessage={() => <p>Search topics</p>}
+          loadingMessage={() => (
+            <div className=" flex justify-center">
+              <Icons.spinner className=" animate-spin" />
+            </div>
+          )}
+          onInputChange={(newValue) => setInputValue(newValue)}
+          loadOptions={loadOptions}
+          defaultOptions={false}
+          cacheOptions
+        />
+      ) : null}
     </div>
   );
 };
