@@ -1,8 +1,5 @@
 import PublishedIssueItem from "~/components/PublishedIssueItem/PublishedIssueItem";
 import { getIssues } from "./action";
-import { Input } from "~/components/ui/input";
-import { Button } from "~/components/ui/button";
-import { Search } from "lucide-react";
 import Pagination from "~/components/sections/pagination";
 import RequestedCard from "~/components/RequestedCard";
 import { validateRequest } from "~/server/auth";
@@ -10,6 +7,7 @@ import InReviewCard from "~/components/InReviewCard";
 import SignUpPromotion from "~/components/SignUpPromotion";
 import RequestChangesCard from "~/components/RequestChangesCard";
 import EmptyState from "~/components/shared/empty-state";
+import SearchByTopics from "~/components/SearchByTopics";
 
 export default async function Home({
   searchParams,
@@ -29,17 +27,22 @@ export default async function Home({
       <div className="mb-9 mt-3 flex">
         <div className=" flex w-[70%] flex-col pr-3">
           <div className="mb-3 flex  w-full items-center space-x-2">
-            <Input type="search" placeholder="Search..." />
-            <Button size="icon" variant="outline">
-              <Search />
-            </Button>
+            <SearchByTopics params={topics} />
           </div>
           {!!issues?.length ? (
             <>
               {issues.map((issue) => (
                 <PublishedIssueItem key={issue.id} {...issue} />
               ))}
-              <Pagination page={page} totalPages={totalPages} />
+              <Pagination
+                page={page}
+                totalPages={totalPages}
+                more={
+                  !!searchParams?.topics
+                    ? `?topics=${searchParams?.topics}`
+                    : ""
+                }
+              />
             </>
           ) : (
             <EmptyState title="No issues found" />
