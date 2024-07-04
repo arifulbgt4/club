@@ -64,6 +64,7 @@ const SearchByTopics: FC<SearchByTopicsProps> = ({
         <Select
           value=""
           className="  bg-transparent"
+          isDisabled={!isAuthenticate}
           classNames={{
             indicatorsContainer: () => "w-0 !hidden",
             control: () =>
