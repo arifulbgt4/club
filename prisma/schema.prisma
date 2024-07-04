@@ -142,7 +142,7 @@ enum IssueType {
 }
 
 model Issue {
-  id          String      @unique
+  id          String      @id @unique
   title       String?
   issueNumber Int?
   prNumber    Int?
