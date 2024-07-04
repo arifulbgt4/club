@@ -39,6 +39,7 @@ export const GET = async (request: NextRequest) => {
     });
 
     const githubUser: GitHubUser = await githubUserResponse.json();
+
     const existingUser = await db.user.findUnique({
       where: {
         githubId: githubUser.id,
@@ -162,15 +163,25 @@ export const GET = async (request: NextRequest) => {
       });
     }
 
+    const gitUserEmailRes = await fetch("https://api.github.com/user/emails", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${tokens.accessToken}`,
+      },
+    });
+    const gitUserEmail: UserEmail[] = await gitUserEmailRes.json();
+    const primaryEmail = gitUserEmail?.find((v) => !!v?.primary);
+    const userEmail = primaryEmail?.email as string;
+
     const customer = await stripe.customers.create({
-      email: githubUser?.email,
+      email: userEmail,
     });
 
     const newUser = await db.user.create({
       data: {
         githubId: githubUser.id,
         name: githubUser.name || githubUser.login,
-        email: githubUser.email,
+        email: userEmail,
         username: githubUser.login,
         userAccessToken: tokens.accessToken,
         stripeCustomerId: customer.id,
@@ -233,6 +244,12 @@ export const GET = async (request: NextRequest) => {
   }
 };
 
+interface UserEmail {
+  email: string;
+  primary: boolean;
+  verified: boolean;
+  visibility: string;
+}
 interface GitHubUser {
   id: number;
   name: string;
