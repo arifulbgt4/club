@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
 
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -20,12 +20,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Lock, LockOpen, PlusCircleIcon, Search } from "lucide-react";
+import { Lock, LockOpen, Plus, PlusCircleIcon, Search } from "lucide-react";
 import type { AddRepositoryProps } from "./Types";
 import { Input } from "../ui/input";
 import type { ProviderPublic } from "~/types";
 import Icons from "../shared/icons";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { cn } from "~/lib/utils";
 
 export default function RepoImport({ providers }: AddRepositoryProps) {
   const [open, setOpen] = useState(false);
@@ -123,6 +125,17 @@ export default function RepoImport({ providers }: AddRepositoryProps) {
                       </SelectItem>
                     ))}
                   </SelectGroup>
+                  <Link
+                    href="https://github.com/apps/issueclub/installations/select_target"
+                    target="_blank"
+                    className={cn(
+                      buttonVariants({ variant: "ghost", size: "sm" }),
+                      "mt-3"
+                    )}
+                  >
+                    <Plus className="mr-1 h-5 w-5" />
+                    Add GitHub Account
+                  </Link>
                 </SelectContent>
               </Select>
               <div className=" relative flex flex-1 items-center px-3">
