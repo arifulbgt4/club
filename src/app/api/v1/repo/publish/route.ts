@@ -50,7 +50,8 @@ export async function POST(req: Request) {
         name: repo?.data?.name,
         fullName: repo?.data?.full_name,
         private: Boolean(repo?.data?.private),
-        topics: repo?.data?.topics || [],
+        language: repo?.data?.language,
+        topics: repo?.data?.topics,
       },
     });
 

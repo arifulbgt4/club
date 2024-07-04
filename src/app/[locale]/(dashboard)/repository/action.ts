@@ -1,4 +1,5 @@
 import db from "~/lib/db";
+import octokit from "~/lib/octokit";
 import { validateRequest } from "~/server/auth";
 import type { ProviderPublic } from "~/types";
 
@@ -21,6 +22,33 @@ export async function getRepository() {
     },
   });
   return repo;
+}
+
+export async function getRepositoryByID(id: string) {
+  const { user } = await validateRequest();
+
+  const dbRepo = await db.repository.findUnique({
+    where: { id, userId: user?.id },
+    include: {
+      provider: {
+        select: {
+          id: true,
+          name: true,
+          picture: true,
+          active: true,
+        },
+      },
+    },
+  });
+
+  const octo = await octokit();
+
+  const gitRepo = await octo.request("GET /repos/{owner}/{repo}", {
+    owner: dbRepo?.provider?.name,
+    repo: dbRepo?.name,
+  });
+
+  return { dbRepo, gitRepo: gitRepo?.data };
 }
 
 export async function getProviders() {
