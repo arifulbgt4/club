@@ -32,7 +32,7 @@ const RepositoryLayout = async ({
             {repos?.map((r) => (
               <li key={r.id} className=" hover:rounded-md hover:bg-accent">
                 <Link
-                  href={`/repository/${r?.id}`}
+                  href={`/repository/${r?.id}?t=board`}
                   className="flex flex-nowrap px-2 py-1"
                 >
                   <div className=" mt-1 flex h-6 w-6 items-center justify-center text-muted-foreground">
