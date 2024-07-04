@@ -42,7 +42,7 @@ const ARepositoryPage = async ({
                 {gitRepo.name}
               </span>
             </TooltipTrigger>
-            <TooltipContent>{gitRepo.name}</TooltipContent>
+            <TooltipContent>{gitRepo.full_name}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
