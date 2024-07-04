@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { cookies } from "next/headers";
 import { cn } from "~/lib/utils";
 import "./globals.css";
+import Cookies from "~/components/Cookies";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -31,6 +32,7 @@ export default function RootLayout({
         )}
       >
         {children}
+        <Cookies />
       </body>
     </html>
   );

@@ -14,5 +14,6 @@ export const GET = async () => {
     sameSite: "lax",
   });
 
-  return Response.redirect(url);
+  // return Response.redirect(url);
+  return new Response(JSON.stringify(url), { status: 200 });
 };

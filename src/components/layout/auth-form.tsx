@@ -8,6 +8,21 @@ import Icons from "../shared/icons";
 export default function AuthForm() {
   const [isGithubLoading, setIsGithubLoading] = useState(false);
 
+  const handleClick = async () => {
+    const res = await fetch("/api/auth/login/github");
+    const url = await res.json();
+    const width = 800;
+    const height = 600;
+    const left = window.screen.width / 2 - width / 3;
+    const top = window.screen.height / 2 - height / 2;
+    const authUrl = `${url}&redirect_uri=${window.location.origin}/api/auth/login/github/callback`;
+    window.open(
+      url,
+      "GitHubAuth",
+      `width=${width},height=${height},top=${top},left=${left}`
+    );
+  };
+
   return (
     <div className={cn("mt-4 flex flex-col gap-4")}>
       {isGithubLoading ? (
@@ -16,12 +31,12 @@ export default function AuthForm() {
         </Button>
       ) : (
         <Link
-          href="/api/auth/login/github"
+          href=""
           className={cn(
             buttonVariants({ variant: "outline" }),
             "hover:bg-accent-foreground hover:text-accent"
           )}
-          onClick={() => setIsGithubLoading(true)}
+          onClick={handleClick}
         >
           Continue with <Icons.gitHub className="ml-2 h-4 w-4" />
         </Link>

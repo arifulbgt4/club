@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import SidebarNav from "~/components/layout/sidebar-nav";
+// import SidebarNav from "~/components/layout/sidebar-nav";
 import { validateRequest } from "~/server/auth";
 
 interface DashboardLayoutProps {
