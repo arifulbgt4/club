@@ -94,7 +94,7 @@ export default function Navbar({
                     <span>Profile</span>
                     <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push("/repo")}>
+                  <DropdownMenuItem onClick={() => router.push("/repository")}>
                     <span>Repository</span>
                     <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                   </DropdownMenuItem>

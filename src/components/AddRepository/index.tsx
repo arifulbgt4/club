@@ -60,9 +60,12 @@ export default function RepoImport({ providers }: AddRepositoryProps) {
       return;
     }
     const pubId = await res.json();
-    router.push(`/repository/${pubId}`);
-    setLoadingPub(false);
-    setOpen(false);
+    router.refresh();
+    setTimeout(() => {
+      router.push(`/repository/${pubId}`);
+      setLoadingPub(false);
+      setOpen(false);
+    }, 500);
   };
 
   useEffect(() => {
@@ -73,7 +76,10 @@ export default function RepoImport({ providers }: AddRepositoryProps) {
   return (
     <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
       <DialogTrigger asChild>
-        <Button variant="secondary">
+        <Button
+          variant="secondary"
+          className=" bg-accent-foreground text-accent hover:text-inherit"
+        >
           <PlusCircleIcon className="mr-2 h-4 w-4" />
           Import a repository
         </Button>
