@@ -14,7 +14,7 @@ export default async function DashboardLayout({
   if (!session) redirect("/login");
   return (
     <div className="container">
-      <div className="flex min-h-[calc(100vh-140px)] flex-col gap-8 rounded-md py-8 md:min-h-[calc(100vh-160px)] lg:flex-row 2xl:gap-12">
+      <div className="flex min-h-[calc(100vh-140px)] flex-col rounded-md  md:min-h-[calc(100vh-160px)] lg:flex-row ">
         {/* <aside className="lg:w-1/5">
           <SidebarNav />
         </aside> */}
