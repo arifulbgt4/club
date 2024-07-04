@@ -47,6 +47,7 @@ export async function createRepo({
 
   const cr = await db.repository.create({
     data: {
+      id: "",
       name,
       fullName,
       language,

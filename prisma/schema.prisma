@@ -108,23 +108,24 @@ model Provider {
 }
 
 model Repository {
-  id         String        @id @unique @default(cuid())
-  name       String?
-  fullName   String?
-  language   String?
-  private    Boolean?
-  topics     String[]
-  user       User?         @relation(fields: [userId], references: [id])
-  userId     String?
-  org        Organization? @relation(fields: [orgId], references: [id])
-  orgId      String?
-  issue      Issue[]
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
-  Provider   Provider?     @relation(fields: [providerId], references: [id])
-  providerId String?
+  id             String        @id @unique
+  name           String?
+  fullName       String?
+  language       String?
+  private        Boolean?
+  active         Boolean?      @default(true)
+  topics         String[]
+  user           User?         @relation(fields: [userId], references: [id])
+  userId         String?
+  issue          Issue[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  provider       Provider?     @relation(fields: [providerId], references: [id])
+  providerId     String?
+  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?
 
-  @@index([userId, orgId])
+  @@index([userId, providerId])
 }
 
 enum IssueState {

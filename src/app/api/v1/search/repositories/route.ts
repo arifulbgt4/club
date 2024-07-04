@@ -1,30 +1,35 @@
-import { app } from "~/lib/octokit";
+import { OwnerTypeState } from "@prisma/client";
+import db from "~/lib/db";
+import octokit from "~/lib/octokit";
 import { validateRequest } from "~/server/auth";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const query = searchParams.get("q");
-  const queryUser = searchParams.get("u");
+  const id = searchParams.get("s");
   try {
-    const { session, user } = await validateRequest();
-    if (!session || !user?.stripeCustomerId) {
-      return new Response("Unauthorized", { status: 401 });
-    }
-    if (!queryUser && queryUser !== user?.username) {
+    const { session } = await validateRequest();
+    if (!session || !id) {
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const octo = await app.getInstallationOctokit(Number(user?.installId));
+    const provider = await db.provider.findUnique({ where: { id } });
+
+    if (!provider) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
+    const ownerType =
+      provider.ownerType === OwnerTypeState.organization ? "org" : "user";
+
+    const octo = await octokit();
 
     const user_repositories = await octo.request("GET /search/repositories", {
-      q: `${query} user:${user?.username}` as string,
+      q: `${query} ${ownerType}:${provider.name}` as string,
       sort: "updated",
       order: "desc",
-      per_page: 10,
+      per_page: 5,
       page: 1,
-      headers: {
-        authorization: `token ${user?.accessToken}`,
-      },
     });
     return new Response(JSON.stringify(user_repositories.data.items), {
       status: 200,
