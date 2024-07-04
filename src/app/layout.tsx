@@ -2,8 +2,8 @@ import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import { cookies } from "next/headers";
 import { cn } from "~/lib/utils";
-import "./globals.css";
 import Cookies from "~/components/Cookies";
+import "./globals.css";
 
 const fontSans = Inter({
   subsets: ["latin"],
