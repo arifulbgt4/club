@@ -81,7 +81,7 @@ export default function RepoImport({ providers }: AddRepositoryProps) {
           className=" bg-accent-foreground text-accent hover:text-inherit"
         >
           <PlusCircleIcon className="mr-2 h-4 w-4" />
-          Import a repository
+          Import repository
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

@@ -14,17 +14,18 @@ const RepositoryLayout = async ({
   const repos = await getRepository();
   return (
     <div className=" flex flex-col gap-2">
-      <div className="flex items-center justify-between border-b pb-3">
-        <h1 className=" text-2xl">
-          Manage your project with global developers
+      <div className="flex items-center justify-between border-b">
+        <h1 className=" text-lg font-semibold">
+          Repository
+          <span className="ml-2">({repos?.length})</span>
         </h1>
         <AddRepository providers={providers} />
       </div>
       <div className="flex flex-nowrap gap-6">
         <div className="flex w-[300px] flex-col ">
-          <span className=" mb-3 px-2 text-sm font-semibold text-muted-foreground">
-            Repository
-            <span className="ml-2">({repos?.length})</span>
+          {/* // TODO: should add a filter by provider  */}
+          <span className=" mb-2 px-2 text-sm font-medium text-muted-foreground">
+            All Repository
           </span>
           <ul className="h-[calc(100vh-270px)] overflow-auto rounded-md border">
             {repos?.map((r) => (
