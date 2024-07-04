@@ -25,12 +25,12 @@ import { PlusCircleIcon, Search } from "lucide-react";
 // import RepoSearch from "./RepoSearch";
 import type { AddRepositoryProps } from "./Types";
 import { Input } from "../ui/input";
-import type { Provider } from "@prisma/client";
+import type { ProviderPublic } from "~/types";
 
 export default function RepoImport({ providers }: AddRepositoryProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [repo, setRepo] = useState([]);
-  const [provider, setProvider] = useState<Provider>(providers[0]);
+  const [provider, setProvider] = useState<ProviderPublic>(providers[0]);
 
   const getRepos = useCallback(async () => {
     try {
@@ -73,7 +73,7 @@ export default function RepoImport({ providers }: AddRepositoryProps) {
                 onValueChange={(v) => {
                   const selected = providers?.find(
                     (p) => p?.name === v
-                  ) as Provider;
+                  ) as ProviderPublic;
                   setProvider(selected);
                 }}
               >

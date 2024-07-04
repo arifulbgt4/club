@@ -1,5 +1,5 @@
-import type { Provider } from "@prisma/client";
+import type { ProviderPublic } from "~/types";
 
 export interface AddRepositoryProps {
-  providers: Provider[];
+  providers: ProviderPublic[];
 }

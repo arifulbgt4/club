@@ -14,6 +14,13 @@ export interface payload {
   picture?: string;
 }
 
+export interface ProviderPublic {
+  id: string;
+  name: string;
+  picture: string;
+  active: boolean;
+}
+
 export const settingsSchema = z.object({
   picture: z.string().url(),
   name: z
