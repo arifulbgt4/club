@@ -9,18 +9,24 @@ export default function AuthForm() {
   const [isGithubLoading, setIsGithubLoading] = useState(false);
 
   const handleClick = async () => {
+    setIsGithubLoading(true);
     const res = await fetch("/api/auth/login/github");
     const url = await res.json();
     const width = 800;
     const height = 600;
     const left = window.screen.width / 2 - width / 3;
     const top = window.screen.height / 2 - height / 2;
-    const authUrl = `${url}&redirect_uri=${window.location.origin}/api/auth/login/github/callback`;
-    window.open(
+    const newWindow = window.open(
       url,
       "GitHubAuth",
       `width=${width},height=${height},top=${top},left=${left}`
     );
+
+    if (!!newWindow) {
+      newWindow.focus();
+    } else {
+      window.location.href = url;
+    }
   };
 
   return (
