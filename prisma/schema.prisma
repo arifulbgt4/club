@@ -51,6 +51,7 @@ model User {
   assignedIssues          Issue[]                  @relation("AssignedIssues")
   issue                   Issue[]
   StripeAccount           StripeAccount[]
+  Provider                Provider[]
 }
 
 model StripeAccount {
@@ -86,20 +87,42 @@ model Organization {
   @@index([userId])
 }
 
+enum OwnerTypeState {
+  user
+  organization
+}
+
+model Provider {
+  id             String          @id @unique
+  name           String?
+  installationId Int?
+  active         Boolean?        @default(true)
+  picture        String?
+  accessToken    String?
+  userId         String?
+  ownerType      OwnerTypeState? @default(user)
+  user           User?           @relation(fields: [userId], references: [id])
+  repository     Repository[]
+
+  @@index([userId])
+}
+
 model Repository {
-  id        String        @id @unique @default(cuid())
-  name      String?
-  fullName  String?
-  language  String?
-  private   Boolean?
-  topics    String[]
-  user      User?         @relation(fields: [userId], references: [id])
-  userId    String?
-  org       Organization? @relation(fields: [orgId], references: [id])
-  orgId     String?
-  issue     Issue[]
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  id         String        @id @unique @default(cuid())
+  name       String?
+  fullName   String?
+  language   String?
+  private    Boolean?
+  topics     String[]
+  user       User?         @relation(fields: [userId], references: [id])
+  userId     String?
+  org        Organization? @relation(fields: [orgId], references: [id])
+  orgId      String?
+  issue      Issue[]
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  Provider   Provider?     @relation(fields: [providerId], references: [id])
+  providerId String?
 
   @@index([userId, orgId])
 }

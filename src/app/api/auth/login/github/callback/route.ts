@@ -1,3 +1,4 @@
+import { OwnerTypeState } from "@prisma/client";
 import { OAuth2RequestError } from "arctic";
 import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
@@ -56,7 +57,6 @@ export const GET = async (request: NextRequest) => {
       );
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       install = installation.data.account as any;
-
       const accessToken = await app.octokit.request(
         "POST /app/installations/{installation_id}/access_tokens",
         {
@@ -105,54 +105,27 @@ export const GET = async (request: NextRequest) => {
       );
 
       if (setup_action === "install") {
-        if (install.type === "Organization") {
-          const org = await db.organization.findFirst({
-            where: { name: install.login },
-          });
-
-          if (!org) {
-            await db.organization.create({
-              data: {
-                name: install.login,
-                token: newAccessToken,
-                picture: install.avatar_url,
-                installId: Number(installation_id),
-                user: {
-                  connect: {
-                    id: existingUser.id,
-                  },
-                },
+        await db.provider.upsert({
+          where: { id: String(installation_id) },
+          create: {
+            id: String(installation_id),
+            name: install.login,
+            accessToken: newAccessToken,
+            installationId: Number(installation_id),
+            picture: install.avatar_url,
+            ...(install.type === "Organization" && {
+              ownerType: OwnerTypeState.organization,
+            }),
+            user: {
+              connect: {
+                id: existingUser.id,
               },
-            });
-          } else {
-            await db.organization.update({
-              where: {
-                id: org.id,
-              },
-              data: {
-                token: newAccessToken,
-                installId: Number(installation_id),
-                active: true,
-                user: {
-                  connect: {
-                    id: existingUser.id,
-                  },
-                },
-              },
-            });
-          }
-        }
-        if (install.type === "User") {
-          await db.user.update({
-            where: {
-              id: existingUser.id,
             },
-            data: {
-              accessToken: newAccessToken,
-              installId: Number(installation_id),
-            },
-          });
-        }
+          },
+          update: {
+            active: true,
+          },
+        });
       }
 
       return new Response(null, {
@@ -186,29 +159,31 @@ export const GET = async (request: NextRequest) => {
         userAccessToken: tokens.accessToken,
         stripeCustomerId: customer.id,
         picture: githubUser.avatar_url,
-        ...(setup_action === "install" &&
-          install.type === "User" && {
-            accessToken: newAccessToken,
-            installId: Number(installation_id),
-          }),
       },
     });
 
     if (setup_action === "install") {
-      if (install.type === "Organization") {
-        await db.organization.create({
-          data: {
-            name: install.login,
-            token: newAccessToken,
-            picture: install.avatar_url,
-            user: {
-              connect: {
-                id: newUser.id,
-              },
+      await db.provider.upsert({
+        where: { id: String(installation_id) },
+        create: {
+          id: String(installation_id),
+          name: install.login,
+          accessToken: newAccessToken,
+          installationId: Number(installation_id),
+          picture: install.avatar_url,
+          ...(install.type === "Organization" && {
+            ownerType: OwnerTypeState.organization,
+          }),
+          user: {
+            connect: {
+              id: newUser.id,
             },
           },
-        });
-      }
+        },
+        update: {
+          active: true,
+        },
+      });
 
       // sendWelcomeEmail({ toMail: newUser.email!, userName: newUser.name! });
       const session = await lucia.createSession(newUser.id, {});
