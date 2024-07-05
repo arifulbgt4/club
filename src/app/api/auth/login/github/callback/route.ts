@@ -45,6 +45,13 @@ export const GET = async (request: NextRequest) => {
       where: {
         githubId: githubUser.id,
       },
+      include: {
+        provider: {
+          where: {
+            name: githubUser?.login,
+          },
+        },
+      },
     });
 
     if (setup_action === "install") {
@@ -90,7 +97,10 @@ export const GET = async (request: NextRequest) => {
         });
       }
 
-      if (setup_action !== "install" && existingUser.accessToken === null) {
+      if (
+        setup_action !== "install" &&
+        existingUser.provider[0]?.name !== existingUser.username
+      ) {
         return Response.redirect(
           `https://github.com/apps/issueclub/installations/new/permissions?target_id=${existingUser.githubId}`
         );

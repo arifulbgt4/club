@@ -50,8 +50,8 @@ model User {
   request                 Request[]
   assignedIssues          Issue[]                  @relation("AssignedIssues")
   issue                   Issue[]
-  StripeAccount           StripeAccount[]
-  Provider                Provider[]
+  stripeAccount           StripeAccount[]
+  provider                Provider[]
 }
 
 model StripeAccount {

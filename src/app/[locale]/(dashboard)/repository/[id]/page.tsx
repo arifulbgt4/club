@@ -13,7 +13,7 @@ import Board from "./_lib/Board";
 
 const ARepositoryPage = async ({
   params: { id },
-  searchParams: { t, p, b },
+  searchParams: { t, b },
 }: {
   params: { id: string };
   searchParams: { t: string; p: string; b: string };
