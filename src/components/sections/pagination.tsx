@@ -12,9 +12,15 @@ interface PaginationProps {
   page: number;
   totalPages: number;
   more?: string;
+  justify?: "start" | "end" | "center";
 }
 
-const Pagination = ({ page, totalPages, more }: PaginationProps) => {
+const Pagination = ({
+  page,
+  totalPages,
+  more,
+  justify = "center",
+}: PaginationProps) => {
   const maxPagesToShow = 6;
   const halfRange = Math.floor(maxPagesToShow / 2);
 
@@ -35,7 +41,7 @@ const Pagination = ({ page, totalPages, more }: PaginationProps) => {
     pageNumbers.push(i);
   }
   return (
-    <PaginationContainer className="my-3">
+    <PaginationContainer className={`my-3 justify-${justify}`}>
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious

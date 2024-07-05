@@ -20,9 +20,9 @@ const TopTabs = ({ t }: { t: string }) => {
           <TooltipTrigger asChild>
             <Button
               size="icon"
-              variant={t === "board" ? "default" : "outline"}
+              variant={t === undefined ? "default" : "outline"}
               className="h-8 w-8"
-              onClick={() => router.push(pathname + "?t=board")}
+              onClick={() => t !== undefined && router.push(pathname)}
             >
               <SquareKanban />
             </Button>
@@ -40,7 +40,9 @@ const TopTabs = ({ t }: { t: string }) => {
               size="icon"
               variant={t === "settings" ? "default" : "outline"}
               className="h-8 w-8"
-              onClick={() => router.push(pathname + "?t=settings")}
+              onClick={() =>
+                t !== "settings" && router.push(pathname + "?t=settings")
+              }
             >
               <Settings />
             </Button>
