@@ -29,7 +29,6 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
       `/api/v1/search/issue?r=${repoId}&q=${query || ""}`
     );
     const data = await response.json();
-    console.log("data: ", data);
     setSearchResults(data);
     setLoading(false);
   };

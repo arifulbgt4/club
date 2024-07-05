@@ -164,7 +164,6 @@ const invoices = [
 const Board = ({ b, repoId }: { b: string; repoId: string }) => {
   const router = useRouter();
   const pathname = usePathname();
-  console.log("path", pathname);
   return (
     <Tabs defaultValue={b || TAB_VALUE.published}>
       <div className="flex items-center justify-between">
