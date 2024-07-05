@@ -13,10 +13,10 @@ import Board from "./_lib/Board";
 
 const ARepositoryPage = async ({
   params: { id },
-  searchParams: { t },
+  searchParams: { t, p, b },
 }: {
   params: { id: string };
-  searchParams: { t: string; p: string };
+  searchParams: { t: string; p: string; b: string };
 }) => {
   const { dbRepo, gitRepo } = await getRepositoryByID(id);
   if (!dbRepo || !gitRepo) return null;
@@ -65,7 +65,7 @@ const ARepositoryPage = async ({
         <TopTabs t={t} />
       </div>
       <div className="pl-9">
-        <Board />
+        <Board b={b} />
       </div>
     </div>
   );
