@@ -5,15 +5,14 @@ import {
   CircleDot,
   CircleDotDashed,
   Edit,
-  PlusCircle,
   RefreshCcwDot,
 } from "lucide-react";
 import {
   Table,
   TableBody,
-  TableCaption,
+  // TableCaption,
   TableCell,
-  TableFooter,
+  // TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -23,6 +22,7 @@ import React from "react";
 import Pagination from "~/components/sections/pagination";
 import { Button } from "~/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import IssueImportModal from "./IssueImportModal";
 
 const TAB_VALUE = {
   published: "published",
@@ -161,7 +161,7 @@ const invoices = [
   },
 ];
 
-const Board = ({ b }: { b: string }) => {
+const Board = ({ b, repoId }: { b: string; repoId: string }) => {
   const router = useRouter();
   const pathname = usePathname();
   console.log("path", pathname);
@@ -174,7 +174,7 @@ const Board = ({ b }: { b: string }) => {
             className="px-2.5 text-base"
             onClick={() => {
               if (b !== undefined || b !== TAB_VALUE.published) {
-                router.push(pathname + "?b=" + TAB_VALUE.published);
+                router.push(pathname);
               }
             }}
           >
@@ -228,10 +228,7 @@ const Board = ({ b }: { b: string }) => {
             <CircleDashed className="mr-1.5 h-5 w-5" /> Draft (0)
           </TabsTrigger>
         </TabsList>
-        <Button size="lg" variant="ghost" className="text-lg text-green-500">
-          <PlusCircle className="mr-2 h-5 w-5" />
-          Publish an issue
-        </Button>
+        <IssueImportModal repoId={repoId} />
       </div>
       <TabsContent className="m-0" value={TAB_VALUE.published}>
         <div className=" max-h-[calc(100vh-309px)] overflow-scroll">

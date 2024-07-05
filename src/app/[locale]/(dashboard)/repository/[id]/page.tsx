@@ -65,7 +65,7 @@ const ARepositoryPage = async ({
         <TopTabs t={t} />
       </div>
       <div className="pl-9">
-        <Board b={b} />
+        <Board b={b} repoId={id} />
       </div>
     </div>
   );
