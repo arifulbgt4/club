@@ -5,6 +5,7 @@ import { Button } from "~/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -48,7 +49,10 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Hello issue</DialogTitle>
+          <DialogTitle>Publish an issue</DialogTitle>
+          <DialogDescription>
+            Search using the complete issue title
+          </DialogDescription>
         </DialogHeader>
         <div className=" relative flex flex-nowrap items-center rounded-md border px-3">
           <Search className="h-5 w-5" />
@@ -56,7 +60,7 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
             className=" w-full border-0 !outline-none  !ring-offset-0 focus-visible:ring-0"
             type="search"
             {...register("query")}
-            placeholder="Search issues of your repository"
+            placeholder="Search by entire issue title"
           />
           {loading && (
             <div className=" absolute right-3">

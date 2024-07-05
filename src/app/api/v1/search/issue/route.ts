@@ -1,4 +1,3 @@
-import { OwnerTypeState } from "@prisma/client";
 import db from "~/lib/db";
 import octokit from "~/lib/octokit";
 import { validateRequest } from "~/server/auth";
