@@ -57,7 +57,12 @@ export async function POST(req: Request) {
         },
       },
       update: {
+        title: issue?.data?.title,
+        state: IssueState.draft,
+        type: body.type as IssueType,
+        topics: [...body?.topics],
         published: false,
+        active: true,
       },
     });
     return new Response(null, { status: 200 });

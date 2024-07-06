@@ -31,7 +31,7 @@ const PUBLISH_STEP = 4;
 
 const IssueImportModalContent = ({
   repoId,
-  // setOpen,
+  setOpen,
 }: {
   repoId: string;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -44,6 +44,7 @@ const IssueImportModalContent = ({
   const [topics, setTopics] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { register, watch } = useForm();
+  const [price, setPrice] = useState<number>(0);
   const [searchResults, setSearchResults] = useState([]);
   const [publishType, setPublishType] = useState<IssueType>("free");
   const [draftLoading, setDraftLoading] = useState<boolean>(false);
@@ -149,7 +150,24 @@ const IssueImportModalContent = ({
 
   async function onPublish() {
     setPublishLoading(true);
+    const res = await fetch("/api/v1/issue/publish", {
+      method: "POST",
+      body: JSON.stringify({
+        topics,
+        issueNumber: issue?.number,
+        type: publishType,
+        repoId,
+        price,
+      }),
+    });
+    if (!res.ok) {
+      setPublishLoading(false);
+      return;
+    }
+    const data = await res.json();
+    console.log("data", data);
     setPublishLoading(false);
+    setOpen(false);
   }
 
   useEffect(() => {
@@ -465,8 +483,10 @@ const IssueImportModalContent = ({
             )}
           </div>
 
-          <Button disabled={publishLoading} onClick={onPublish}>
-            {" "}
+          <Button
+            disabled={publishLoading || (publishType === "paid" && price < 3)}
+            onClick={onPublish}
+          >
             {!publishLoading ? (
               "Publish"
             ) : (
