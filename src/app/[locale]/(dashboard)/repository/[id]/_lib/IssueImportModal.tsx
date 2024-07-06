@@ -1,21 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  ArrowLeft,
-  CircleDot,
-  PlusCircle,
-  Search,
-  StepForward,
-  X,
-} from "lucide-react";
+import { ArrowLeft, CircleDot, Search, StepForward, X } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "~/components/ui/dialog";
 import React, { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -30,7 +20,7 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
   const [inputValue, setInputValue] = useState("");
   const [topics, setTopics] = useState<string[]>([]);
   const [stepLoading, setStepLoading] = useState(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const { register, watch } = useForm();
   const [searchResults, setSearchResults] = useState([]);
 
@@ -46,7 +36,7 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
     setLoading(false);
   };
 
-  const debouncedFetchResults = useCallback(debounce(fetchResults, 300), []);
+  const debouncedFetchResults = useCallback(debounce(fetchResults, 500), []);
 
   function goBack() {
     setStep((prevState) => prevState - 1);
@@ -125,10 +115,12 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
                   </div>
                 </div>
               ))
-            ) : (
+            ) : !loading ? (
               <div className=" p-3 text-center italic text-muted-foreground">
                 No open issue found {searchQuery && ` for "${searchQuery}"`}
               </div>
+            ) : (
+              <div className="w-fill h-12"></div>
             )}
           </div>
         </>

@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { type FC, useEffect, useState } from "react";
+import { type FC, useCallback, useEffect, useState } from "react";
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
 import { Button, buttonVariants } from "~/components/ui/button";
 import {
@@ -11,6 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { useForm } from "react-hook-form";
+import debounce from "lodash/debounce";
 import { Lock, LockOpen, Plus, Search } from "lucide-react";
 import type { RepositoryListProps } from "./Types";
 import { Input } from "../ui/input";
@@ -21,17 +24,20 @@ import Link from "next/link";
 import { cn } from "~/lib/utils";
 
 const RepositoryList: FC<RepositoryListProps> = ({ providers, setOpen }) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [loadingPub, setLoadingPub] = useState<boolean>(false);
   const [repo, setRepo] = useState([]);
   const [provider, setProvider] = useState<ProviderPublic>(providers[0]);
 
   const router = useRouter();
+  const { register, watch } = useForm();
 
-  const onChange = async (e: React.ChangeEvent<HTMLInputElement> | null) => {
+  const searchQuery = watch("query");
+
+  const fetchResults = async (query: string) => {
     setLoading(true);
     const res = await fetch(
-      `/api/v1/search/repositories?s=${provider?.id}&q=${e?.target?.value || ""}`,
+      `/api/v1/search/repositories?s=${provider?.id}&q=${query || ""}`,
       {
         method: "GET",
       }
@@ -40,6 +46,10 @@ const RepositoryList: FC<RepositoryListProps> = ({ providers, setOpen }) => {
     setRepo(data);
     setLoading(false);
   };
+
+  const debouncedFetchResults = useCallback(debounce(fetchResults, 500), [
+    provider,
+  ]);
 
   const onPublishRepo = async (repoName: string) => {
     setLoadingPub(true);
@@ -61,9 +71,8 @@ const RepositoryList: FC<RepositoryListProps> = ({ providers, setOpen }) => {
   };
 
   useEffect(() => {
-    onChange(null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [provider]);
+    debouncedFetchResults(searchQuery);
+  }, [searchQuery, debouncedFetchResults]);
 
   return (
     <div className=" flex flex-col">
@@ -117,7 +126,7 @@ const RepositoryList: FC<RepositoryListProps> = ({ providers, setOpen }) => {
               type="search"
               className=" w-full border-0 !outline-none  !ring-offset-0 focus-visible:ring-0"
               placeholder="Search..."
-              onChange={onChange}
+              {...register("query")}
             />
 
             {loading && (
@@ -159,10 +168,12 @@ const RepositoryList: FC<RepositoryListProps> = ({ providers, setOpen }) => {
                 </Button>
               </div>
             ))
-          ) : (
-            <div className="px-3 py-6">
-              <em>No repositories found</em>
+          ) : !loading ? (
+            <div className=" p-3 text-center italic text-muted-foreground">
+              No repositories found {searchQuery && ` for "${searchQuery}"`}
             </div>
+          ) : (
+            <div className="w-fill h-12"></div>
           )}
         </div>
       </div>
