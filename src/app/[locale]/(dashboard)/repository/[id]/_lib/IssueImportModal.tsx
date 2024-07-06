@@ -13,6 +13,7 @@ import debounce from "lodash/debounce";
 import { Input } from "~/components/ui/input";
 import Icons from "~/components/shared/icons";
 import Select from "react-select/async";
+import { cn } from "~/lib/utils";
 
 const IssueImportModal = ({ repoId }: { repoId: string }) => {
   const [step, setStep] = useState<number>(1);
@@ -20,11 +21,12 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
   const [inputValue, setInputValue] = useState("");
   const [afterText, setAfterText] = useState<string>("");
   const [topics, setTopics] = useState<string[]>([]);
-  const [stepLoading, setStepLoading] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
   const { register, watch } = useForm();
   const [searchResults, setSearchResults] = useState([]);
-
+  const [publishType, setPublishType] = useState<"free" | "paid">("free");
+  const [draftLoading, setDraftLoading] = useState<boolean>(false);
+  const [publishLoading, setPublishLoading] = useState<boolean>(false);
   const searchQuery = watch("query");
 
   const fetchResults = async (query: string) => {
@@ -65,6 +67,34 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
     }
     setTopics((pre) => pre.filter((v) => v !== t));
   };
+
+  function stepTwo() {
+    setStep(3);
+  }
+
+  async function stepThree() {
+    setDraftLoading(true);
+    const res = await fetch("/api/v1/issue/draft_publish", {
+      method: "POST",
+      body: JSON.stringify({
+        topics,
+        issueNumber: issue?.number,
+        type: publishType,
+        repoId,
+      }),
+    });
+    if (!res.ok) {
+      setDraftLoading(false);
+      return;
+    }
+    setDraftLoading(false);
+    setStep(4);
+  }
+
+  async function onPublish() {
+    setPublishLoading(true);
+    setPublishLoading(false);
+  }
 
   useEffect(() => {
     debouncedFetchResults(searchQuery);
@@ -146,55 +176,183 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
             <DialogDescription>
               Add topics related to the issue to reach out to developers
             </DialogDescription>
-            <div>
-              <div className="flex min-h-12 w-full items-center gap-2 rounded-lg border px-2 py-1">
-                <div className="flex">
-                  {topics?.map((p, i) => (
-                    <Button
-                      key={i}
-                      size="sm"
-                      onClick={() => removeTopic(p)}
-                      className="mx-1 h-6 px-2 hover:text-destructive"
-                    >
-                      {p}
-                      <X className="ml-1 h-4 w-4" />
-                    </Button>
-                  ))}
-                </div>
-                <Select
-                  value=""
-                  className="  bg-transparent"
-                  classNames={{
-                    indicatorsContainer: () => "w-0 !hidden",
-                    control: () =>
-                      "!bg-transparent !border-0 !shadow-none !cursor-text",
-                    valueContainer: () => "!p-0",
-                    input: () => "!text-inherit !p-0",
-                    menu: () => "!bg-accent !text-inherit !w-[240px]",
-                    option: ({ isFocused }) =>
-                      isFocused
-                        ? "!bg-accent-foreground !text-accent"
-                        : "!bg-transparent !text-inherit",
-                  }}
-                  onChange={(v: any) => setTopics([...topics, v?.value])}
-                  inputValue={inputValue}
-                  placeholder="Search topics"
-                  noOptionsMessage={() => <p>Search topics</p>}
-                  loadingMessage={() => (
-                    <div className=" flex justify-center">
-                      <Icons.spinner className=" animate-spin" />
-                    </div>
-                  )}
-                  onInputChange={(newValue) => setInputValue(newValue)}
-                  loadOptions={loadOptions}
-                  defaultOptions={false}
-                  cacheOptions
-                />
-              </div>
-
-              <Button className="mt-4">Next</Button>
-            </div>
           </DialogHeader>
+          <div>
+            <div className="flex min-h-12 w-full flex-wrap items-center gap-2 rounded-lg border px-2 py-1">
+              <div className="flex flex-wrap gap-1">
+                {topics?.map((p, i) => (
+                  <Button
+                    key={i}
+                    size="sm"
+                    onClick={() => removeTopic(p)}
+                    className="h-6 px-2 hover:text-destructive"
+                  >
+                    {p}
+                    <X className="ml-1 h-4 w-4" />
+                  </Button>
+                ))}
+              </div>
+              <Select
+                value=""
+                className="  bg-transparent"
+                classNames={{
+                  indicatorsContainer: () => "w-0 !hidden",
+                  control: () =>
+                    "!bg-transparent !border-0 !shadow-none !cursor-text",
+                  valueContainer: () => "!p-0",
+                  input: () => "!text-inherit !p-0",
+                  menu: () => "!bg-accent !text-inherit !w-[240px]",
+                  option: ({ isFocused }) =>
+                    isFocused
+                      ? "!bg-accent-foreground !text-accent"
+                      : "!bg-transparent !text-inherit",
+                }}
+                onChange={(v: any) => setTopics([...topics, v?.value])}
+                inputValue={inputValue}
+                placeholder="Search topics"
+                noOptionsMessage={() => <p>Search topics</p>}
+                loadingMessage={() => (
+                  <div className=" flex justify-center">
+                    <Icons.spinner className=" animate-spin" />
+                  </div>
+                )}
+                onInputChange={(newValue) => setInputValue(newValue)}
+                loadOptions={loadOptions}
+                defaultOptions={false}
+                cacheOptions
+              />
+            </div>
+
+            <Button
+              disabled={!topics?.length}
+              className="mt-4"
+              onClick={stepTwo}
+            >
+              Next
+            </Button>
+          </div>
+        </>
+      )}
+      {step === 3 && (
+        <>
+          <DialogHeader>
+            <DialogTitle className="flex flex-col">
+              <Button
+                size="sm"
+                variant="link"
+                className=" mb-1 w-fit px-0"
+                onClick={goBack}
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" /> Back
+              </Button>
+
+              <span>{issue?.title}</span>
+            </DialogTitle>
+            <DialogDescription>
+              Publish the issue to global developers
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-2">
+            <span className=" font-medium">How you want to publish?</span>
+            <div className="flex flex-col gap-2">
+              <div
+                onClick={() => {
+                  if (publishType === "paid") {
+                    setPublishType("free");
+                  }
+                }}
+                className={cn(
+                  publishType === "free" && "pointer-events-none bg-accent",
+                  "flex cursor-pointer flex-nowrap items-center gap-2 rounded-md border p-3 hover:bg-accent"
+                )}
+              >
+                <span className=" flex h-5 w-5 items-center justify-center rounded-full border-2 border-accent-foreground">
+                  {publishType === "free" && (
+                    <span className=" h-3 w-3 rounded-full bg-accent-foreground"></span>
+                  )}
+                </span>
+                <span className="text-lg font-semibold">Free</span>
+              </div>
+              <div
+                onClick={() => {
+                  if (publishType === "free") {
+                    setPublishType("paid");
+                  }
+                }}
+                className={cn(
+                  publishType === "paid" && "pointer-events-none bg-accent",
+                  "flex cursor-pointer flex-nowrap items-center gap-2 rounded-md border p-3 hover:bg-accent"
+                )}
+              >
+                <span className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-accent-foreground">
+                  {publishType === "paid" && (
+                    <span className=" h-3 w-3 rounded-full bg-accent-foreground"></span>
+                  )}
+                </span>
+                <span className="text-lg font-semibold">Paid</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <Button
+              disabled={!topics?.length || draftLoading}
+              className="mt-4"
+              onClick={stepThree}
+            >
+              {!draftLoading ? (
+                "Next"
+              ) : (
+                <Icons.spinner className=" animate-spin" />
+              )}
+            </Button>
+          </div>
+        </>
+      )}
+      {step === 4 && (
+        <>
+          <DialogHeader>
+            <DialogTitle>{issue?.title}</DialogTitle>
+            <DialogDescription>
+              Publish the issue to global developers
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-wrap gap-1">
+            {topics?.map((p, i) => (
+              <Button
+                key={i}
+                size="sm"
+                className="pointer-events-none h-6 px-2"
+              >
+                {p}
+              </Button>
+            ))}
+          </div>
+          <div className="flex flex-col gap-2">
+            {publishType === "free" ? (
+              <div className="pointer-events-none flex cursor-pointer flex-nowrap items-center gap-2 rounded-md border bg-accent p-3">
+                <span className=" flex h-5 w-5 items-center justify-center rounded-full border-2 border-accent-foreground">
+                  <span className=" h-3 w-3 rounded-full bg-accent-foreground"></span>
+                </span>
+                <span className="text-lg font-semibold">Free</span>
+              </div>
+            ) : (
+              <div className="pointer-events-none flex cursor-pointer flex-nowrap items-center gap-2 rounded-md border bg-accent p-3">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-accent-foreground">
+                  <span className=" h-3 w-3 rounded-full bg-accent-foreground"></span>
+                </span>
+                <span className="text-lg font-semibold">Paid</span>
+              </div>
+            )}
+          </div>
+
+          <Button disabled={publishLoading} onClick={onPublish}>
+            {" "}
+            {!publishLoading ? (
+              "Publish"
+            ) : (
+              <Icons.spinner className=" animate-spin" />
+            )}
+          </Button>
         </>
       )}
     </>
