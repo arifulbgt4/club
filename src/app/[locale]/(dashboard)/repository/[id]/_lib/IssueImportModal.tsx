@@ -120,7 +120,9 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
                 No open issue found {searchQuery && ` for "${searchQuery}"`}
               </div>
             ) : (
-              <div className="w-fill h-12"></div>
+              <div className="p-3 text-center italic text-muted-foreground">
+                Searching...
+              </div>
             )}
           </div>
         </>

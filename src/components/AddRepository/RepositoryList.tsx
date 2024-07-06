@@ -47,7 +47,7 @@ const RepositoryList: FC<RepositoryListProps> = ({ providers, setOpen }) => {
     setLoading(false);
   };
 
-  const debouncedFetchResults = useCallback(debounce(fetchResults, 500), [
+  const debouncedFetchResults = useCallback(debounce(fetchResults, 300), [
     provider,
   ]);
 
@@ -173,7 +173,9 @@ const RepositoryList: FC<RepositoryListProps> = ({ providers, setOpen }) => {
               No repositories found {searchQuery && ` for "${searchQuery}"`}
             </div>
           ) : (
-            <div className="w-fill h-12"></div>
+            <div className="p-3 text-center italic text-muted-foreground">
+              Searching...
+            </div>
           )}
         </div>
       </div>
