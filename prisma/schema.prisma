@@ -148,6 +148,7 @@ model Issue {
   issueNumber Int?
   prNumber    Int?
   topics      String[]
+  active      Boolean?    @default(true)
   type        IssueType?
   state       IssueState  @default(draft)
   published   Boolean?    @default(true)

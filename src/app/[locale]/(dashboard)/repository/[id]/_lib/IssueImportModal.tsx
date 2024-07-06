@@ -1,11 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ArrowLeft, CircleDot, Search, StepForward, X } from "lucide-react";
+import {
+  ArrowLeft,
+  CircleDot,
+  PlusCircle,
+  Search,
+  StepForward,
+  X,
+} from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
+  Dialog,
+  DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "~/components/ui/dialog";
 import React, { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -14,17 +24,26 @@ import { Input } from "~/components/ui/input";
 import Icons from "~/components/shared/icons";
 import Select from "react-select/async";
 import { cn } from "~/lib/utils";
+import { IssueState, type IssueType } from "@prisma/client";
 
-const IssueImportModal = ({ repoId }: { repoId: string }) => {
+const PUBLISH_STEP = 4;
+
+const IssueImportModalContent = ({
+  repoId,
+  // setOpen,
+}: {
+  repoId: string;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const [step, setStep] = useState<number>(1);
   const [issue, setIssue] = useState<any>({});
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState<string>("");
   const [afterText, setAfterText] = useState<string>("");
   const [topics, setTopics] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { register, watch } = useForm();
   const [searchResults, setSearchResults] = useState([]);
-  const [publishType, setPublishType] = useState<"free" | "paid">("free");
+  const [publishType, setPublishType] = useState<IssueType>("free");
   const [draftLoading, setDraftLoading] = useState<boolean>(false);
   const [publishLoading, setPublishLoading] = useState<boolean>(false);
   const searchQuery = watch("query");
@@ -68,8 +87,29 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
     setTopics((pre) => pre.filter((v) => v !== t));
   };
 
-  function stepTwo() {
-    setStep(3);
+  async function stepForward(id: string) {
+    setStep(1.5);
+    const res = await fetch(`/api/v1/issue/exist?id=${id}`, {
+      method: "GET",
+    });
+    if (!res.ok) {
+      setStep(1);
+      return;
+    }
+    const data = await res.json();
+    if (!data?.is_exist) {
+      setStep(2);
+      return;
+    }
+    if (data?.is_exist && data?.issue?.state !== IssueState.draft) {
+      setStep(1.75);
+      return;
+    }
+    if (data?.is_exist && data?.issue?.state === IssueState.draft) {
+      setPublishType(data?.issue?.type as IssueType);
+      setTopics(data?.issue?.topics);
+      setStep(PUBLISH_STEP);
+    }
   }
 
   async function stepThree() {
@@ -88,7 +128,7 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
       return;
     }
     setDraftLoading(false);
-    setStep(4);
+    setStep(PUBLISH_STEP);
   }
 
   async function onPublish() {
@@ -131,7 +171,7 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
                   className="group flex cursor-pointer flex-nowrap items-center justify-between gap-2 rounded px-3 py-2 hover:bg-accent"
                   onClick={() => {
                     setIssue(result);
-                    setStep(2);
+                    stepForward(result?.id);
                   }}
                 >
                   <div className="flex flex-nowrap gap-2">
@@ -157,6 +197,23 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
               </div>
             )}
           </div>
+        </>
+      )}
+
+      {step === 1.5 && (
+        <div className="flex h-[204px] items-center justify-center">
+          <Icons.spinner className=" animate-spin" />
+        </div>
+      )}
+      {step === 1.75 && (
+        <>
+          <DialogHeader>
+            <DialogTitle>{issue?.title}</DialogTitle>
+            <DialogDescription>The issue already in board</DialogDescription>
+            <DialogTrigger asChild>
+              <Button variant="destructive">Close</Button>
+            </DialogTrigger>
+          </DialogHeader>
         </>
       )}
       {step === 2 && (
@@ -226,7 +283,7 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
             <Button
               disabled={!topics?.length}
               className="mt-4"
-              onClick={stepTwo}
+              onClick={() => setStep(3)}
             >
               Next
             </Button>
@@ -308,7 +365,7 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
           </div>
         </>
       )}
-      {step === 4 && (
+      {step === PUBLISH_STEP && (
         <>
           <DialogHeader>
             <DialogTitle>{issue?.title}</DialogTitle>
@@ -356,6 +413,23 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
         </>
       )}
     </>
+  );
+};
+
+const IssueImportModal = ({ repoId }: { repoId: string }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button size="lg" variant="ghost" className="text-lg text-green-500">
+          <PlusCircle className="mr-2 h-5 w-5" />
+          Publish an issue
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <IssueImportModalContent repoId={repoId} setOpen={setOpen} />
+      </DialogContent>
+    </Dialog>
   );
 };
 
