@@ -22,10 +22,7 @@ export default function RepoImport({ providers }: AddRepositoryProps) {
   return (
     <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
       <DialogTrigger asChild>
-        <Button
-          variant="secondary"
-          className=" bg-accent-foreground text-accent hover:text-inherit"
-        >
+        <Button variant="secondary" className=" rounded-br-none">
           <PlusCircleIcon className="mr-2 h-4 w-4" />
           Import repository
         </Button>
