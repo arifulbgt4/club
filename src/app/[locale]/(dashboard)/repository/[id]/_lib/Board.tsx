@@ -5,6 +5,7 @@ import {
   CircleDot,
   CircleDotDashed,
   Edit,
+  PlusCircle,
   RefreshCcwDot,
 } from "lucide-react";
 import {
@@ -22,6 +23,7 @@ import React from "react";
 import Pagination from "~/components/sections/pagination";
 import { Button } from "~/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 import IssueImportModal from "./IssueImportModal";
 
 const TAB_VALUE = {
@@ -227,7 +229,21 @@ const Board = ({ b, repoId }: { b: string; repoId: string }) => {
             <CircleDashed className="mr-1.5 h-5 w-5" /> Draft (0)
           </TabsTrigger>
         </TabsList>
-        <IssueImportModal repoId={repoId} />
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              size="lg"
+              variant="ghost"
+              className="text-lg text-green-500"
+            >
+              <PlusCircle className="mr-2 h-5 w-5" />
+              Publish an issue
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <IssueImportModal repoId={repoId} />
+          </DialogContent>
+        </Dialog>
       </div>
       <TabsContent className="m-0" value={TAB_VALUE.published}>
         <div className=" max-h-[calc(100vh-309px)] overflow-scroll">
