@@ -3,6 +3,7 @@
 import {
   ArrowLeft,
   CircleDot,
+  Edit2,
   PlusCircle,
   Search,
   StepForward,
@@ -39,6 +40,7 @@ const IssueImportModalContent = ({
   const [issue, setIssue] = useState<any>({});
   const [inputValue, setInputValue] = useState<string>("");
   const [afterText, setAfterText] = useState<string>("");
+  const [isEdit, setIsEdit] = useState<boolean>(false);
   const [topics, setTopics] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { register, watch } = useForm();
@@ -112,7 +114,21 @@ const IssueImportModalContent = ({
     }
   }
 
+  function stepTwo() {
+    if (isEdit) {
+      setStep(PUBLISH_STEP);
+      setIsEdit(false);
+      return;
+    }
+    setStep(3);
+  }
+
   async function stepThree() {
+    if (isEdit) {
+      setStep(PUBLISH_STEP);
+      setIsEdit(false);
+      return;
+    }
     setDraftLoading(true);
     const res = await fetch("/api/v1/issue/draft_publish", {
       method: "POST",
@@ -139,6 +155,7 @@ const IssueImportModalContent = ({
   useEffect(() => {
     debouncedFetchResults(searchQuery);
   }, [searchQuery, debouncedFetchResults]);
+
   return (
     <>
       {step === 1 && (
@@ -199,7 +216,6 @@ const IssueImportModalContent = ({
           </div>
         </>
       )}
-
       {step === 1.5 && (
         <div className="flex h-[204px] items-center justify-center">
           <Icons.spinner className=" animate-spin" />
@@ -209,10 +225,16 @@ const IssueImportModalContent = ({
         <>
           <DialogHeader>
             <DialogTitle>{issue?.title}</DialogTitle>
-            <DialogDescription>The issue already in board</DialogDescription>
-            <DialogTrigger asChild>
-              <Button variant="destructive">Close</Button>
-            </DialogTrigger>
+            <DialogDescription className="text-base">
+              The issue already in board
+            </DialogDescription>
+            <div>
+              <DialogTrigger asChild>
+                <Button size="sm" variant="destructive">
+                  Close
+                </Button>
+              </DialogTrigger>
+            </div>
           </DialogHeader>
         </>
       )}
@@ -220,72 +242,79 @@ const IssueImportModalContent = ({
         <>
           <DialogHeader>
             <DialogTitle className="flex flex-col">
-              <Button
-                size="sm"
-                variant="link"
-                className=" mb-1 w-fit px-0"
-                onClick={goBack}
-              >
-                <ArrowLeft className="mr-2 h-4 w-4" /> Back
-              </Button>
+              {!isEdit ? (
+                <Button
+                  size="sm"
+                  variant="link"
+                  className=" mb-1 w-fit px-0"
+                  onClick={goBack}
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                </Button>
+              ) : (
+                <span className="mb-2 flex items-center text-sm">
+                  <Edit2 className="mr-1 h-3 w-3" /> editing
+                </span>
+              )}
+
               <span>{issue?.title}</span>
             </DialogTitle>
             <DialogDescription>
               Add topics related to the issue to reach out to developers
             </DialogDescription>
           </DialogHeader>
-          <div>
-            <div className="flex min-h-12 w-full flex-wrap items-center gap-2 rounded-lg border px-2 py-1">
-              <div className="flex flex-wrap gap-1">
-                {topics?.map((p, i) => (
-                  <Button
-                    key={i}
-                    size="sm"
-                    onClick={() => removeTopic(p)}
-                    className="h-6 px-2 hover:text-destructive"
-                  >
-                    {p}
-                    <X className="ml-1 h-4 w-4" />
-                  </Button>
-                ))}
-              </div>
-              <Select
-                value=""
-                className="  bg-transparent"
-                classNames={{
-                  indicatorsContainer: () => "w-0 !hidden",
-                  control: () =>
-                    "!bg-transparent !border-0 !shadow-none !cursor-text",
-                  valueContainer: () => "!p-0",
-                  input: () => "!text-inherit !p-0",
-                  menu: () => "!bg-accent !text-inherit !w-[240px]",
-                  option: ({ isFocused }) =>
-                    isFocused
-                      ? "!bg-accent-foreground !text-accent"
-                      : "!bg-transparent !text-inherit",
-                }}
-                onChange={(v: any) => setTopics([...topics, v?.value])}
-                inputValue={inputValue}
-                placeholder="Search topics"
-                noOptionsMessage={() => <p>Search topics</p>}
-                loadingMessage={() => (
-                  <div className=" flex justify-center">
-                    <Icons.spinner className=" animate-spin" />
-                  </div>
-                )}
-                onInputChange={(newValue) => setInputValue(newValue)}
-                loadOptions={loadOptions}
-                defaultOptions={false}
-                cacheOptions
-              />
-            </div>
 
+          <div className="flex min-h-12 w-full flex-wrap items-center gap-2 rounded-lg border px-2 py-1">
+            <div className="flex flex-wrap gap-1">
+              {topics?.map((p, i) => (
+                <Button
+                  key={i}
+                  size="sm"
+                  onClick={() => removeTopic(p)}
+                  className="h-6 px-2 hover:text-destructive"
+                >
+                  {p}
+                  <X className="ml-1 h-4 w-4" />
+                </Button>
+              ))}
+            </div>
+            <Select
+              value=""
+              className="  bg-transparent"
+              classNames={{
+                indicatorsContainer: () => "w-0 !hidden",
+                control: () =>
+                  "!bg-transparent !border-0 !shadow-none !cursor-text",
+                valueContainer: () => "!p-0",
+                input: () => "!text-inherit !p-0",
+                menu: () => "!bg-accent !text-inherit !w-[240px]",
+                option: ({ isFocused }) =>
+                  isFocused
+                    ? "!bg-accent-foreground !text-accent"
+                    : "!bg-transparent !text-inherit",
+              }}
+              onChange={(v: any) => setTopics([...topics, v?.value])}
+              inputValue={inputValue}
+              placeholder="Search topics"
+              noOptionsMessage={() => <p>Search topics</p>}
+              loadingMessage={() => (
+                <div className=" flex justify-center">
+                  <Icons.spinner className=" animate-spin" />
+                </div>
+              )}
+              onInputChange={(newValue) => setInputValue(newValue)}
+              loadOptions={loadOptions}
+              defaultOptions={false}
+              cacheOptions
+            />
+          </div>
+          <div>
             <Button
               disabled={!topics?.length}
               className="mt-4"
-              onClick={() => setStep(3)}
+              onClick={stepTwo}
             >
-              Next
+              {isEdit ? "Update" : "Next"}
             </Button>
           </div>
         </>
@@ -294,14 +323,20 @@ const IssueImportModalContent = ({
         <>
           <DialogHeader>
             <DialogTitle className="flex flex-col">
-              <Button
-                size="sm"
-                variant="link"
-                className=" mb-1 w-fit px-0"
-                onClick={goBack}
-              >
-                <ArrowLeft className="mr-2 h-4 w-4" /> Back
-              </Button>
+              {!isEdit ? (
+                <Button
+                  size="sm"
+                  variant="link"
+                  className=" mb-1 w-fit px-0"
+                  onClick={goBack}
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                </Button>
+              ) : (
+                <span className="mb-2 flex items-center text-sm">
+                  <Edit2 className="mr-1 h-3 w-3" /> editing
+                </span>
+              )}
 
               <span>{issue?.title}</span>
             </DialogTitle>
@@ -357,7 +392,11 @@ const IssueImportModalContent = ({
               onClick={stepThree}
             >
               {!draftLoading ? (
-                "Next"
+                isEdit ? (
+                  "Update"
+                ) : (
+                  "Next"
+                )
               ) : (
                 <Icons.spinner className=" animate-spin" />
               )}
@@ -373,7 +412,19 @@ const IssueImportModalContent = ({
               Publish the issue to global developers
             </DialogDescription>
           </DialogHeader>
-          <div className="flex flex-wrap gap-1">
+          <div className="relative mt-3 flex flex-wrap gap-1 rounded-md border p-3">
+            <Button
+              size="icon"
+              variant="ghost"
+              className=" absolute -top-5 right-3"
+              onClick={() => {
+                setStep(2);
+                setIsEdit(true);
+              }}
+            >
+              <Edit2 className="h-4 w-4" />
+            </Button>
+            <span className="mb-2 w-full font-semibold">Topics</span>
             {topics?.map((p, i) => (
               <Button
                 key={i}
@@ -384,7 +435,19 @@ const IssueImportModalContent = ({
               </Button>
             ))}
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="relative mt-3 flex flex-col rounded-md border p-3">
+            <Button
+              size="icon"
+              variant="ghost"
+              className=" absolute -top-5 right-3"
+              onClick={() => {
+                setStep(3);
+                setIsEdit(true);
+              }}
+            >
+              <Edit2 className="h-4 w-4" />
+            </Button>
+            <span className="mb-2 font-semibold">Type</span>
             {publishType === "free" ? (
               <div className="pointer-events-none flex cursor-pointer flex-nowrap items-center gap-2 rounded-md border bg-accent p-3">
                 <span className=" flex h-5 w-5 items-center justify-center rounded-full border-2 border-accent-foreground">
