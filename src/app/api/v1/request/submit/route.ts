@@ -15,7 +15,7 @@ export async function PUT(req: Request) {
       include: {
         issue: {
           include: {
-            repo: true,
+            repository: true,
             user: true,
           },
         },
@@ -23,7 +23,7 @@ export async function PUT(req: Request) {
     });
 
     const reqUser = request?.issue?.user;
-    const repo = request?.issue?.repo;
+    const repo = request?.issue?.repository;
 
     const octo = await app.getInstallationOctokit(Number(reqUser?.installId));
 

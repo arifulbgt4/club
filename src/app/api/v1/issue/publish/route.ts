@@ -53,7 +53,7 @@ export async function POST(req: Request) {
         type: body.type as IssueType,
         ...(body?.type === IssueType.paid && { price: body?.price }),
         topics: [...body?.topics],
-        repo: {
+        repository: {
           connect: {
             id: repo?.id,
           },

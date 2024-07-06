@@ -7,7 +7,7 @@ export async function getAnIssue(id: string) {
   const { session, user } = await validateRequest();
   const dbIssue = await db.issue.findUnique({
     where: { id },
-    include: { repo: true, user: true },
+    include: { repository: true, user: true },
   });
   const octo = await app.getInstallationOctokit(
     Number(dbIssue?.user?.installId)
@@ -16,7 +16,7 @@ export async function getAnIssue(id: string) {
     "GET /repos/{owner}/{repo}/issues/{issue_number}",
     {
       owner: dbIssue?.user?.username as string,
-      repo: dbIssue?.repo?.name as string,
+      repo: dbIssue?.repository?.name as string,
       issue_number: Number(dbIssue?.issueNumber),
       headers: {
         authorization: `token ${dbIssue?.user?.accessToken}`,
@@ -28,7 +28,7 @@ export async function getAnIssue(id: string) {
     "GET /repos/{owner}/{repo}/issues/{issue_number}/comments",
     {
       owner: dbIssue?.user?.username as string,
-      repo: dbIssue?.repo?.name as string,
+      repo: dbIssue?.repository?.name as string,
       issue_number: Number(dbIssue?.issueNumber),
       headers: {
         authorization: `token ${dbIssue?.user?.accessToken}`,

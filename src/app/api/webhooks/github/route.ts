@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
           const reviewData = data?.review;
           const issue = await db.issue.findFirst({
             where: {
-              repo: {
+              repository: {
                 fullName: data?.repository?.full_name,
               },
               user: {

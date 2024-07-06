@@ -45,7 +45,7 @@ export async function POST(req: Request) {
         state: IssueState.draft,
         type: body.type as IssueType,
         topics: [...body?.topics],
-        repo: {
+        repository: {
           connect: {
             id: repo?.id,
           },

@@ -8,6 +8,12 @@ export async function getIssues(page: number = 1, topics?: string[]) {
   const issues = await db.issue.findMany({
     where: {
       state: IssueState.published,
+      repository: {
+        active: true,
+        provider: {
+          active: true,
+        },
+      },
       published: true,
       ...(!!topics?.length && {
         topics: {
@@ -22,7 +28,11 @@ export async function getIssues(page: number = 1, topics?: string[]) {
     skip: (page - 1) * TAKE,
     include: {
       user: true,
-      repo: true,
+      repository: {
+        include: {
+          provider: true,
+        },
+      },
     },
   });
   const total = await db.issue.count({

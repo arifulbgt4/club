@@ -24,7 +24,7 @@ export async function getInProgress() {
               accessToken: true,
             },
           },
-          repo: true,
+          repository: true,
         },
       },
     },
@@ -39,7 +39,7 @@ export async function getInProgress() {
     "GET /repos/{owner}/{repo}/issues/{issue_number}",
     {
       owner: inprogress?.issue?.user?.username as string,
-      repo: inprogress?.issue?.repo?.name as string,
+      repo: inprogress?.issue?.repository?.name as string,
       issue_number: Number(inprogress?.issue?.issueNumber),
       headers: {
         authorization: `token ${inprogress?.issue?.user?.accessToken}`,
@@ -51,7 +51,7 @@ export async function getInProgress() {
     "GET /repos/{owner}/{repo}/issues/{issue_number}/comments",
     {
       owner: inprogress?.issue?.user?.username as string,
-      repo: inprogress?.issue?.repo?.name as string,
+      repo: inprogress?.issue?.repository?.name as string,
       issue_number: Number(inprogress?.issue?.issueNumber),
       headers: {
         authorization: `token ${inprogress?.issue?.user?.accessToken}`,
