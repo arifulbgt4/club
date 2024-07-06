@@ -27,6 +27,7 @@ const RepositoryList: FC<RepositoryListProps> = ({ providers, setOpen }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingPub, setLoadingPub] = useState<boolean>(false);
   const [repo, setRepo] = useState([]);
+  const [afterText, setAfterText] = useState("");
   const [provider, setProvider] = useState<ProviderPublic>(providers[0]);
 
   const router = useRouter();
@@ -43,6 +44,7 @@ const RepositoryList: FC<RepositoryListProps> = ({ providers, setOpen }) => {
       }
     );
     const data = await res.json();
+    setAfterText(query);
     setRepo(data);
     setLoading(false);
   };
@@ -170,7 +172,7 @@ const RepositoryList: FC<RepositoryListProps> = ({ providers, setOpen }) => {
             ))
           ) : !loading ? (
             <div className=" p-3 text-center italic text-muted-foreground">
-              No repositories found {searchQuery && ` for "${searchQuery}"`}
+              No repositories found {afterText && ` for "${afterText}"`}
             </div>
           ) : (
             <div className="p-3 text-center italic text-muted-foreground">

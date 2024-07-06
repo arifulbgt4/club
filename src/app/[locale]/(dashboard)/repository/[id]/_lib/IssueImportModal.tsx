@@ -18,6 +18,7 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
   const [step, setStep] = useState<number>(1);
   const [issue, setIssue] = useState<any>({});
   const [inputValue, setInputValue] = useState("");
+  const [afterText, setAfterText] = useState<string>("");
   const [topics, setTopics] = useState<string[]>([]);
   const [stepLoading, setStepLoading] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -32,6 +33,7 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
       `/api/v1/search/issue?r=${repoId}&q=${query || ""}`
     );
     const data = await response.json();
+    setAfterText(query);
     setSearchResults(data);
     setLoading(false);
   };
@@ -117,7 +119,7 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
               ))
             ) : !loading ? (
               <div className=" p-3 text-center italic text-muted-foreground">
-                No open issue found {searchQuery && ` for "${searchQuery}"`}
+                No open issue found {afterText && ` for "${afterText}"`}
               </div>
             ) : (
               <div className="p-3 text-center italic text-muted-foreground">
