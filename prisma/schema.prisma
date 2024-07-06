@@ -153,7 +153,7 @@ model Issue {
   state       IssueState  @default(draft)
   published   Boolean?    @default(true)
   price       Float?
-  repo        Repository? @relation(fields: [repoId], references: [id])
+  repository  Repository? @relation(fields: [repoId], references: [id])
   repoId      String?
   user        User?       @relation(fields: [userId], references: [id])
   userId      String?
