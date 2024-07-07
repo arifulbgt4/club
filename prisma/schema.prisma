@@ -34,7 +34,7 @@ model User {
   refreshToken            String?
   installId               Int?
   available               Boolean?                 @default(true)
-  activate                Boolean?                 @default(true)
+  active                  Boolean?                 @default(true)
   githubId                Int?                     @unique
   username                String?                  @unique
   stripeCustomerId        String?                  @unique @map("stripe_customer_id")

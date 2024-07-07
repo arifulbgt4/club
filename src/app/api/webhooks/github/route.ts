@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
               githubId: sender.id,
             },
             data: {
-              activate: false,
+              active: false,
             },
           });
         }
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
               data: {
                 accessToken: null,
                 installId: null,
-                activate: false,
+                active: false,
               },
             });
           }

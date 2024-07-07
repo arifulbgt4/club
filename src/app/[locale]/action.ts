@@ -5,21 +5,27 @@ import { type IssueOptions } from "~/types";
 const TAKE = 10;
 
 export async function getIssues(page: number = 1, topics?: string[]) {
+  const FILTER = {
+    state: IssueState.published,
+    user: {
+      active: true,
+    },
+    repository: {
+      active: true,
+      provider: {
+        active: true,
+      },
+    },
+    published: true,
+    ...(!!topics?.length && {
+      topics: {
+        hasSome: topics,
+      },
+    }),
+  };
   const issues = await db.issue.findMany({
     where: {
-      state: IssueState.published,
-      repository: {
-        active: true,
-        provider: {
-          active: true,
-        },
-      },
-      published: true,
-      ...(!!topics?.length && {
-        topics: {
-          hasSome: topics,
-        },
-      }),
+      ...FILTER,
     },
     orderBy: {
       createdAt: "desc",
@@ -37,8 +43,7 @@ export async function getIssues(page: number = 1, topics?: string[]) {
   });
   const total = await db.issue.count({
     where: {
-      state: IssueState.published,
-      published: true,
+      ...FILTER,
     },
   });
   return { issues: issues as IssueOptions[], total, take: TAKE, page };

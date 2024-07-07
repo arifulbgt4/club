@@ -126,13 +126,13 @@ export const GET = async (request: NextRequest) => {
           refreshToken: tokens.refreshToken,
         },
       });
-      if (!existingUser.activate) {
+      if (!existingUser.active) {
         await db.user.update({
           where: {
             id: existingUser.id,
           },
           data: {
-            activate: true,
+            active: true,
           },
         });
       }
