@@ -85,9 +85,10 @@ export async function createEmailVerificationToken(
 export const octokit = cache(async () => {
   const { user, session } = await validateRequest();
   const accessTokenExpires = cookies().get("refresh")?.value || null;
-
   if (!session || accessTokenExpires === null) {
-    return redirect("/login");
+    return {
+      error: "Unauthorized",
+    };
   }
   const theUser = await db.user.findUnique({ where: { id: user?.id } });
   let token = theUser?.userAccessToken;
