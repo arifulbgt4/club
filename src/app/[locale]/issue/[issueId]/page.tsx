@@ -15,14 +15,20 @@ interface IssuePageProps {
 }
 
 const IssuePage = async ({ params: { issueId } }: IssuePageProps) => {
-  const { issue, dbIssue, comments, isOwn, isAuthenticated } =
-    await getAnIssue(issueId);
+  const data = await getAnIssue(issueId);
+  if (data === null) {
+    return <span>No issue Found</span>;
+  }
+  const { issue, dbIssue, comments, isOwn, isAuthenticated } = data;
+
   return (
     <div className="mt-6 flex flex-col">
       <div className=" border-b">
         <h1 className=" mb-2 break-words text-3xl">{issue?.title}</h1>
         <p className=" mb-2 text-sm font-medium text-muted-foreground">
-          <span className=" font-bold">{dbIssue?.user?.username}</span>{" "}
+          <span className=" font-bold">
+            {dbIssue?.repository?.provider?.name}
+          </span>{" "}
           published this issue{" "}
           {formatDistanceToNow(new Date(dbIssue?.updatedAt), {
             addSuffix: true,
