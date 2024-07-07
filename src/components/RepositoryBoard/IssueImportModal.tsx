@@ -27,6 +27,7 @@ import Icons from "~/components/shared/icons";
 import Select from "react-select/async";
 import { cn } from "~/lib/utils";
 import { IssueState, type IssueType } from "@prisma/client";
+import { useRouter } from "next/navigation";
 
 const PUBLISH_STEP = 4;
 
@@ -51,6 +52,7 @@ const IssueImportModalContent = ({
   const [draftLoading, setDraftLoading] = useState<boolean>(false);
   const [publishLoading, setPublishLoading] = useState<boolean>(false);
   const searchQuery = watch("query");
+  const router = useRouter();
 
   const fetchResults = async (query: string) => {
     setLoading(true);
@@ -147,6 +149,7 @@ const IssueImportModalContent = ({
     }
     setDraftLoading(false);
     setStep(PUBLISH_STEP);
+    router.refresh();
   }
 
   async function onPublish() {
@@ -165,8 +168,8 @@ const IssueImportModalContent = ({
       setPublishLoading(false);
       return;
     }
-    const data = await res.json();
-    console.log("data", data);
+    // const data = await res.json();
+    router.refresh();
     setPublishLoading(false);
     setOpen(false);
   }
