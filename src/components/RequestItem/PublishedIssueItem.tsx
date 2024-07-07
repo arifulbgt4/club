@@ -7,7 +7,6 @@ export default function PublishedIssueItem({
   id,
   issueNumber,
   user,
-  repo,
   updatedAt,
   title,
 }: PublishedIssueItemProps) {

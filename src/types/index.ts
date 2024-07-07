@@ -1,4 +1,4 @@
-import { type User, type Issue, type Repository } from "@prisma/client";
+import type { User, Issue, Repository, Provider } from "@prisma/client";
 import { z } from "zod";
 
 export type CurrentUser = {
@@ -60,9 +60,14 @@ export interface sendVerificationEmailProps extends SendWelcomeEmailProps {
   verificationUrl: string;
 }
 
+export interface RepositoryOptions extends Repository {
+  user?: User;
+  provider?: Provider;
+}
+
 export interface IssueOptions extends Issue {
   user?: User;
-  repo?: Repository;
+  repository?: RepositoryOptions;
 }
 
 export enum TASK_TABS {

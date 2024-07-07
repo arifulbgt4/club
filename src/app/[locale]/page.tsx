@@ -1,3 +1,4 @@
+"use server";
 import PublishedIssueItem from "~/components/PublishedIssueItem/PublishedIssueItem";
 import { getIssues } from "./action";
 import Pagination from "~/components/sections/pagination";

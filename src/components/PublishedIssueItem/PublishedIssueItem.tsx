@@ -7,23 +7,20 @@ import { Avatar, AvatarImage } from "~/components/ui/avatar";
 import { getIssue } from "./action";
 import { hexToRgba } from "~/lib/utils";
 import { IssueType } from "@prisma/client";
+import type { RepositoryOptions } from "~/types";
 
 export default async function PublishedIssueItem({
   id,
   issueNumber,
-  user,
-  repo,
+  repository,
   updatedAt,
   price,
   type,
   topics,
 }: PublishedIssueItemProps) {
   const issue = await getIssue(
-    repo?.name as string,
-    user?.username as string,
-    Number(issueNumber),
-    user?.installId as number,
-    user?.accessToken as string
+    repository as RepositoryOptions,
+    Number(issueNumber)
   );
 
   return (
@@ -54,10 +51,10 @@ export default async function PublishedIssueItem({
         </div>
         <div className="mb-2 flex items-center">
           <Avatar className="mr-1 h-[15px] w-[15px] rounded-sm">
-            <AvatarImage src={user?.picture as string} />
+            <AvatarImage src={repository?.provider?.picture as string} />
           </Avatar>
           <p className=" ml-0.5 font-medium text-muted-foreground">
-            {user?.username}
+            {repository?.provider?.name}
           </p>
         </div>
         {/* <div className="text-xs font-medium">{user?.username}</div> */}
