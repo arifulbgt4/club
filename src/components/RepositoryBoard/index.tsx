@@ -34,8 +34,8 @@ const RepositoryBoard = async ({
         <Published repoId={repoId} b={b} />
       </TabsContent>
       <TabsContent className="m-0" value={TAB_VALUE.inprogress}>
-        <div className="max-h-[calc(100vh-291px)] overflow-scroll ">
-          <div className="min-h-[calc(100vh-291px)] pt-3">
+        <div className="max-h-[calc(100vh-279px)] overflow-scroll ">
+          <div className="min-h-[calc(100vh-279px)] pt-3">
             <span>
               Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed
               libero soluta illum adipisci voluptas sunt deserunt, amet omnis
@@ -47,8 +47,8 @@ const RepositoryBoard = async ({
         <Pagination page={1} totalPages={1} justify="start" />
       </TabsContent>
       <TabsContent className="m-0" value={TAB_VALUE.inreview}>
-        <div className="max-h-[calc(100vh-291px)] overflow-scroll ">
-          <div className="min-h-[calc(100vh-291px)] pt-3">
+        <div className="max-h-[calc(100vh-279px)] overflow-scroll ">
+          <div className="min-h-[calc(100vh-279px)] pt-3">
             <span>
               Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed
               libero soluta illum adipisci voluptas sunt deserunt, amet omnis
@@ -60,8 +60,8 @@ const RepositoryBoard = async ({
         <Pagination page={1} totalPages={1} justify="start" />
       </TabsContent>
       <TabsContent className="m-0" value={TAB_VALUE.done}>
-        <div className="max-h-[calc(100vh-291px)] overflow-scroll ">
-          <div className="min-h-[calc(100vh-291px)] pt-3">
+        <div className="max-h-[calc(100vh-279px)] overflow-scroll ">
+          <div className="min-h-[calc(100vh-279px)] pt-3">
             <span>
               Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed
               libero soluta illum adipisci voluptas sunt deserunt, amet omnis
@@ -73,8 +73,8 @@ const RepositoryBoard = async ({
         <Pagination page={1} totalPages={1} justify="start" />
       </TabsContent>
       <TabsContent className="m-0" value={TAB_VALUE.draft}>
-        <div className="max-h-[calc(100vh-291px)] overflow-scroll ">
-          <div className="min-h-[calc(100vh-291px)] pt-3">
+        <div className="max-h-[calc(100vh-279px)] overflow-scroll ">
+          <div className="min-h-[calc(100vh-279px)] pt-3">
             <span>
               Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed
               libero soluta illum adipisci voluptas sunt deserunt, amet omnis

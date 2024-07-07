@@ -15,8 +15,8 @@ const Published = async ({ b, repoId }: { b: string; repoId: string }) => {
 
   return (
     <>
-      <div className="max-h-[calc(100vh-291px)] overflow-scroll ">
-        <div className="min-h-[calc(100vh-291px)] pt-3">
+      <div className="max-h-[calc(100vh-279px)] overflow-scroll ">
+        <div className="min-h-[calc(100vh-279px)] pt-3">
           {issues?.map((i) => (
             <div
               key={i?.id}
@@ -26,7 +26,7 @@ const Published = async ({ b, repoId }: { b: string; repoId: string }) => {
                 <div className="mb-1 flex items-center">
                   <div className="mb-0.5 flex flex-col">
                     <div className="text-xs text-muted-foreground">
-                      published{" "}
+                      #{i?.issueNumber} {" • "} published{" "}
                       {formatDistanceToNow(new Date(i?.createdAt), {
                         addSuffix: true,
                         includeSeconds: true,
@@ -47,11 +47,11 @@ const Published = async ({ b, repoId }: { b: string; repoId: string }) => {
               </div>
 
               {i?.topics?.length ? (
-                <div className=" flex flex-wrap">
+                <div className=" my-1 flex flex-wrap gap-1">
                   {i?.topics?.map((t, i) => (
                     <span
                       key={i}
-                      className=" m-1 rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground"
+                      className=" rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground"
                     >
                       {t}
                     </span>

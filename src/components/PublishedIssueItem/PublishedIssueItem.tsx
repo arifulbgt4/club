@@ -85,11 +85,11 @@ export default async function PublishedIssueItem({
         ""
       )}
       {topics?.length ? (
-        <div className=" flex flex-wrap">
+        <div className=" my-1 flex flex-wrap gap-1">
           {topics?.map((t, i) => (
             <span
               key={i}
-              className=" m-1 rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground"
+              className="rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground"
             >
               {t}
             </span>

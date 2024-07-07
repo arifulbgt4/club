@@ -41,7 +41,7 @@ const Pagination = ({
     pageNumbers.push(i);
   }
   return (
-    <PaginationContainer className={`my-3 justify-${justify}`}>
+    <PaginationContainer className={`my-1.5 justify-${justify}`}>
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
