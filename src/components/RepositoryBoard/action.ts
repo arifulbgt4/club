@@ -50,3 +50,25 @@ export async function getCounts(repoId: string) {
 
   return result;
 }
+
+export async function getPublished(repoId: string) {
+  const { user } = await validateRequest();
+  const issues = await db.issue.findMany({
+    where: {
+      repositoryId: repoId,
+      state: IssueState.published,
+      active: true,
+      userId: user?.id,
+    },
+    include: {
+      request: {
+        take: 9,
+        skip: 0,
+      },
+    },
+  });
+  if (!issues) {
+    return null;
+  }
+  return issues;
+}
