@@ -9,7 +9,7 @@ import { getRepositoryByID } from "../action";
 import { Lock, LockOpen } from "lucide-react";
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
 import TopTabs from "./_lib/TopTabs";
-import Board from "./_lib/Board";
+import RepositoryBoard from "~/components/RepositoryBoard";
 
 const ARepositoryPage = async ({
   params: { id },
@@ -65,7 +65,7 @@ const ARepositoryPage = async ({
         <TopTabs t={t} />
       </div>
       <div className="pl-9">
-        <Board b={b} repoId={id} />
+        <RepositoryBoard b={b} repoId={id} />
       </div>
     </div>
   );

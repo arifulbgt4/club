@@ -1,3 +1,4 @@
+"use client";
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
@@ -171,7 +172,9 @@ const IssueImportModalContent = ({
   }
 
   useEffect(() => {
+    // if (searchQuery === undefined || searchQuery?.length > 0) {
     debouncedFetchResults(searchQuery);
+    // }
   }, [searchQuery, debouncedFetchResults]);
 
   return (

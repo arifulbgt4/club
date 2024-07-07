@@ -1,12 +1,5 @@
-"use client";
-import {
-  CircleCheckBig,
-  CircleDashed,
-  CircleDot,
-  CircleDotDashed,
-  Edit,
-  RefreshCcwDot,
-} from "lucide-react";
+"use server";
+import { Edit } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -17,12 +10,13 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import Pagination from "~/components/sections/pagination";
 import { Button } from "~/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { Tabs, TabsContent } from "~/components/ui/tabs";
 import IssueImportModal from "./IssueImportModal";
+import BoardTabsTrigger from "./BoardTabsTrigger";
+import { getCounts } from "./action";
 
 const TAB_VALUE = {
   published: "published",
@@ -161,79 +155,25 @@ const invoices = [
   },
 ];
 
-const Board = ({ b, repoId }: { b: string; repoId: string }) => {
-  const router = useRouter();
-  const pathname = usePathname();
+const RepositoryBoard = async ({
+  b,
+  repoId,
+}: {
+  b: string;
+  repoId: string;
+}) => {
+  const count = await getCounts(repoId);
   return (
     <Tabs defaultValue={b || TAB_VALUE.published}>
       <div className="flex items-center justify-between">
-        <TabsList className=" h-auto">
-          <TabsTrigger
-            value={TAB_VALUE.published}
-            className="px-2.5 text-base"
-            onClick={() => {
-              if (b !== undefined || b !== TAB_VALUE.published) {
-                router.push(pathname);
-              }
-            }}
-          >
-            <CircleDot className="mr-1.5 h-5 w-5 text-sky-500" /> Published (0)
-          </TabsTrigger>
-          <TabsTrigger
-            value={TAB_VALUE.inprogress}
-            className="px-2.5 text-base"
-            onClick={() => {
-              if (b !== TAB_VALUE.inprogress) {
-                router.push(pathname + "?b=" + TAB_VALUE.inprogress);
-              }
-            }}
-          >
-            <CircleDotDashed className="mr-1.5 h-5 w-5 text-purple-500" /> In
-            Progress (0)
-          </TabsTrigger>
-          <TabsTrigger
-            value={TAB_VALUE.inreview}
-            className="px-2.5 text-base"
-            onClick={() => {
-              if (b !== TAB_VALUE.inreview) {
-                router.push(pathname + "?b=" + TAB_VALUE.inreview);
-              }
-            }}
-          >
-            <RefreshCcwDot className="mr-1.5 h-5 w-5 text-yellow-500" /> In
-            Review (0)
-          </TabsTrigger>
-          <TabsTrigger
-            value={TAB_VALUE.done}
-            className="px-2.5 text-base"
-            onClick={() => {
-              if (b !== TAB_VALUE.done) {
-                router.push(pathname + "?b=" + TAB_VALUE.done);
-              }
-            }}
-          >
-            <CircleCheckBig className="mr-1.5 h-5 w-5 text-green-500" /> Done
-            (0)
-          </TabsTrigger>
-          <TabsTrigger
-            value={TAB_VALUE.draft}
-            className="px-2.5 text-base"
-            onClick={() => {
-              if (b !== TAB_VALUE.draft) {
-                router.push(pathname + "?b=" + TAB_VALUE.draft);
-              }
-            }}
-          >
-            <CircleDashed className="mr-1.5 h-5 w-5" /> Draft (0)
-          </TabsTrigger>
-        </TabsList>
+        <BoardTabsTrigger b={b} count={count} />
         <IssueImportModal repoId={repoId} />
       </div>
       <TabsContent className="m-0" value={TAB_VALUE.published}>
         <div className=" max-h-[calc(100vh-309px)] overflow-scroll">
           <Table>
             {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
-            <TableHeader>
+            {/* <TableHeader>
               <TableRow>
                 <TableHead className="w-[60px]">Number</TableHead>
                 <TableHead>Title</TableHead>
@@ -274,7 +214,7 @@ const Board = ({ b, repoId }: { b: string; repoId: string }) => {
                   </TableCell>
                 </TableRow>
               ))}
-            </TableBody>
+            </TableBody> */}
             {/* <TableFooter>
         <TableRow>
           <TableCell colSpan={3}>Total</TableCell>
@@ -313,4 +253,4 @@ const Board = ({ b, repoId }: { b: string; repoId: string }) => {
   );
 };
 
-export default Board;
+export default RepositoryBoard;
