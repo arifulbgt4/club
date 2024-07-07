@@ -22,7 +22,7 @@ const ARepositoryPage = async ({
   if (!dbRepo || !gitRepo) return null;
   return (
     <div className="flex flex-col">
-      <div className="flex gap-3 border-b pb-2 pl-9">
+      <div className="flex gap-3 pb-2">
         <div className="flex w-[calc(100%-5rem)] items-center ">
           <TooltipProvider>
             <Tooltip>
@@ -64,7 +64,7 @@ const ARepositoryPage = async ({
         </div>
         <TopTabs t={t} />
       </div>
-      <div className="pl-9">
+      <div className=" rounded-tl-md border-t">
         <RepositoryBoard b={b} repoId={id} />
       </div>
     </div>

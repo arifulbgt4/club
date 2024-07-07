@@ -102,7 +102,7 @@ export default function SubLayout({
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <Header />
-      <main className=" min-h-[calc(100vh-160px)]">
+      <main className=" min-h-[calc(100vh-142px)]">
         {children}
         {loginDialog}
       </main>

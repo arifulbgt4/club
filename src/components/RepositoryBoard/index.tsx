@@ -170,10 +170,11 @@ const RepositoryBoard = async ({
         <IssueImportModal repoId={repoId} />
       </div>
       <TabsContent className="m-0" value={TAB_VALUE.published}>
-        <div className=" max-h-[calc(100vh-309px)] overflow-scroll">
-          <Table>
-            {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
-            {/* <TableHeader>
+        <div className="max-h-[calc(100vh-291px)] overflow-scroll ">
+          <div className="min-h-[calc(100vh-291px)] pt-3">
+            <Table>
+              {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
+              {/* <TableHeader>
               <TableRow>
                 <TableHead className="w-[60px]">Number</TableHead>
                 <TableHead>Title</TableHead>
@@ -215,37 +216,66 @@ const RepositoryBoard = async ({
                 </TableRow>
               ))}
             </TableBody> */}
-            {/* <TableFooter>
+              {/* <TableFooter>
         <TableRow>
           <TableCell colSpan={3}>Total</TableCell>
           <TableCell className="text-right">$2,500.00</TableCell>
         </TableRow>
       </TableFooter> */}
-          </Table>
+            </Table>
+          </div>
         </div>
         <Pagination page={1} totalPages={12} justify="start" />
       </TabsContent>
       <TabsContent className="m-0" value={TAB_VALUE.inprogress}>
-        <div className=" min-h-[calc(100vh-309px)]">
-          <span>inprogress</span>
+        <div className="max-h-[calc(100vh-291px)] overflow-scroll ">
+          <div className="min-h-[calc(100vh-291px)] pt-3">
+            <span>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed
+              libero soluta illum adipisci voluptas sunt deserunt, amet omnis
+              quidem, aperiam, nemo doloremque alias id fugiat cupiditate quis.
+              Tempora, voluptatem delectus.
+            </span>
+          </div>
         </div>
         <Pagination page={1} totalPages={1} justify="start" />
       </TabsContent>
       <TabsContent className="m-0" value={TAB_VALUE.inreview}>
-        <div className=" min-h-[calc(100vh-309px)]">
-          <span>inreview</span>
+        <div className="max-h-[calc(100vh-291px)] overflow-scroll ">
+          <div className="min-h-[calc(100vh-291px)] pt-3">
+            <span>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed
+              libero soluta illum adipisci voluptas sunt deserunt, amet omnis
+              quidem, aperiam, nemo doloremque alias id fugiat cupiditate quis.
+              Tempora, voluptatem delectus.
+            </span>
+          </div>
         </div>
         <Pagination page={1} totalPages={1} justify="start" />
       </TabsContent>
       <TabsContent className="m-0" value={TAB_VALUE.done}>
-        <div className=" min-h-[calc(100vh-309px)]">
-          <span>done</span>
+        <div className="max-h-[calc(100vh-291px)] overflow-scroll ">
+          <div className="min-h-[calc(100vh-291px)] pt-3">
+            <span>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed
+              libero soluta illum adipisci voluptas sunt deserunt, amet omnis
+              quidem, aperiam, nemo doloremque alias id fugiat cupiditate quis.
+              Tempora, voluptatem delectus.
+            </span>
+          </div>
         </div>
         <Pagination page={1} totalPages={1} justify="start" />
       </TabsContent>
       <TabsContent className="m-0" value={TAB_VALUE.draft}>
-        <div className=" min-h-[calc(100vh-309px)]">
-          <span>Draft</span>
+        <div className="max-h-[calc(100vh-291px)] overflow-scroll ">
+          <div className="min-h-[calc(100vh-291px)] pt-3">
+            <span>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed
+              libero soluta illum adipisci voluptas sunt deserunt, amet omnis
+              quidem, aperiam, nemo doloremque alias id fugiat cupiditate quis.
+              Tempora, voluptatem delectus.
+            </span>
+          </div>
         </div>
         <Pagination page={1} totalPages={1} justify="start" />
       </TabsContent>

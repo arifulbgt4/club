@@ -14,14 +14,14 @@ const RepositoryLayout = async ({
   const repos = await getRepository();
   return (
     <div className=" flex flex-col gap-2">
-      <div className="flex flex-nowrap">
+      <div className="flex flex-nowrap gap-9">
         <div className="flex w-[300px] flex-col rounded-tr-md border-r">
           <AddRepository providers={providers} />
           {/* // TODO: should add a filter by provider  */}
           <span className="mt-1 p-2 text-sm font-medium text-muted-foreground">
             All Repository
           </span>
-          <ul className="h-[calc(100vh-240px)] overflow-auto rounded-md pr-3">
+          <ul className="h-[calc(100vh-222px)] overflow-auto rounded-md pr-3">
             {repos?.map((r) => (
               <li key={r.id} className=" hover:rounded-md hover:bg-accent">
                 <Link
