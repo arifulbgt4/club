@@ -18,9 +18,11 @@ const TAB_VALUE = {
 
 const RepositoryBoard = async ({
   b,
+  p,
   repoId,
 }: {
   b: string;
+  p: number;
   repoId: string;
 }) => {
   const count = await getCounts(repoId);
@@ -31,7 +33,7 @@ const RepositoryBoard = async ({
         <IssueImportModal repoId={repoId} />
       </div>
       <TabsContent className="m-0" value={TAB_VALUE.published}>
-        <Published repoId={repoId} b={b} />
+        <Published repoId={repoId} p={p} total={count?.published} />
       </TabsContent>
       <TabsContent className="m-0" value={TAB_VALUE.inprogress}>
         <div className="max-h-[calc(100vh-279px)] overflow-scroll ">

@@ -51,7 +51,9 @@ export async function getCounts(repoId: string) {
   return result;
 }
 
-export async function getPublished(repoId: string) {
+const TAKE = 10;
+
+export async function getPublished(repoId: string, page: number = 1) {
   const { user } = await validateRequest();
   const issues = await db.issue.findMany({
     where: {
@@ -60,6 +62,8 @@ export async function getPublished(repoId: string) {
       active: true,
       userId: user?.id,
     },
+    take: TAKE,
+    skip: (page - 1) * TAKE,
     include: {
       request: {
         take: 9,
@@ -70,5 +74,5 @@ export async function getPublished(repoId: string) {
   if (!issues) {
     return null;
   }
-  return issues;
+  return { issues, take: TAKE, page };
 }

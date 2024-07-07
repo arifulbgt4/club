@@ -3,15 +3,26 @@ import { getPublished } from "../action";
 import { IssueType } from "@prisma/client";
 import Pagination from "~/components/sections/pagination";
 
-const Published = async ({ b, repoId }: { b: string; repoId: string }) => {
-  const issues = await getPublished(repoId);
-  if (!issues || !issues?.length) {
+const Published = async ({
+  p,
+  repoId,
+  total,
+}: {
+  p: number;
+  repoId: string;
+  total: number;
+}) => {
+  const data = await getPublished(repoId, p);
+  if (!data || !data?.issues?.length) {
     return (
       <div>
         <span>No published issue</span>
       </div>
     );
   }
+  const { issues, take, page } = data;
+
+  const totalPages = Math.ceil(total / take);
 
   return (
     <>
@@ -64,7 +75,7 @@ const Published = async ({ b, repoId }: { b: string; repoId: string }) => {
           ))}
         </div>
       </div>
-      <Pagination page={1} totalPages={12} justify="start" />
+      <Pagination page={page} totalPages={totalPages} justify="start" />
     </>
   );
 };

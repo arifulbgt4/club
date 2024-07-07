@@ -13,13 +13,14 @@ import RepositoryBoard from "~/components/RepositoryBoard";
 
 const ARepositoryPage = async ({
   params: { id },
-  searchParams: { t, b },
+  searchParams: { t, b, page },
 }: {
   params: { id: string };
-  searchParams: { t: string; p: string; b: string };
+  searchParams: { t: string; page: string; b: string };
 }) => {
   const { dbRepo, gitRepo } = await getRepositoryByID(id);
   if (!dbRepo || !gitRepo) return null;
+  const p = Number(page) || 1;
   return (
     <div className="flex flex-col">
       <div className="flex gap-3 pb-2">
@@ -65,7 +66,7 @@ const ARepositoryPage = async ({
         <TopTabs t={t} />
       </div>
       <div className=" rounded-tl-md border-t">
-        <RepositoryBoard b={b} repoId={id} />
+        <RepositoryBoard b={b} p={p} repoId={id} />
       </div>
     </div>
   );
