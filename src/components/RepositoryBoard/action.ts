@@ -11,7 +11,7 @@ export async function getCounts(repoId: string) {
     _count: {
       state: true,
     },
-    where: { userId: user?.id, repoId },
+    where: { userId: user?.id, repositoryId: repoId },
   });
 
   // Initialize counts object with all states set to 0
