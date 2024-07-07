@@ -1,11 +1,11 @@
 "use server";
-
 import { type Session, type User } from "lucia";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { TimeSpan, createDate } from "oslo";
 import { cache } from "react";
 import db from "~/lib/db";
+import { Octokit } from "octokit";
 import { lucia } from "~/lib/lucia";
 
 export const validateRequest = cache(
@@ -81,3 +81,48 @@ export async function createEmailVerificationToken(
   });
   return newToken.id;
 }
+
+export const octokit = cache(async () => {
+  const { user, session } = await validateRequest();
+  const accessTokenExpires = cookies().get("refresh")?.value || null;
+
+  if (!session || accessTokenExpires === null) {
+    return redirect("/login");
+  }
+  const theUser = await db.user.findUnique({ where: { id: user?.id } });
+  let token = theUser?.userAccessToken;
+
+  if (Number(accessTokenExpires) < Date.now()) {
+    const access_token = await fetch(
+      "https://github.com/login/oauth/access_token",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          client_id: process.env.GITHUB_CLIENT_ID,
+          client_secret: process.env.GITHUB_CLIENT_SECRET,
+          grant_type: "refresh_token",
+          refresh_token: theUser?.refreshToken,
+        }),
+      }
+    );
+    const res_token = await access_token.json();
+    const expiresTime = Date.now() + res_token?.expires_in;
+    await db.user.update({
+      where: { id: user?.id },
+      data: {
+        userAccessToken: res_token?.access_token,
+        refreshToken: res_token?.refresh_token,
+      },
+    });
+    token = res_token?.access_token;
+    cookies().set("refresh", expiresTime.toString(), {
+      path: "/",
+      priority: "medium",
+    });
+  }
+  return new Octokit({ auth: token });
+});

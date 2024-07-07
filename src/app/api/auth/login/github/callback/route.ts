@@ -3,7 +3,7 @@ import { OAuth2RequestError } from "arctic";
 import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import db from "~/lib/db";
-import { github, lucia } from "~/lib/lucia";
+import { lucia } from "~/lib/lucia";
 // import { sendWelcomeEmail } from "~/server/mail";
 import { app, privateKey } from "~/lib/octokit";
 import { stripe } from "~/lib/stripe";
@@ -32,7 +32,46 @@ export const GET = async (request: NextRequest) => {
   let install;
 
   try {
-    const tokens = await github.validateAuthorizationCode(String(code));
+    const access_token = await fetch(
+      "https://github.com/login/oauth/access_token",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          client_id: process.env.GITHUB_CLIENT_ID,
+          client_secret: process.env.GITHUB_CLIENT_SECRET,
+          code,
+          redirect_uri: "http://localhost:3000/api/auth/login/github/callback/",
+        }),
+      }
+    );
+    const res_token = await access_token.json();
+    if (
+      res_token?.error ||
+      !res_token?.access_token ||
+      !res_token?.refresh_token
+    ) {
+      return new Response(null, {
+        status: 302,
+        headers: {
+          Location: "/login",
+        },
+      });
+    }
+
+    // const tokens = await github.validateAuthorizationCode(String(code));
+    const tokens = {
+      accessToken: res_token?.access_token,
+      refreshToken: res_token?.refresh_token,
+    };
+    const expiresTime = Date.now() + res_token?.expires_in;
+    cookies().set("refresh", expiresTime?.toString(), {
+      path: "/",
+      priority: "medium",
+    });
     const githubUserResponse = await fetch("https://api.github.com/user", {
       headers: {
         Authorization: `Bearer ${tokens.accessToken}`,
@@ -84,6 +123,7 @@ export const GET = async (request: NextRequest) => {
         },
         data: {
           userAccessToken: tokens.accessToken,
+          refreshToken: tokens.refreshToken,
         },
       });
       if (!existingUser.activate) {
@@ -167,6 +207,7 @@ export const GET = async (request: NextRequest) => {
         email: userEmail,
         username: githubUser.login,
         userAccessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
         stripeCustomerId: customer.id,
         picture: githubUser.avatar_url,
       },
