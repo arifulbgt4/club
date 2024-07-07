@@ -85,12 +85,6 @@ const Published: FC<PublishedProps> = ({ id, title, request }) => {
             {getData?.map((r) => <Request key={r?.id} {...r} issueId={id} />)}
           </div>
         )}
-
-        {/* <SheetFooter>
-          <SheetClose asChild>
-            <Button type="submit">Save changes</Button>
-          </SheetClose>
-        </SheetFooter> */}
       </SheetContent>
     </Sheet>
   );

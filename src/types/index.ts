@@ -1,4 +1,10 @@
-import type { User, Issue, Repository, Provider } from "@prisma/client";
+import type {
+  User,
+  Issue,
+  Repository,
+  Provider,
+  Request,
+} from "@prisma/client";
 import { z } from "zod";
 
 export type CurrentUser = {
@@ -68,6 +74,10 @@ export interface RepositoryOptions extends Repository {
 export interface IssueOptions extends Issue {
   user?: User;
   repository?: RepositoryOptions;
+}
+export interface RequestOptions extends Request {
+  user?: User;
+  issue?: IssueOptions;
 }
 
 export enum TASK_TABS {
