@@ -9,7 +9,7 @@ export async function GET(req: Request) {
     const { user } = await validateRequest();
     const getall = await db.issue.findMany({
       where: {
-        repoId,
+        repositoryId: repoId,
         published: true,
         userId: user?.id,
       },

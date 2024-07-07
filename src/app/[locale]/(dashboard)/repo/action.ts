@@ -35,7 +35,7 @@ export async function getRepositoryById(id: string) {
 export async function deleteRepositoryById(id: string) {
   const { user } = await validateRequest();
   // TODO: need to delete request when delete issues
-  await db.issue.deleteMany({ where: { repoId: id, userId: user?.id } });
+  await db.issue.deleteMany({ where: { repositoryId: id, userId: user?.id } });
   await db.repository.delete({
     where: {
       id,

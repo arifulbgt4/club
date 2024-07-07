@@ -144,27 +144,27 @@ enum IssueType {
 }
 
 model Issue {
-  id          String      @id @unique
-  title       String?
-  issueNumber Int?
-  prNumber    Int?
-  topics      String[]
-  active      Boolean?    @default(true)
-  type        IssueType?
-  state       IssueState  @default(draft)
-  published   Boolean?    @default(true)
-  price       Float?
-  repository  Repository? @relation(fields: [repoId], references: [id])
-  repoId      String?
-  user        User?       @relation(fields: [userId], references: [id])
-  userId      String?
-  assigned    User?       @relation("AssignedIssues", fields: [assignedId], references: [id])
-  assignedId  String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  request     Request[]
+  id           String      @id @unique
+  title        String?
+  issueNumber  Int?
+  prNumber     Int?
+  topics       String[]
+  active       Boolean?    @default(true)
+  type         IssueType?
+  state        IssueState  @default(draft)
+  published    Boolean?    @default(true)
+  price        Float?
+  repository   Repository? @relation(fields: [repositoryId], references: [id])
+  repositoryId String?
+  user         User?       @relation(fields: [userId], references: [id])
+  userId       String?
+  assigned     User?       @relation("AssignedIssues", fields: [assignedId], references: [id])
+  assignedId   String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  request      Request[]
 
-  @@index([repoId, userId, assignedId])
+  @@index([repositoryId, userId, assignedId])
 }
 
 enum RequestState {
