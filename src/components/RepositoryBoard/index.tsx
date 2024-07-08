@@ -1,7 +1,5 @@
 "use server";
-
 import React from "react";
-import Pagination from "~/components/sections/pagination";
 import { Tabs, TabsContent } from "~/components/ui/tabs";
 import IssueImportModal from "./IssueImportModal";
 import BoardTabsTrigger from "./BoardTabsTrigger";

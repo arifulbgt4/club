@@ -1,11 +1,12 @@
 import { getPublished } from "../action";
 import Pagination from "~/components/sections/pagination";
-import { Button, buttonVariants } from "~/components/ui/button";
-import { Edit2, ExternalLink } from "lucide-react";
+import { buttonVariants } from "~/components/ui/button";
+import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { cn } from "~/lib/utils";
 import Content from "./Content";
 import EmptyState from "~/components/shared/empty-state";
+import EditModal from "./EditModal";
 
 const Published = async ({
   p,
@@ -43,13 +44,7 @@ const Published = async ({
                   >
                     <ExternalLink className="h-4 w-4" />
                   </Link>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className=" rounded-full"
-                  >
-                    <Edit2 className="h-4 w-4" />
-                  </Button>
+                  <EditModal issueId={i?.id} />
                 </div>
               </div>
             ))}
