@@ -37,8 +37,8 @@ const Inprogress = async ({
                   <div className="mb-1 flex items-center">
                     <div className="mb-0.5 flex flex-col">
                       <div className="text-xs text-muted-foreground">
-                        #{issue?.issueNumber} {" • "} published{" "}
-                        {formatDistanceToNow(new Date(issue?.createdAt), {
+                        #{issue?.issueNumber} {" • "} in-progress{" "}
+                        {formatDistanceToNow(new Date(issue?.updatedAt), {
                           addSuffix: true,
                           includeSeconds: true,
                         })}
