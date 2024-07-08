@@ -74,10 +74,11 @@ function RequestItem({
         method: "PUT",
         body: JSON.stringify({ id, issueId, userId: user?.id }),
       });
+
       router.push(`${pathname}?b=inprogress`);
 
       setOpen(false);
-      setTimeout(() => router.refresh(), 1000);
+      setTimeout(() => router.refresh(), 300);
     } catch (error) {
       console.log(error);
     } finally {
