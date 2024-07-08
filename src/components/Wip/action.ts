@@ -15,34 +15,30 @@ export async function getInProgress() {
     include: {
       issue: {
         include: {
-          user: {
-            select: {
-              name: true,
-              username: true,
-              picture: true,
-              installId: true,
-              accessToken: true,
+          repository: {
+            include: {
+              provider: true,
             },
           },
-          repository: true,
         },
       },
     },
   });
-  if (!inprogress) return {};
+  if (!inprogress) return null;
 
+  const provider = inprogress.issue?.repository?.provider;
   const octo = await app.getInstallationOctokit(
-    Number(inprogress?.issue?.user?.installId)
+    Number(provider?.installationId)
   );
 
   const issue = await octo.request(
     "GET /repos/{owner}/{repo}/issues/{issue_number}",
     {
-      owner: inprogress?.issue?.user?.username as string,
+      owner: provider?.name as string,
       repo: inprogress?.issue?.repository?.name as string,
       issue_number: Number(inprogress?.issue?.issueNumber),
       headers: {
-        authorization: `token ${inprogress?.issue?.user?.accessToken}`,
+        authorization: `token ${provider?.accessToken}`,
       },
     }
   );
@@ -50,11 +46,11 @@ export async function getInProgress() {
   const comments = await octo.request(
     "GET /repos/{owner}/{repo}/issues/{issue_number}/comments",
     {
-      owner: inprogress?.issue?.user?.username as string,
+      owner: provider?.name as string,
       repo: inprogress?.issue?.repository?.name as string,
       issue_number: Number(inprogress?.issue?.issueNumber),
       headers: {
-        authorization: `token ${inprogress?.issue?.user?.accessToken}`,
+        authorization: `token ${provider?.accessToken}`,
       },
     }
   );
@@ -65,7 +61,7 @@ export async function getInProgress() {
     inprogress: {
       id: inprogress?.id,
       updatedAt: inprogress?.updatedAt,
-      userName: inprogress?.issue?.user?.username,
+      userName: provider?.name,
     },
   };
 }

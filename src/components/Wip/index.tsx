@@ -8,15 +8,17 @@ import Submit from "./Submit";
 import { Suspense } from "react";
 import EmptyState from "../shared/empty-state";
 
-async function Wip(props: WipProps) {
-  const { issue, inprogress, comments } = await getInProgress();
-  if (!inprogress)
+async function Wip({}: WipProps) {
+  const data = await getInProgress();
+  if (!data)
     return (
       <EmptyState
         title="Currently no issues in progress"
         description="Currently, there are no active issue. To start working on one, discover and apply more issues."
       />
     );
+
+  const { issue, inprogress, comments } = data;
   return (
     <div className="mt-6 flex flex-col">
       <div className=" border-b">
