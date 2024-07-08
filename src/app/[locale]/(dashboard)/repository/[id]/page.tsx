@@ -10,6 +10,7 @@ import { Lock, LockOpen } from "lucide-react";
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
 import TopTabs from "./_lib/TopTabs";
 import RepositoryBoard from "~/components/RepositoryBoard";
+import EmptyState from "~/components/shared/empty-state";
 
 const ARepositoryPage = async ({
   params: { id },
@@ -18,8 +19,9 @@ const ARepositoryPage = async ({
   params: { id: string };
   searchParams: { t: string; page: string; b: string };
 }) => {
-  const { dbRepo, gitRepo } = await getRepositoryByID(id);
-  if (!dbRepo || !gitRepo) return null;
+  const data = await getRepositoryByID(id);
+  if (!data) return <EmptyState title="Repository is not found" />;
+  const { dbRepo, gitRepo } = data;
   const p = Number(page) || 1;
   return (
     <div className="flex flex-col">

@@ -40,6 +40,8 @@ export async function getRepositoryByID(id: string) {
     },
   });
 
+  if (!dbRepo) return null;
+
   const octo = await octokit();
 
   const gitRepo = await octo.request("GET /repos/{owner}/{repo}", {
