@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { usePathname, useRouter } from "next/navigation";
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -69,13 +70,14 @@ function RequestItem({
   async function onAccept() {
     try {
       setLoading(true);
-      const res = await fetch(`/api/v1/request/accept`, {
+      await fetch(`/api/v1/request/accept`, {
         method: "PUT",
         body: JSON.stringify({ id, issueId, userId: user?.id }),
       });
       router.push(`${pathname}?b=inprogress`);
-      router.refresh();
+
       setOpen(false);
+      setTimeout(() => router.refresh(), 1000);
     } catch (error) {
       console.log(error);
     } finally {

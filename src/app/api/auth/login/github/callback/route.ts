@@ -71,7 +71,7 @@ export const GET = async (request: NextRequest) => {
     cookies().set("refresh", expiresTime?.toString(), {
       path: "/",
       priority: "medium",
-      expires: 365,
+      maxAge: 15552000,
     });
     const githubUserResponse = await fetch("https://api.github.com/user", {
       headers: {

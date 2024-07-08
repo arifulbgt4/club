@@ -26,6 +26,7 @@ const RepositoryBoard = async ({
   repoId: string;
 }) => {
   const count = await getCounts(repoId);
+  console.log("first b: ", b);
   return (
     <Tabs defaultValue={b || TAB_VALUE.published}>
       <div className="flex items-center justify-between">

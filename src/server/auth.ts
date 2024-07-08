@@ -123,7 +123,7 @@ export const octokit = cache(async () => {
     cookies().set("refresh", expiresTime.toString(), {
       path: "/",
       priority: "medium",
-      expires: 365,
+      maxAge: 15552000,
     });
   }
   return new Octokit({ auth: token });
