@@ -85,7 +85,7 @@ export async function createEmailVerificationToken(
 export const octokit = cache(async () => {
   const { user, session } = await validateRequest();
   const accessTokenExpires = cookies().get("refresh")?.value || null;
-  if (!session || accessTokenExpires === null) {
+  if (!session) {
     return {
       error: "Unauthorized",
     };
@@ -123,6 +123,7 @@ export const octokit = cache(async () => {
     cookies().set("refresh", expiresTime.toString(), {
       path: "/",
       priority: "medium",
+      expires: 365,
     });
   }
   return new Octokit({ auth: token });
