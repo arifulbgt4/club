@@ -13,13 +13,6 @@ export const app = new App({
     clientSecret: process.env.GITHUB_CLIENT_SECRET!,
   },
 });
-
-export default cache(async function Octokit() {
-  const { user } = await validateRequest();
-  const a = await db.user.findUnique({ where: { id: user?.id } });
-  return new Octo({ auth: a?.userAccessToken });
-});
-
 export const privateKey = jwt.sign(
   {
     // Issued at time (60 seconds in the past)

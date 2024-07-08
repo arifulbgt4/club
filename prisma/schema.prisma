@@ -30,7 +30,6 @@ model User {
   emailVerified           Boolean?                 @default(false)
   picture                 String?
   accessToken             String?
-  userAccessToken         String?
   refreshToken            String?
   installId               Int?
   available               Boolean?                 @default(true)

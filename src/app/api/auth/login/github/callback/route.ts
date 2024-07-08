@@ -67,7 +67,7 @@ export const GET = async (request: NextRequest) => {
       accessToken: res_token?.access_token,
       refreshToken: res_token?.refresh_token,
     };
-    const expiresTime = Date.now() + res_token?.expires_in;
+    const expiresTime = Date.now() + res_token?.expires_in * 1000;
     cookies().set("refresh", expiresTime?.toString(), {
       path: "/",
       priority: "medium",
@@ -123,7 +123,7 @@ export const GET = async (request: NextRequest) => {
           id: existingUser.id,
         },
         data: {
-          userAccessToken: tokens.accessToken,
+          accessToken: tokens.accessToken,
           refreshToken: tokens.refreshToken,
         },
       });
@@ -207,7 +207,7 @@ export const GET = async (request: NextRequest) => {
         name: githubUser.name || githubUser.login,
         email: userEmail,
         username: githubUser.login,
-        userAccessToken: tokens.accessToken,
+        accessToken: tokens.accessToken,
         refreshToken: tokens.refreshToken,
         stripeCustomerId: customer.id,
         picture: githubUser.avatar_url,

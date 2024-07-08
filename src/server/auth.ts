@@ -85,46 +85,18 @@ export async function createEmailVerificationToken(
 export const octokit = cache(async () => {
   const { user, session } = await validateRequest();
   const accessTokenExpires = cookies().get("refresh")?.value || null;
+
   if (!session) {
     return {
       error: "Unauthorized",
     };
   }
-  const theUser = await db.user.findUnique({ where: { id: user?.id } });
-  let token = theUser?.userAccessToken;
 
   if (Number(accessTokenExpires) < Date.now()) {
-    const access_token = await fetch(
-      "https://github.com/login/oauth/access_token",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          client_id: process.env.GITHUB_CLIENT_ID,
-          client_secret: process.env.GITHUB_CLIENT_SECRET,
-          grant_type: "refresh_token",
-          refresh_token: theUser?.refreshToken,
-        }),
-      }
-    );
-    const res_token = await access_token.json();
-    const expiresTime = Date.now() + res_token?.expires_in;
-    await db.user.update({
-      where: { id: user?.id },
-      data: {
-        userAccessToken: res_token?.access_token,
-        refreshToken: res_token?.refresh_token,
-      },
-    });
-    token = res_token?.access_token;
-    cookies().set("refresh", expiresTime.toString(), {
-      path: "/",
-      priority: "medium",
-      maxAge: 15552000,
-    });
+    console.log("redirect");
+    return redirect("/api/auth/login/github/refresh/");
   }
-  return new Octokit({ auth: token });
+  const theUser = await db.user.findUnique({ where: { id: user?.id } });
+
+  return new Octokit({ auth: theUser?.accessToken });
 });

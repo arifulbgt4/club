@@ -1,7 +1,6 @@
 import { IssueState, type IssueType } from "@prisma/client";
 import db from "~/lib/db";
-import octokit from "~/lib/octokit";
-import { validateRequest } from "~/server/auth";
+import { octokit, validateRequest } from "~/server/auth";
 
 export async function POST(req: Request) {
   const body = await req.json();

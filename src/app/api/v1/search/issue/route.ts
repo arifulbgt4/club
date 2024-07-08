@@ -1,6 +1,5 @@
 import db from "~/lib/db";
-import octokit from "~/lib/octokit";
-import { validateRequest } from "~/server/auth";
+import { octokit, validateRequest } from "~/server/auth";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
