@@ -7,7 +7,10 @@ import IssueImportModal from "./IssueImportModal";
 import BoardTabsTrigger from "./BoardTabsTrigger";
 import { getCounts } from "./action";
 import Published from "./Published";
-import Inprogress from "./InProgress";
+import InProgress from "./InProgress";
+import InReview from "./InReview";
+import Done from "./Done";
+import Draft from "./Draft";
 
 const TAB_VALUE = {
   published: "published",
@@ -37,46 +40,16 @@ const RepositoryBoard = async ({
         <Published repoId={repoId} p={p} total={count?.published} />
       </TabsContent>
       <TabsContent className="m-0" value={TAB_VALUE.inprogress}>
-        <Inprogress repoId={repoId} p={p} total={count?.inprogress} b={b} />
+        <InProgress repoId={repoId} p={p} total={count?.inprogress} b={b} />
       </TabsContent>
       <TabsContent className="m-0" value={TAB_VALUE.inreview}>
-        <div className="max-h-[calc(100vh-279px)] overflow-scroll ">
-          <div className="min-h-[calc(100vh-279px)] pt-3">
-            <span>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed
-              libero soluta illum adipisci voluptas sunt deserunt, amet omnis
-              quidem, aperiam, nemo doloremque alias id fugiat cupiditate quis.
-              Tempora, voluptatem delectus.
-            </span>
-          </div>
-        </div>
-        <Pagination page={1} totalPages={1} justify="start" />
+        <InReview repoId={repoId} p={p} total={count?.inreview} b={b} />
       </TabsContent>
       <TabsContent className="m-0" value={TAB_VALUE.done}>
-        <div className="max-h-[calc(100vh-279px)] overflow-scroll ">
-          <div className="min-h-[calc(100vh-279px)] pt-3">
-            <span>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed
-              libero soluta illum adipisci voluptas sunt deserunt, amet omnis
-              quidem, aperiam, nemo doloremque alias id fugiat cupiditate quis.
-              Tempora, voluptatem delectus.
-            </span>
-          </div>
-        </div>
-        <Pagination page={1} totalPages={1} justify="start" />
+        <Done repoId={repoId} p={p} total={count?.done} b={b} />
       </TabsContent>
       <TabsContent className="m-0" value={TAB_VALUE.draft}>
-        <div className="max-h-[calc(100vh-279px)] overflow-scroll ">
-          <div className="min-h-[calc(100vh-279px)] pt-3">
-            <span>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed
-              libero soluta illum adipisci voluptas sunt deserunt, amet omnis
-              quidem, aperiam, nemo doloremque alias id fugiat cupiditate quis.
-              Tempora, voluptatem delectus.
-            </span>
-          </div>
-        </div>
-        <Pagination page={1} totalPages={1} justify="start" />
+        <Draft repoId={repoId} p={p} total={count?.draft} b={b} />
       </TabsContent>
     </Tabs>
   );

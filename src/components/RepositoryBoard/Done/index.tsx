@@ -1,10 +1,10 @@
 import EmptyState from "~/components/shared/empty-state";
-import { getInProgress } from "../action";
+import { getDone } from "../action";
 import Pagination from "~/components/sections/pagination";
 import { formatDistanceToNow } from "date-fns";
 import { IssueType } from "@prisma/client";
 
-const InProgress = async ({
+const Done = async ({
   p,
   b,
   total,
@@ -15,9 +15,9 @@ const InProgress = async ({
   total: number;
   repoId: string;
 }) => {
-  const data = await getInProgress(repoId, p);
+  const data = await getDone(repoId, p);
   if (!data || !data?.issues?.length) {
-    return <EmptyState title="No issues in progress" />;
+    return <EmptyState title="No issues completed yet" />;
   }
   const { issues, take, page } = data;
 
@@ -37,7 +37,7 @@ const InProgress = async ({
                   <div className="mb-1 flex items-center">
                     <div className="mb-0.5 flex flex-col">
                       <div className="text-xs text-muted-foreground">
-                        #{issue?.issueNumber} {" • "} in-progress{" "}
+                        #{issue?.issueNumber} {" • "} completed{" "}
                         {formatDistanceToNow(new Date(issue?.updatedAt), {
                           addSuffix: true,
                           includeSeconds: true,
@@ -88,4 +88,4 @@ const InProgress = async ({
   );
 };
 
-export default InProgress;
+export default Done;

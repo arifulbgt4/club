@@ -96,3 +96,61 @@ export async function getInProgress(repoId: string, page: number = 1) {
   }
   return { issues, take: TAKE, page };
 }
+
+export async function getInReview(repoId: string, page: number = 1) {
+  const { user } = await validateRequest();
+  const issues = await db.issue.findMany({
+    where: {
+      repositoryId: repoId,
+      state: IssueState.inreview,
+      active: true,
+      userId: user?.id,
+    },
+    take: TAKE,
+    skip: (page - 1) * TAKE,
+    include: {
+      assigned: true,
+    },
+  });
+  if (!issues) {
+    return null;
+  }
+  return { issues, take: TAKE, page };
+}
+
+export async function getDone(repoId: string, page: number = 1) {
+  const { user } = await validateRequest();
+  const issues = await db.issue.findMany({
+    where: {
+      repositoryId: repoId,
+      state: IssueState.done,
+      userId: user?.id,
+    },
+    take: TAKE,
+    skip: (page - 1) * TAKE,
+    include: {
+      assigned: true,
+    },
+  });
+  if (!issues) {
+    return null;
+  }
+  return { issues, take: TAKE, page };
+}
+
+export async function getDraft(repoId: string, page: number = 1) {
+  const { user } = await validateRequest();
+  const issues = await db.issue.findMany({
+    where: {
+      repositoryId: repoId,
+      state: IssueState.draft,
+      userId: user?.id,
+    },
+    take: TAKE,
+    skip: (page - 1) * TAKE,
+  });
+  if (!issues) {
+    return null;
+  }
+  return { issues, take: TAKE, page };
+}
