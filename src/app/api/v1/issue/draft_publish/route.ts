@@ -1,5 +1,6 @@
 import { IssueState, type IssueType } from "@prisma/client";
 import db from "~/lib/db";
+import { redirectError } from "~/lib/utils";
 import { octokit, validateRequest } from "~/server/auth";
 
 export async function POST(req: Request) {
@@ -66,6 +67,7 @@ export async function POST(req: Request) {
     });
     return new Response(null, { status: 200 });
   } catch (error) {
+    redirectError(error);
     return new Response(null, {
       status: 500,
     });

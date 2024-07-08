@@ -1,5 +1,6 @@
 import { IssueState, IssueType } from "@prisma/client";
 import db from "~/lib/db";
+import { redirectError } from "~/lib/utils";
 import { octokit, validateRequest } from "~/server/auth";
 
 export async function POST(req: Request) {
@@ -39,7 +40,7 @@ export async function POST(req: Request) {
       }
     );
 
-    const ii = await db.issue.upsert({
+    const published = await db.issue.upsert({
       where: {
         id: String(issue?.data?.id),
         userId: user?.id,
@@ -72,8 +73,9 @@ export async function POST(req: Request) {
         topics: [...body?.topics],
       },
     });
-    return new Response(JSON.stringify(ii), { status: 200 });
+    return new Response(JSON.stringify(published), { status: 200 });
   } catch (error) {
+    redirectError(error);
     return new Response(null, {
       status: 500,
     });

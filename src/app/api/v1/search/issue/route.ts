@@ -1,4 +1,5 @@
 import db from "~/lib/db";
+import { redirectError } from "~/lib/utils";
 import { octokit, validateRequest } from "~/server/auth";
 
 export async function GET(req: Request) {
@@ -30,6 +31,7 @@ export async function GET(req: Request) {
       status: 200,
     });
   } catch (error) {
+    redirectError(error);
     return new Response(null, { status: 500 });
   }
 }

@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
+import { redirect } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -65,4 +66,11 @@ export function hexToRgba(hex: string, alpha: number = 1): string {
 
   // Return the rgba color code
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function redirectError(error?: { digest: string } | any) {
+  if (error?.digest?.includes("NEXT_REDIRECT")) {
+    return redirect("/api/auth/login/github/refresh/");
+  }
 }

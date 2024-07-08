@@ -1,3 +1,4 @@
+import { redirectError } from "~/lib/utils";
 import { octokit, validateRequest } from "~/server/auth";
 
 export async function GET(req: Request) {
@@ -16,6 +17,7 @@ export async function GET(req: Request) {
 
     return new Response(JSON.stringify(topics.data.items), { status: 200 });
   } catch (error) {
+    redirectError(error);
     return new Response(null, { status: 500 });
   }
 }
