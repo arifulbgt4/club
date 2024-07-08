@@ -1,8 +1,5 @@
-import { cache } from "react";
 import jwt from "jsonwebtoken";
-import { Octokit as Octo, App } from "octokit";
-import { validateRequest } from "~/server/auth";
-import db from "./db";
+import { App } from "octokit";
 
 export const app = new App({
   appId: process.env.GITHUB_APP_ID!,

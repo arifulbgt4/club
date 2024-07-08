@@ -93,7 +93,6 @@ export const octokit = cache(async () => {
   }
 
   if (Number(accessTokenExpires) < Date.now()) {
-    console.log("redirect");
     return redirect("/api/auth/login/github/refresh/");
   }
   const theUser = await db.user.findUnique({ where: { id: user?.id } });
