@@ -81,7 +81,9 @@ export async function getInProgress(repoId: string, page: number = 1) {
   const issues = await db.issue.findMany({
     where: {
       repositoryId: repoId,
-      state: IssueState.inprogress,
+      state: {
+        in: [IssueState.inprogress, IssueState.reassign],
+      },
       active: true,
       userId: user?.id,
     },
