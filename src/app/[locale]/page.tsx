@@ -25,7 +25,7 @@ export default async function Home({
   const totalPages = Math.ceil(total / take);
   return (
     <div className="container">
-      <div className="mb-9 mt-3 flex">
+      <div className="flex pb-10 pt-3">
         <div className=" flex w-[70%] flex-col pr-3">
           <div className="mb-3 flex  w-full items-center space-x-2">
             <SearchByTopics params={topics} isAuthenticate={!!session} />

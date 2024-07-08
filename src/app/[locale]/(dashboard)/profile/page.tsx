@@ -1,19 +1,14 @@
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
-import { app } from "~/lib/octokit";
-import { validateRequest } from "~/server/auth";
+import { octokit, validateRequest } from "~/server/auth";
 import Readme from "./Readme";
 import { Button } from "~/components/ui/button";
 
 const ProfilePage = async () => {
   const { user } = await validateRequest();
-  const octo = await app.getInstallationOctokit(Number(user?.installId));
+  const octo = await octokit();
   const { data } = await octo.request("GET /users/{username}", {
     username: user?.username as string,
-    headers: {
-      "X-GitHub-Api-Version": "2022-11-28",
-      authorization: `token ${user?.accessToken}`,
-    },
   });
 
   const readme = async () => {
@@ -34,7 +29,7 @@ const ProfilePage = async () => {
   const readMe = await readme();
 
   return (
-    <div className="container flex max-w-[900px] flex-1 flex-col items-center justify-center px-5">
+    <div className="container flex max-w-[900px] flex-1 flex-col items-center justify-center px-5 pb-10">
       <Avatar className=" mb-4 h-36  w-36 border-4">
         <AvatarImage src={data?.avatar_url} />
       </Avatar>
