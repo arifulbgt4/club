@@ -15,26 +15,32 @@ export async function PUT(req: Request) {
       include: {
         issue: {
           include: {
-            repository: true,
-            user: true,
+            repository: {
+              include: {
+                provider: true,
+              },
+            },
           },
         },
       },
     });
 
-    const reqUser = request?.issue?.user;
+    const provider = request?.issue?.repository?.provider;
+
     const repo = request?.issue?.repository;
 
-    const octo = await app.getInstallationOctokit(Number(reqUser?.installId));
+    const octo = await app.getInstallationOctokit(
+      Number(provider?.installationId)
+    );
 
     const pull = await octo.request(
       "GET /repos/{owner}/{repo}/pulls/{pull_number}",
       {
-        owner: reqUser?.username as string,
+        owner: provider?.name as string,
         repo: repo?.name as string,
         pull_number: Number(body?.prNumber),
         headers: {
-          authorization: `token ${reqUser?.accessToken}`,
+          authorization: `token ${provider?.accessToken}`,
         },
       }
     );
