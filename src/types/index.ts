@@ -74,7 +74,9 @@ export interface RepositoryOptions extends Repository {
 export interface IssueOptions extends Issue {
   user?: User;
   repository?: RepositoryOptions;
+  request?: Request[];
 }
+
 export interface RequestOptions extends Request {
   user?: User;
   issue?: IssueOptions;

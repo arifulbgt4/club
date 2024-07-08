@@ -7,6 +7,7 @@ import { cn } from "~/lib/utils";
 import Content from "./Content";
 import EmptyState from "~/components/shared/empty-state";
 import EditModal from "./EditModal";
+import type { IssueOptions } from "~/types";
 
 const Published = async ({
   p,
@@ -30,7 +31,7 @@ const Published = async ({
       <div className="max-h-[calc(100vh-279px)] overflow-scroll ">
         <div className="min-h-[calc(100vh-279px)] pt-3">
           <div className=" flex flex-col gap-3">
-            {issues?.map((i) => (
+            {issues?.map((i: IssueOptions) => (
               <div key={i?.id} className=" group relative mr-5">
                 <Content issue={i} />
                 <div className=" absolute right-0 top-3 flex flex-col gap-2 opacity-30 transition-opacity group-hover:opacity-100">

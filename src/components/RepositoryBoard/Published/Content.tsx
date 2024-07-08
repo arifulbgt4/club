@@ -4,7 +4,9 @@ import { formatDistanceToNow } from "date-fns";
 import { Sheet, SheetTrigger } from "~/components/ui/sheet";
 import { IssueType } from "@prisma/client";
 import RequestList from "./RequestList";
-import type { IssueOptions } from "~/types";
+import type { IssueOptions, RequestOptions } from "~/types";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import Icons from "~/components/shared/icons";
 
 const Content = ({ issue }: { issue: IssueOptions }) => {
   const [open, setOpen] = useState(false);
@@ -48,6 +50,34 @@ const Content = ({ issue }: { issue: IssueOptions }) => {
           ) : (
             ""
           )}
+          <div className="mt-2 flex items-center">
+            <span className=" text-xs font-bold text-muted-foreground">
+              {issue?.request?.length === 0 && " No request yet"}
+            </span>
+            <div className=" flex items-center">
+              {issue?.request?.map((u: RequestOptions) => (
+                <Avatar
+                  key={u?.id}
+                  className=" -mr-2 h-6 w-6 border border-black"
+                >
+                  <AvatarImage
+                    src={u?.user?.picture as string}
+                    title={u?.user?.username as string}
+                  />
+                  <AvatarFallback>
+                    <Icons.spinner className=" animate-spin" />
+                  </AvatarFallback>
+                </Avatar>
+              ))}
+              {issue?.request?.length === 8 && (
+                <div className=" z-50 flex h-6 w-7 items-center justify-center rounded-full border bg-white shadow">
+                  <span className="text-center text-xs font-black text-red-600">
+                    9+
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </SheetTrigger>
       {open && <RequestList id={issue?.id} setOpen={setOpen} />}

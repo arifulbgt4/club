@@ -66,8 +66,18 @@ export async function getPublished(repoId: string, page: number = 1) {
     skip: (page - 1) * TAKE,
     include: {
       request: {
-        take: 9,
+        take: 8,
         skip: 0,
+        include: {
+          user: {
+            select: {
+              id: true,
+              username: true,
+              name: true,
+              picture: true,
+            },
+          },
+        },
       },
     },
   });
