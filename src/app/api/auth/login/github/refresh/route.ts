@@ -48,7 +48,7 @@ export async function GET(req: Request) {
     return new Response(null, {
       status: 302,
       headers: {
-        Location: "/repository",
+        Location: `/refresh?l=${referer}`,
       },
     });
   } catch (error) {
