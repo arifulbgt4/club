@@ -45,7 +45,8 @@ const RequestList = ({
           {loading && <Icons.spinner className=" animate-spin" />}
         </SheetTitle>
         <SheetDescription>
-          Make changes to your profile here. Click save when youre done.
+          Accept a request and assign the developer to continue working on the
+          issue
         </SheetDescription>
       </SheetHeader>
       <div className="grid gap-4 py-4">
