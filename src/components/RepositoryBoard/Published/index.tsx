@@ -5,6 +5,7 @@ import { Edit2, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { cn } from "~/lib/utils";
 import Content from "./Content";
+import EmptyState from "~/components/shared/empty-state";
 
 const Published = async ({
   p,
@@ -17,11 +18,7 @@ const Published = async ({
 }) => {
   const data = await getPublished(repoId, p);
   if (!data || !data?.issues?.length) {
-    return (
-      <div>
-        <span>No published issue</span>
-      </div>
-    );
+    return <EmptyState title="No issues published yet" />;
   }
   const { issues, take, page } = data;
 

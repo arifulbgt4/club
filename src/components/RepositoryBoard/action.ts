@@ -76,3 +76,23 @@ export async function getPublished(repoId: string, page: number = 1) {
   }
   return { issues, take: TAKE, page };
 }
+export async function getInProgress(repoId: string, page: number = 1) {
+  const { user } = await validateRequest();
+  const issues = await db.issue.findMany({
+    where: {
+      repositoryId: repoId,
+      state: IssueState.inprogress,
+      active: true,
+      userId: user?.id,
+    },
+    take: TAKE,
+    skip: (page - 1) * TAKE,
+    include: {
+      assigned: true,
+    },
+  });
+  if (!issues) {
+    return null;
+  }
+  return { issues, take: TAKE, page };
+}

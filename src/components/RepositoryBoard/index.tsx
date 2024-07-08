@@ -7,6 +7,7 @@ import IssueImportModal from "./IssueImportModal";
 import BoardTabsTrigger from "./BoardTabsTrigger";
 import { getCounts } from "./action";
 import Published from "./Published";
+import Inprogress from "./InProgress";
 
 const TAB_VALUE = {
   published: "published",
@@ -26,7 +27,6 @@ const RepositoryBoard = async ({
   repoId: string;
 }) => {
   const count = await getCounts(repoId);
-  console.log("first b: ", b);
   return (
     <Tabs defaultValue={b || TAB_VALUE.published}>
       <div className="flex items-center justify-between">
@@ -37,17 +37,7 @@ const RepositoryBoard = async ({
         <Published repoId={repoId} p={p} total={count?.published} />
       </TabsContent>
       <TabsContent className="m-0" value={TAB_VALUE.inprogress}>
-        <div className="max-h-[calc(100vh-279px)] overflow-scroll ">
-          <div className="min-h-[calc(100vh-279px)] pt-3">
-            <span>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed
-              libero soluta illum adipisci voluptas sunt deserunt, amet omnis
-              quidem, aperiam, nemo doloremque alias id fugiat cupiditate quis.
-              Tempora, voluptatem delectus.
-            </span>
-          </div>
-        </div>
-        <Pagination page={1} totalPages={1} justify="start" />
+        <Inprogress repoId={repoId} p={p} total={count?.inprogress} b={b} />
       </TabsContent>
       <TabsContent className="m-0" value={TAB_VALUE.inreview}>
         <div className="max-h-[calc(100vh-279px)] overflow-scroll ">
