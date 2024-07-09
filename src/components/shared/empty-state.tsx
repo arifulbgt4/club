@@ -6,23 +6,24 @@ import { cn } from "~/lib/utils";
 interface EmptyStateProps {
   title: string;
   description?: string;
-  onActionClick?: () => void;
-  actionText?: string;
+  children?: React.ReactNode;
+  border?: boolean;
   size?: "default" | "sm";
 }
 
 const EmptyState: FC<EmptyStateProps> = ({
   title,
   description,
-  onActionClick,
-  actionText = "Take Action",
+  children,
+  border = true,
   size = "default",
 }) => {
   return (
     <div
       className={cn(
-        size === "sm" ? "px-3" : "border p-16",
-        " flex flex-col items-center justify-center rounded text-center"
+        size === "sm" ? "px-3" : "p-16",
+        border && size === "default" && "border",
+        " flex flex-1 flex-col items-center justify-center gap-2 rounded text-center"
       )}
     >
       <Icons.emptyIllustration
@@ -32,21 +33,17 @@ const EmptyState: FC<EmptyStateProps> = ({
       <span
         className={cn(
           size === "sm" ? "text-base" : "text-2xl",
-          "mt-4 font-bold"
+          "pt-2 font-bold"
         )}
       >
         {title}
       </span>
 
       {description && (
-        <span className=" mt-2 text-muted-foreground">{description}</span>
+        <span className="text-muted-foreground">{description}</span>
       )}
 
-      {onActionClick && (
-        <Button onClick={onActionClick} className=" mt-6">
-          {actionText}
-        </Button>
-      )}
+      {children && children}
     </div>
   );
 };
