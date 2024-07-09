@@ -33,7 +33,7 @@ const Done = async ({
             {issues?.map((issue) => (
               <div
                 key={issue?.id}
-                className="mr-5 flex cursor-pointer flex-col items-start rounded-lg border p-4 pr-9 hover:bg-accent"
+                className="flex cursor-pointer flex-col items-start rounded-lg border p-4 hover:bg-accent"
               >
                 <div className="flex w-full flex-col">
                   <div className="mb-1 flex items-center">
