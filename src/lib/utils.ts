@@ -32,7 +32,7 @@ export function nFormatter(num: number, digits?: number) {
 export function hasFileNameSpaces(fileName: string) {
   return /\s/.test(fileName);
 }
-export function formatDate(input: string | number): string {
+export function formatDate(input: string | number | Date): string {
   const date = new Date(input);
   return date.toLocaleDateString("en-US", {
     month: "long",
@@ -73,4 +73,10 @@ export function redirectError(error?: { digest: string } | any) {
   if (error?.digest?.includes("NEXT_REDIRECT")) {
     return redirect("/api/auth/login/github/refresh/");
   }
+}
+
+export function addDays(dateString: string | Date, days: number) {
+  const date = new Date(dateString);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date;
 }

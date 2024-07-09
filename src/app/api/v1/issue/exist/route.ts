@@ -11,6 +11,21 @@ export async function GET(req: Request) {
     }
     const issue = await db.issue.findUnique({
       where: { id, userId: user?.id, active: true },
+      include: {
+        assigned: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            picture: true,
+          },
+        },
+        request: {
+          where: {
+            approved: true,
+          },
+        },
+      },
     });
     if (!issue) {
       return new Response(JSON.stringify({ is_exist: false }), { status: 200 });

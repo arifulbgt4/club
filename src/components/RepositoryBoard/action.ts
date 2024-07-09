@@ -100,7 +100,14 @@ export async function getInProgress(repoId: string, page: number = 1) {
     take: TAKE,
     skip: (page - 1) * TAKE,
     include: {
-      assigned: true,
+      assigned: {
+        select: {
+          id: true,
+          username: true,
+          name: true,
+          picture: true,
+        },
+      },
     },
   });
   if (!issues) {
@@ -121,7 +128,14 @@ export async function getInReview(repoId: string, page: number = 1) {
     take: TAKE,
     skip: (page - 1) * TAKE,
     include: {
-      assigned: true,
+      assigned: {
+        select: {
+          id: true,
+          username: true,
+          name: true,
+          picture: true,
+        },
+      },
     },
   });
   if (!issues) {
@@ -141,7 +155,14 @@ export async function getDone(repoId: string, page: number = 1) {
     take: TAKE,
     skip: (page - 1) * TAKE,
     include: {
-      assigned: true,
+      assigned: {
+        select: {
+          id: true,
+          username: true,
+          name: true,
+          picture: true,
+        },
+      },
     },
   });
   if (!issues) {

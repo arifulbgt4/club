@@ -75,6 +75,7 @@ export interface IssueOptions extends Issue {
   user?: User;
   repository?: RepositoryOptions;
   request?: Request[];
+  assigned?: User;
 }
 
 export interface RequestOptions extends Request {
