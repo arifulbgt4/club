@@ -28,6 +28,7 @@ const Countdown = ({ endDate }: { endDate: Date }) => {
     }, 1000);
 
     return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [endDate]);
 
   if (!timeLeft) {
