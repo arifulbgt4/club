@@ -35,7 +35,7 @@ const Content: FC<{ issue: IssueOptions }> = ({ issue }) => {
           ""
         )}
       </div>
-      <div className="flex w-28 justify-end text-right text-base text-green-500">
+      <div className="flex w-28 justify-end pt-4 text-right text-base text-green-500">
         {issue?.type === IssueType.paid ? (
           `$ ${issue?.price?.toFixed(2) ?? (0).toFixed(2)}`
         ) : (
