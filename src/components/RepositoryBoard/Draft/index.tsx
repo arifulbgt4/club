@@ -1,8 +1,6 @@
 import EmptyState from "~/components/shared/empty-state";
 import { getDraft } from "../action";
 import Pagination from "~/components/sections/pagination";
-import { formatDistanceToNow } from "date-fns";
-import { IssueType } from "@prisma/client";
 import Content from "./Content";
 
 const Draft = async ({
