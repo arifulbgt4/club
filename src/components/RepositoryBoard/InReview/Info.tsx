@@ -36,7 +36,7 @@ const Info = ({ issue }: { issue: IssueOptions }) => {
           </span>
         </div>
         <div>
-          <strong className="pr-2">Failor:</strong>
+          <strong className="pr-2">Failure:</strong>
           <span>
             If you review and <strong>Close</strong> pull request, the issue
             will move to draft, and the developer will receive a failure point.
