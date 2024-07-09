@@ -8,7 +8,6 @@ import {
   PlusCircle,
   Search,
   StepForward,
-  X,
 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
@@ -24,10 +23,10 @@ import { useForm } from "react-hook-form";
 import debounce from "lodash/debounce";
 import { Input } from "~/components/ui/input";
 import Icons from "~/components/shared/icons";
-import Select from "react-select/async";
 import { cn } from "~/lib/utils";
 import { IssueState, type IssueType } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import SearchTopics from "../SearchTopics";
 
 const PUBLISH_STEP = 4;
 
@@ -40,7 +39,6 @@ const IssueImportModalContent = ({
 }) => {
   const [step, setStep] = useState<number>(1);
   const [issue, setIssue] = useState<any>({});
-  const [inputValue, setInputValue] = useState<string>("");
   const [afterText, setAfterText] = useState<string>("");
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [topics, setTopics] = useState<string[]>([]);
@@ -70,28 +68,6 @@ const IssueImportModalContent = ({
   function goBack() {
     setStep((prevState) => prevState - 1);
   }
-
-  const loadOptions = async (inputValue: string) => {
-    if (!inputValue) return [];
-    const res = await fetch(`/api/v1/search/topics?q=${inputValue}`, {
-      method: "GET",
-    });
-    if (!res.ok) {
-      return;
-    }
-    const topics = await res.json();
-    return topics?.map((topic: { name: string }) => ({
-      label: topic.name,
-      value: topic.name,
-    }));
-  };
-
-  const removeTopic = (t: string) => {
-    if (topics?.length <= 1) {
-      return setTopics([]);
-    }
-    setTopics((pre) => pre.filter((v) => v !== t));
-  };
 
   async function stepForward(id: string) {
     setStep(1.5);
@@ -288,50 +264,7 @@ const IssueImportModalContent = ({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="flex min-h-12 w-full flex-wrap items-center gap-2 rounded-lg border px-2 py-1">
-            <div className="flex flex-wrap gap-1">
-              {topics?.map((p, i) => (
-                <Button
-                  key={i}
-                  size="sm"
-                  onClick={() => removeTopic(p)}
-                  className="h-6 px-2 hover:text-destructive"
-                >
-                  {p}
-                  <X className="ml-1 h-4 w-4" />
-                </Button>
-              ))}
-            </div>
-            <Select
-              value=""
-              className="  bg-transparent"
-              classNames={{
-                indicatorsContainer: () => "w-0 !hidden",
-                control: () =>
-                  "!bg-transparent !border-0 !shadow-none !cursor-text",
-                valueContainer: () => "!p-0",
-                input: () => "!text-inherit !p-0",
-                menu: () => "!bg-accent !text-inherit !w-[240px]",
-                option: ({ isFocused }) =>
-                  isFocused
-                    ? "!bg-accent-foreground !text-accent"
-                    : "!bg-transparent !text-inherit",
-              }}
-              onChange={(v: any) => setTopics([...topics, v?.value])}
-              inputValue={inputValue}
-              placeholder="Search topics"
-              noOptionsMessage={() => <p>Search topics</p>}
-              loadingMessage={() => (
-                <div className=" flex justify-center">
-                  <Icons.spinner className=" animate-spin" />
-                </div>
-              )}
-              onInputChange={(newValue) => setInputValue(newValue)}
-              loadOptions={loadOptions}
-              defaultOptions={false}
-              cacheOptions
-            />
-          </div>
+          <SearchTopics value={topics} onChange={setTopics} />
           <div>
             <Button
               disabled={!topics?.length}
