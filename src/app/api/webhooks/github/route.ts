@@ -162,6 +162,9 @@ export async function POST(req: NextRequest) {
                   id: queue[0]?.id,
                   approved: true,
                   status: RequestStatus.queue,
+                  user: {
+                    available: true,
+                  },
                 },
                 data: {
                   status: RequestStatus.default,
