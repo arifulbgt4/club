@@ -3,6 +3,8 @@ import { getInReview } from "../action";
 import Pagination from "~/components/sections/pagination";
 import { formatDistanceToNow } from "date-fns";
 import { IssueType } from "@prisma/client";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import Icons from "~/components/shared/icons";
 
 const InReview = async ({
   p,
@@ -73,6 +75,20 @@ const InReview = async ({
                 ) : (
                   ""
                 )}
+                <div className="mt-2 flex items-center gap-1.5">
+                  <Avatar className="h-6 w-6 border border-black">
+                    <AvatarImage
+                      src={issue?.assigned?.picture as string}
+                      title={issue?.assigned?.username as string}
+                    />
+                    <AvatarFallback>
+                      <Icons.spinner className=" animate-spin" />
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className=" font-semibold">
+                    {issue?.assigned?.name}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
