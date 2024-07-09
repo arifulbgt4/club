@@ -93,8 +93,9 @@ export async function POST(req: NextRequest) {
           });
           if (!issue) break;
           if (
-            reviewData.state === "changes_requested" ||
-            reviewData.state === "commented"
+            (reviewData.state === "changes_requested" ||
+              reviewData.state === "commented") &&
+            issue?.state === IssueState.inreview
           ) {
             await db.issue.update({
               where: {
