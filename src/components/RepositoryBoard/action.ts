@@ -136,6 +136,7 @@ export async function getInReview(repoId: string, page: number = 1) {
           picture: true,
         },
       },
+      repository: true,
     },
   });
   if (!issues) {
