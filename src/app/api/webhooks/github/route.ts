@@ -78,11 +78,24 @@ export async function POST(req: NextRequest) {
                 username: data?.repository?.login,
               },
               prNumber: data?.pull_request?.number,
-              state: IssueState.inreview,
+              state: {
+                in: [IssueState.inreview, IssueState.inprogress],
+              },
+            },
+            include: {
+              request: {
+                where: {
+                  approved: true,
+                  state: RequestState.inreview,
+                },
+              },
             },
           });
           if (!issue) break;
-          if (reviewData.state === "changes_requested") {
+          if (
+            reviewData.state === "changes_requested" ||
+            reviewData.state === "commented"
+          ) {
             await db.issue.update({
               where: {
                 id: issue?.id,
@@ -92,7 +105,7 @@ export async function POST(req: NextRequest) {
                 request: {
                   update: {
                     where: {
-                      id: issue?.assignedId as string,
+                      id: issue?.request[0]?.id as string,
                     },
                     data: {
                       state: RequestState.reassign,
@@ -113,10 +126,17 @@ export async function POST(req: NextRequest) {
                 request: {
                   update: {
                     where: {
-                      id: issue?.assignedId as string,
+                      id: issue?.request[0]?.id as string,
                     },
                     data: {
-                      state: RequestState.completed,
+                      state: RequestState.done,
+                      user: {
+                        update: {
+                          data: {
+                            available: true,
+                          },
+                        },
+                      },
                     },
                   },
                 },

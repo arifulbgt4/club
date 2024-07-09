@@ -7,10 +7,10 @@ const TAKE = 10;
 export async function getList(page: number = 1) {
   const { user } = await validateRequest();
   const total = await db.request.count({
-    where: { userId: user?.id, state: RequestState.completed },
+    where: { userId: user?.id, state: RequestState.done },
   });
   const requests = await db.request.findMany({
-    where: { userId: user?.id, state: RequestState.completed },
+    where: { userId: user?.id, state: RequestState.done },
     include: {
       issue: {
         include: {

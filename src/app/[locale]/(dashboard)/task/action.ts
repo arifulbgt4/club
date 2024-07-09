@@ -36,7 +36,7 @@ export async function getCounts() {
         case RequestState.inreview:
           result.inreview = _count.state;
           break;
-        case RequestState.completed:
+        case RequestState.done:
           result.completed = _count.state;
           break;
         case RequestState.failed:
