@@ -1,4 +1,4 @@
-import { IssueState, RequestState } from "@prisma/client";
+import { IssueState, RequestState, RequestStatus } from "@prisma/client";
 import { headers } from "next/headers";
 import { type NextRequest } from "next/server";
 import db from "~/lib/db";
@@ -92,6 +92,12 @@ export async function POST(req: NextRequest) {
             },
           });
           if (!issue) break;
+
+          const queue = await db.request.findMany({
+            where: { userId: issue?.assignedId, status: RequestStatus.queue },
+            orderBy: { updatedAt: "asc" },
+          });
+
           if (
             (reviewData.state === "changes_requested" ||
               reviewData.state === "commented") &&
@@ -110,6 +116,12 @@ export async function POST(req: NextRequest) {
                     },
                     data: {
                       state: RequestState.reassign,
+                      ...(!!queue?.length && { status: RequestStatus.queue }),
+                      user: {
+                        update: {
+                          available: false,
+                        },
+                      },
                     },
                   },
                 },
@@ -143,6 +155,30 @@ export async function POST(req: NextRequest) {
                 },
               },
             });
+
+            if (!!queue?.length) {
+              await db.request.update({
+                where: {
+                  id: queue[0]?.id,
+                  approved: true,
+                  status: RequestStatus.queue,
+                },
+                data: {
+                  status: RequestStatus.default,
+                  state: RequestState.reassign,
+                  issue: {
+                    update: {
+                      state: IssueState.reassign,
+                    },
+                  },
+                  user: {
+                    update: {
+                      available: false,
+                    },
+                  },
+                },
+              });
+            }
             break;
           }
         }
