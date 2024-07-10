@@ -2,13 +2,19 @@
 import React, { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { Sheet, SheetTrigger } from "~/components/ui/sheet";
-import { IntentType } from "@prisma/client";
+import { type Intent, IntentType } from "@prisma/client";
 import RequestList from "./RequestList";
 import type { IssueOptions, RequestOptions } from "~/types";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import Icons from "~/components/shared/icons";
 
-const Content = ({ issue }: { issue: IssueOptions }) => {
+const Content = ({
+  issue,
+  intent,
+}: {
+  issue: IssueOptions;
+  intent: Intent;
+}) => {
   const [open, setOpen] = useState(false);
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -20,7 +26,7 @@ const Content = ({ issue }: { issue: IssueOptions }) => {
                 <div className="mb-0.5 flex flex-col">
                   <div className="text-xs text-muted-foreground">
                     #{issue?.issueNumber} {" • "} published{" "}
-                    {formatDistanceToNow(new Date(issue?.createdAt), {
+                    {formatDistanceToNow(new Date(intent?.updatedAt), {
                       addSuffix: true,
                       includeSeconds: true,
                     })}
@@ -72,15 +78,13 @@ const Content = ({ issue }: { issue: IssueOptions }) => {
               </div>
             </div>
           </div>
-          {!!issue?.intent?.length && (
-            <div className="flex w-28 justify-end pt-3 text-right text-base text-green-500">
-              {issue?.intent[0]?.type === IntentType.paid ? (
-                `$ ${issue?.intent[0]?.price?.toFixed(2) ?? (0).toFixed(2)}`
-              ) : (
-                <span className=" text-muted-foreground">open-source</span>
-              )}
-            </div>
-          )}
+          <div className="flex w-28 justify-end pt-3 text-right text-base text-green-500">
+            {intent?.type === IntentType.paid ? (
+              `$ ${intent?.price?.toFixed(2) ?? (0).toFixed(2)}`
+            ) : (
+              <span className=" text-muted-foreground">open-source</span>
+            )}
+          </div>
         </div>
       </SheetTrigger>
       {open && <RequestList id={issue?.id} setOpen={setOpen} />}

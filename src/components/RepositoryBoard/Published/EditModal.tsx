@@ -14,7 +14,7 @@ import {
 import React, { useState, useEffect, useCallback } from "react";
 import Icons from "~/components/shared/icons";
 import { cn } from "~/lib/utils";
-import { type IntentType, type Issue } from "@prisma/client";
+import { IntentType, type Issue } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import SearchTopics from "~/components/SearchTopics";
 
@@ -62,14 +62,14 @@ const IssueImportModalContent = ({
 
   async function onUpdate() {
     setUpdateLoading(true);
-    const res = await fetch("/api/v1/issue/publish", {
-      method: "POST",
+    const res = await fetch("/api/v1/issue/update", {
+      method: "PUT",
       body: JSON.stringify({
         topics,
         issueNumber: issue?.issueNumber,
         type: publishType,
         repoId: issue?.repositoryId,
-        price,
+        price: publishType === IntentType.paid ? price : null,
       }),
     });
     if (!res.ok) {

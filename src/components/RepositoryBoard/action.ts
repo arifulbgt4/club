@@ -55,42 +55,46 @@ const TAKE = 10;
 
 export async function getPublished(repoId: string, page: number = 1) {
   const { user } = await validateRequest();
-  const issues = await db.issue.findMany({
+  const intents = await db.intent.findMany({
     where: {
-      repositoryId: repoId,
-      state: IssueState.published,
       active: true,
-      userId: user?.id,
+      issue: {
+        repositoryId: repoId,
+        state: IssueState.published,
+        active: true,
+        userId: user?.id,
+      },
     },
     take: TAKE,
     orderBy: {
-      createdAt: "desc",
+      updatedAt: "desc",
     },
     skip: (page - 1) * TAKE,
     include: {
-      intent: {
-        where: { active: true },
-      },
-      request: {
-        take: 8,
-        skip: 0,
+      issue: {
         include: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              picture: true,
+          request: {
+            take: 8,
+            skip: 0,
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                  name: true,
+                  picture: true,
+                },
+              },
             },
           },
         },
       },
     },
   });
-  if (!issues) {
+  if (!intents) {
     return null;
   }
-  return { issues, take: TAKE, page };
+  return { intents, take: TAKE, page };
 }
 export async function getInProgress(repoId: string, page: number = 1) {
   const { user } = await validateRequest();
@@ -202,6 +206,7 @@ export async function getDraft(repoId: string, page: number = 1) {
         repositoryId: repoId,
         state: IssueState.draft,
         userId: user?.id,
+        active: true,
       },
     },
     orderBy: {

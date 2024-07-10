@@ -19,10 +19,10 @@ const Published = async ({
   total: number;
 }) => {
   const data = await getPublished(repoId, p);
-  if (!data || !data?.issues?.length) {
+  if (!data || !data?.intents?.length) {
     return <EmptyState title="No issues published yet" />;
   }
-  const { issues, take, page } = data;
+  const { intents, take, page } = data;
 
   const totalPages = Math.ceil(total / take);
 
@@ -31,12 +31,15 @@ const Published = async ({
       <div className="max-h-[calc(100vh-279px)] overflow-scroll ">
         <div className="min-h-[calc(100vh-279px)] pt-3">
           <div className=" flex flex-col gap-3">
-            {issues?.map((i: IssueOptions) => (
-              <div key={i?.id} className=" group relative mr-5">
-                <Content issue={i} />
+            {intents?.map((intent) => (
+              <div key={intent?.id} className=" group relative mr-5">
+                <Content
+                  issue={intent?.issue as IssueOptions}
+                  intent={intent}
+                />
                 <div className=" absolute right-0 top-3 flex flex-col gap-2 opacity-30 transition-opacity group-hover:opacity-100">
                   <Link
-                    href={`/issue/${i?.id}`}
+                    href={`/issue/${intent?.issue?.id}`}
                     target="_blank"
                     className={cn(
                       buttonVariants({ size: "icon", variant: "outline" }),
@@ -45,7 +48,7 @@ const Published = async ({
                   >
                     <ExternalLink className="h-4 w-4" />
                   </Link>
-                  <EditModal issueId={i?.id} />
+                  <EditModal issueId={intent?.issue?.id as string} />
                 </div>
               </div>
             ))}
