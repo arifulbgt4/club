@@ -1,51 +1,53 @@
-import { IssueState, RequestState } from "@prisma/client";
-import { NextResponse } from "next/server";
+import { IssueState } from "@prisma/client";
 import db from "~/lib/db";
+import { validateRequest } from "~/server/auth";
 
 export async function PUT(req: Request) {
   const body = await req.json();
   try {
-    const acc = await db.request.update({
+    const { session } = await validateRequest();
+    if (!session || !body?.issueId || !body?.intentId || !body?.requestId) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
+    const update = await db.intent.update({
       where: {
-        id: body?.id,
-        issueId: body?.issueId,
-        userId: body?.userId,
-        approved: false,
-        state: RequestState.open,
-        user: {
-          available: true,
-        },
+        id: body?.intentId,
       },
       data: {
-        approved: true,
-        state: RequestState.inprogress,
-        user: {
-          update: {
-            available: false,
+        request: {
+          connect: {
+            id: body?.requestId,
           },
         },
         issue: {
           update: {
             state: IssueState.inprogress,
-            assigned: {
-              connect: {
-                id: body?.userId,
-              },
-            },
           },
         },
       },
     });
+
+    if (!update) {
+      return new Response("Wrong information", { status: 401 });
+    }
+
+    await db.request.update({
+      where: { id: body.requestId },
+      data: { approved: true },
+    });
+
     await db.request.deleteMany({
       where: {
-        issueId: body?.issueId,
         id: {
           not: body?.id,
         },
+        issueId: body?.issueId,
       },
     });
-    return NextResponse.json(acc);
+    return new Response("success", { status: 200 });
   } catch (error) {
+    console.log("error: ", error);
     return new Response(null, { status: 500 });
   }
 }

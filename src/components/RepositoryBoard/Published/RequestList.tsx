@@ -16,9 +16,11 @@ import type { RequestOptions } from "~/types";
 
 const RequestList = ({
   id,
+  intentId,
   setOpen,
 }: {
   id: string;
+  intentId: string;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [loading, setLoading] = useState(true);
@@ -51,7 +53,12 @@ const RequestList = ({
       </SheetHeader>
       <div className="grid gap-4 py-4">
         {reqData?.map((r) => (
-          <RequestItem key={r?.id} request={r} setOpen={setOpen} />
+          <RequestItem
+            key={r?.id}
+            request={r}
+            setOpen={setOpen}
+            intentId={intentId}
+          />
         ))}
       </div>
     </SheetContent>
@@ -60,9 +67,11 @@ const RequestList = ({
 
 function RequestItem({
   request: { id, days, user, issueId },
+  intentId,
   setOpen,
 }: {
   request: RequestOptions;
+  intentId: string;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [loading, setLoading] = useState(false);
@@ -73,7 +82,12 @@ function RequestItem({
       setLoading(true);
       await fetch(`/api/v1/request/accept`, {
         method: "PUT",
-        body: JSON.stringify({ id, issueId, userId: user?.id }),
+        body: JSON.stringify({
+          requestId: id,
+          issueId,
+          userId: user?.id,
+          intentId,
+        }),
       });
 
       router.push(`${pathname}?b=inprogress`);

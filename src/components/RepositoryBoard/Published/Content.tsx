@@ -87,7 +87,9 @@ const Content = ({
           </div>
         </div>
       </SheetTrigger>
-      {open && <RequestList id={issue?.id} setOpen={setOpen} />}
+      {open && (
+        <RequestList id={issue?.id} setOpen={setOpen} intentId={intent?.id} />
+      )}
     </Sheet>
   );
 };
