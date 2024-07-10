@@ -2,6 +2,7 @@ import EmptyState from "~/components/shared/empty-state";
 import { getDraft } from "../action";
 import Pagination from "~/components/sections/pagination";
 import Content from "./Content";
+import type { IssueOptions } from "~/types";
 
 const Draft = async ({
   p,
@@ -14,11 +15,12 @@ const Draft = async ({
   total: number;
   repoId: string;
 }) => {
+  // const data = await getDraft(repoId, p);
   const data = await getDraft(repoId, p);
-  if (!data || !data?.issues?.length) {
+  if (!data || !data?.intents?.length) {
     return <EmptyState title="No issues in draft" />;
   }
-  const { issues, take, page } = data;
+  const { intents, take, page } = data;
 
   const totalPages = Math.ceil(total / take);
 
@@ -27,7 +29,13 @@ const Draft = async ({
       <div className="max-h-[calc(100vh-279px)] overflow-scroll ">
         <div className="min-h-[calc(100vh-279px)] pt-3">
           <div className=" flex flex-col gap-3">
-            {issues?.map((issue) => <Content key={issue?.id} issue={issue} />)}
+            {intents?.map((intent) => (
+              <Content
+                key={intent?.id}
+                issue={intent.issue as IssueOptions}
+                intent={intent}
+              />
+            ))}
           </div>
         </div>
       </div>

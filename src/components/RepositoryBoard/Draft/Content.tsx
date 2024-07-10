@@ -1,12 +1,11 @@
 "use client";
-import { IntentType } from "@prisma/client";
+import { type Intent, IntentType, type Issue } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
 import { useState, type FC } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
-import type { IssueOptions } from "~/types";
 import Update from "./Update";
 
-const Content: FC<{ issue: IssueOptions }> = ({ issue }) => {
+const Content: FC<{ issue: Issue; intent: Intent }> = ({ issue, intent }) => {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -17,7 +16,7 @@ const Content: FC<{ issue: IssueOptions }> = ({ issue }) => {
               <div className="mb-1.5 flex flex-col">
                 <div className="text-xs text-muted-foreground">
                   #{issue?.issueNumber} {" • "} draft{" "}
-                  {formatDistanceToNow(new Date(issue?.updatedAt), {
+                  {formatDistanceToNow(new Date(intent?.updatedAt), {
                     addSuffix: true,
                     includeSeconds: true,
                   })}
@@ -41,15 +40,14 @@ const Content: FC<{ issue: IssueOptions }> = ({ issue }) => {
               ""
             )}
           </div>
-          {!!issue?.intent?.length && (
-            <div className="flex w-28 justify-end pt-3 text-right text-base text-green-500">
-              {issue?.intent[0]?.type === IntentType.paid ? (
-                `$ ${issue?.intent[0]?.price?.toFixed(2) ?? (0).toFixed(2)}`
-              ) : (
-                <span className=" text-muted-foreground">open-source</span>
-              )}
-            </div>
-          )}
+
+          <div className="flex w-28 justify-end pt-3 text-right text-base text-green-500">
+            {intent?.type === IntentType.paid ? (
+              `$ ${intent?.price?.toFixed(2) ?? (0).toFixed(2)}`
+            ) : (
+              <span className=" text-muted-foreground">open-source</span>
+            )}
+          </div>
         </div>
       </DialogTrigger>
       <DialogContent>

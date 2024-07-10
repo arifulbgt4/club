@@ -229,7 +229,17 @@ const IssueImportModalContent = ({
       {step === 1.75 && (
         <>
           <DialogHeader>
-            <DialogTitle>{issue?.title}</DialogTitle>
+            <DialogTitle className="flex flex-col">
+              <Button
+                size="sm"
+                variant="link"
+                className=" mb-1 w-fit px-0"
+                onClick={() => setStep(1)}
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" /> Back
+              </Button>
+              <span> {issue?.title}</span>
+            </DialogTitle>
             <DialogDescription className="text-base">
               The issue already in board
             </DialogDescription>

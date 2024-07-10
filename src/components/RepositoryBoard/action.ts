@@ -195,25 +195,26 @@ export async function getDone(repoId: string, page: number = 1) {
 
 export async function getDraft(repoId: string, page: number = 1) {
   const { user } = await validateRequest();
-  const issues = await db.issue.findMany({
+  const intents = await db.intent.findMany({
     where: {
-      repositoryId: repoId,
-      state: IssueState.draft,
-      userId: user?.id,
+      active: true,
+      issue: {
+        repositoryId: repoId,
+        state: IssueState.draft,
+        userId: user?.id,
+      },
     },
     orderBy: {
       updatedAt: "desc",
     },
     include: {
-      intent: {
-        where: { active: true },
-      },
+      issue: true,
     },
     take: TAKE,
     skip: (page - 1) * TAKE,
   });
-  if (!issues) {
+  if (!intents) {
     return null;
   }
-  return { issues, take: TAKE, page };
+  return { intents, take: TAKE, page };
 }
