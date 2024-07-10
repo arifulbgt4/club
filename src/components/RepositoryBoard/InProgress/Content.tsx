@@ -73,7 +73,7 @@ const Content = ({
         </div>
       </DialogTrigger>
       <DialogContent>
-        <Update id={issue?.id} setOpen={setOpen} />
+        <Update id={intent?.id} setOpen={setOpen} />
       </DialogContent>
     </Dialog>
   );

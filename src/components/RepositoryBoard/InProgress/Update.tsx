@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog";
 import { addDays, formatDate } from "~/lib/utils";
-import type { IssueOptions } from "~/types";
+import type { IssueOptions, RequestOptions } from "~/types";
 
 const Update = ({
   id,
@@ -21,14 +21,16 @@ const Update = ({
 }) => {
   const [loading, setLoading] = useState(true);
   const [issue, setIssue] = useState<IssueOptions>();
+  const [request, setRequest] = useState<RequestOptions>();
 
   const fetchIssue = useCallback(async () => {
-    const res = await fetch(`/api/v1/issue/exist?id=${id}`, { method: "GET" });
+    const res = await fetch(`/api/v1/issue/intent?id=${id}`, { method: "GET" });
     if (!res.ok) {
       return;
     }
     const resDate = await res.json();
     setIssue(resDate?.issue);
+    setRequest(resDate?.request);
     setLoading(false);
   }, [id]);
 
@@ -52,52 +54,44 @@ const Update = ({
         <div className=" flex items-center gap-1.5">
           <Avatar className="h-6 w-6">
             <AvatarImage
-              src={issue?.assigned?.picture as string}
-              alt={("@" + issue?.assigned?.username) as string}
+              src={request?.user?.picture as string}
+              alt={("@" + request?.user?.username) as string}
             />
           </Avatar>
-          <span className="font-semibold">{issue?.assigned?.username}</span>
+          <span className="font-semibold">{request?.user?.username}</span>
         </div>
         <span>Working on this issue</span>
       </div>
-      {!!issue?.request?.length && (
-        <div className="flex flex-col gap-1">
-          <div className=" flex gap-5">
-            <div className="flex items-center gap-3">
-              <span className="text-sm">Started:</span>
-              <span className="font-medium">
-                {formatDate(issue?.request[0]?.updatedAt)}
-              </span>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-sm">Ending:</span>
-              <span className="font-medium">
-                {formatDate(
-                  addDays(
-                    issue?.request[0]?.updatedAt,
-                    Number(issue?.request[0]?.days)
-                  )
-                )}
-              </span>
-            </div>
-          </div>
+      <div className="flex flex-col gap-1">
+        <div className=" flex gap-5">
           <div className="flex items-center gap-3">
-            <span className="text-sm">Remaining time:</span>
-            <span className="text-lg font-bold">
-              <Countdown
-                endDate={addDays(
-                  issue?.request[0]?.updatedAt,
-                  Number(issue?.request[0]?.days)
-                )}
-              />
+            <span className="text-sm">Started:</span>
+            <span className="font-medium">
+              {formatDate(issue?.updatedAt as Date)}
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-sm">Working period:</span>
-            <span className="font-medium">{issue?.request[0]?.days} days</span>
+            <span className="text-sm">Ending:</span>
+            <span className="font-medium">
+              {formatDate(
+                addDays(issue?.updatedAt as Date, Number(request?.days))
+              )}
+            </span>
           </div>
         </div>
-      )}
+        <div className="flex items-center gap-3">
+          <span className="text-sm">Remaining time:</span>
+          <span className="text-lg font-bold">
+            <Countdown
+              endDate={addDays(issue?.updatedAt as Date, Number(request?.days))}
+            />
+          </span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-sm">Working period:</span>
+          <span className="font-medium">{request?.days} days</span>
+        </div>
+      </div>
       <DialogFooter className=" !flex-col !justify-start gap-3 border-t">
         <div className="w-full">
           <em className="text-sm">
