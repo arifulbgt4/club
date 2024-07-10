@@ -63,6 +63,9 @@ export async function getPublished(repoId: string, page: number = 1) {
       userId: user?.id,
     },
     take: TAKE,
+    orderBy: {
+      createdAt: "desc",
+    },
     skip: (page - 1) * TAKE,
     include: {
       request: {
@@ -97,6 +100,9 @@ export async function getInProgress(repoId: string, page: number = 1) {
       active: true,
       userId: user?.id,
     },
+    orderBy: {
+      updatedAt: "desc",
+    },
     take: TAKE,
     skip: (page - 1) * TAKE,
     include: {
@@ -124,6 +130,9 @@ export async function getInReview(repoId: string, page: number = 1) {
       state: IssueState.inreview,
       active: true,
       userId: user?.id,
+    },
+    orderBy: {
+      updatedAt: "desc",
     },
     take: TAKE,
     skip: (page - 1) * TAKE,
@@ -153,6 +162,9 @@ export async function getDone(repoId: string, page: number = 1) {
       state: IssueState.done,
       userId: user?.id,
     },
+    orderBy: {
+      updatedAt: "desc",
+    },
     take: TAKE,
     skip: (page - 1) * TAKE,
     include: {
@@ -179,6 +191,9 @@ export async function getDraft(repoId: string, page: number = 1) {
       repositoryId: repoId,
       state: IssueState.draft,
       userId: user?.id,
+    },
+    orderBy: {
+      updatedAt: "desc",
     },
     take: TAKE,
     skip: (page - 1) * TAKE,

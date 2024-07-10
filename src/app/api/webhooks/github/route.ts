@@ -66,6 +66,119 @@ export async function POST(req: NextRequest) {
           }
         }
         break;
+      case "pull_request":
+        if (action === "closed") {
+          console.log("data: ", data, data?.repository?.login);
+          const issue = await db.issue.findFirst({
+            where: {
+              repository: {
+                fullName: data?.repository?.full_name,
+              },
+              prNumber: data?.pull_request?.number,
+            },
+            include: {
+              request: {
+                where: {
+                  approved: true,
+                  state: {
+                    in: [
+                      RequestState.inreview,
+                      RequestState.inprogress,
+                      RequestState.failed,
+                    ],
+                  },
+                },
+              },
+            },
+          });
+          if (!issue) break;
+          const queue = await db.request.findMany({
+            where: { userId: issue?.assignedId, status: RequestStatus.queue },
+            orderBy: { updatedAt: "asc" },
+          });
+          if (eventData?.merged) {
+            await db.issue.update({
+              where: {
+                id: issue?.id,
+              },
+              data: {
+                state: IssueState.done,
+                request: {
+                  update: {
+                    where: {
+                      id: issue?.request[0]?.id as string,
+                    },
+                    data: {
+                      state: RequestState.done,
+                      user: {
+                        update: {
+                          data: {
+                            available: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            });
+          }
+          if (!eventData?.merged) {
+            await db.issue.update({
+              where: {
+                id: issue?.id,
+              },
+              data: {
+                state: IssueState.draft,
+                request: {
+                  update: {
+                    where: {
+                      id: issue?.request[0]?.id as string,
+                    },
+                    data: {
+                      state: RequestState.failed,
+                      user: {
+                        update: {
+                          data: {
+                            available: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            });
+          }
+
+          if (!!queue?.length) {
+            await db.request.update({
+              where: {
+                id: queue[0]?.id,
+                approved: true,
+                status: RequestStatus.queue,
+                user: {
+                  available: true,
+                },
+              },
+              data: {
+                status: RequestStatus.default,
+                state: RequestState.reassign,
+                issue: {
+                  update: {
+                    state: IssueState.reassign,
+                  },
+                },
+                user: {
+                  update: {
+                    available: false,
+                  },
+                },
+              },
+            });
+          }
+        }
+        break;
       case "pull_request_review":
         if (action === "submitted") {
           const reviewData = data?.review;
@@ -73,9 +186,6 @@ export async function POST(req: NextRequest) {
             where: {
               repository: {
                 fullName: data?.repository?.full_name,
-              },
-              user: {
-                username: data?.repository?.login,
               },
               prNumber: data?.pull_request?.number,
               state: {
@@ -86,7 +196,9 @@ export async function POST(req: NextRequest) {
               request: {
                 where: {
                   approved: true,
-                  state: RequestState.inreview,
+                  state: {
+                    in: [RequestState.inreview, RequestState.inprogress],
+                  },
                 },
               },
             },

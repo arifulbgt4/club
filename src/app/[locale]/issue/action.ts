@@ -2,11 +2,12 @@ import { type IssueOptions } from "~/types";
 import db from "~/lib/db";
 import { app } from "~/lib/octokit";
 import { validateRequest } from "~/server/auth";
+import { IssueState } from "@prisma/client";
 
 export async function getAnIssue(id: string) {
   const { session, user } = await validateRequest();
   const dbIssue = await db.issue.findUnique({
-    where: { id, active: true },
+    where: { id, active: true, state: IssueState.published },
     include: { repository: { include: { provider: true } } },
   });
 

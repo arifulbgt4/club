@@ -24,6 +24,9 @@ export async function getList(page: number = 1) {
         },
       },
     },
+    orderBy: {
+      updatedAt: "desc",
+    },
     take: TAKE,
     skip: (page - 1) * TAKE,
   });
