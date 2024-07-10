@@ -2,7 +2,7 @@ import EmptyState from "~/components/shared/empty-state";
 import { getInProgress } from "../action";
 import Pagination from "~/components/sections/pagination";
 import Content from "./Content";
-import type { IssueOptions } from "~/types";
+import type { IssueOptions, RequestOptions } from "~/types";
 
 const InProgress = async ({
   p,
@@ -16,10 +16,10 @@ const InProgress = async ({
   repoId: string;
 }) => {
   const data = await getInProgress(repoId, p);
-  if (!data || !data?.issues?.length) {
+  if (!data || !data?.intents?.length) {
     return <EmptyState title="No issues in progress" />;
   }
-  const { issues, take, page } = data;
+  const { intents, take, page } = data;
 
   const totalPages = Math.ceil(total / take);
 
@@ -28,8 +28,13 @@ const InProgress = async ({
       <div className="max-h-[calc(100vh-279px)] overflow-scroll ">
         <div className="min-h-[calc(100vh-279px)] pt-3">
           <div className=" flex flex-col gap-3">
-            {issues?.map((issue) => (
-              <Content key={issue?.id} issue={issue as IssueOptions} />
+            {intents?.map((intent) => (
+              <Content
+                key={intent?.id}
+                issue={intent?.issue as IssueOptions}
+                request={intent?.request as RequestOptions}
+                intent={intent}
+              />
             ))}
           </div>
         </div>

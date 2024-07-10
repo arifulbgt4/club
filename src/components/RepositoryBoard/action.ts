@@ -98,14 +98,17 @@ export async function getPublished(repoId: string, page: number = 1) {
 }
 export async function getInProgress(repoId: string, page: number = 1) {
   const { user } = await validateRequest();
-  const issues = await db.issue.findMany({
+  const intents = await db.intent.findMany({
     where: {
-      repositoryId: repoId,
-      state: {
-        in: [IssueState.inprogress, IssueState.reassign],
-      },
       active: true,
-      userId: user?.id,
+      issue: {
+        repositoryId: repoId,
+        state: {
+          in: [IssueState.inprogress, IssueState.reassign],
+        },
+        active: true,
+        userId: user?.id,
+      },
     },
     orderBy: {
       updatedAt: "desc",
@@ -113,23 +116,25 @@ export async function getInProgress(repoId: string, page: number = 1) {
     take: TAKE,
     skip: (page - 1) * TAKE,
     include: {
-      intent: {
-        where: { active: true },
-      },
-      assigned: {
-        select: {
-          id: true,
-          username: true,
-          name: true,
-          picture: true,
+      issue: true,
+      request: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              picture: true,
+            },
+          },
         },
       },
     },
   });
-  if (!issues) {
+  if (!intents) {
     return null;
   }
-  return { issues, take: TAKE, page };
+  return { intents, take: TAKE, page };
 }
 
 export async function getInReview(repoId: string, page: number = 1) {

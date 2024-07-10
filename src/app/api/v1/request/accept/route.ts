@@ -40,11 +40,12 @@ export async function PUT(req: Request) {
     await db.request.deleteMany({
       where: {
         id: {
-          not: body?.id,
+          not: body?.requestId,
         },
         issueId: body?.issueId,
       },
     });
+
     return new Response("success", { status: 200 });
   } catch (error) {
     console.log("error: ", error);

@@ -5,10 +5,18 @@ import Icons from "~/components/shared/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 import Update from "./Update";
-import type { IssueOptions } from "~/types";
-import { IssueType } from "@prisma/client";
+import type { IssueOptions, RequestOptions } from "~/types";
+import { type Intent, IntentType } from "@prisma/client";
 
-const Content = ({ issue }: { issue: IssueOptions }) => {
+const Content = ({
+  intent,
+  issue,
+  request,
+}: {
+  issue: IssueOptions;
+  intent: Intent;
+  request: RequestOptions;
+}) => {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -27,8 +35,8 @@ const Content = ({ issue }: { issue: IssueOptions }) => {
                 <span className=" text-xl font-semibold">{issue?.title}</span>
               </div>
               <div className="ml-auto text-base text-green-500">
-                {issue?.type === IssueType.paid ? (
-                  `$ ${issue?.price?.toFixed(2)}`
+                {intent?.type === IntentType.paid ? (
+                  `$ ${intent?.price?.toFixed(2)}`
                 ) : (
                   <span className=" text-muted-foreground">open-source</span>
                 )}
@@ -53,14 +61,14 @@ const Content = ({ issue }: { issue: IssueOptions }) => {
           <div className="mt-2 flex items-center gap-1.5">
             <Avatar className="h-6 w-6 border border-black">
               <AvatarImage
-                src={issue?.assigned?.picture as string}
-                title={issue?.assigned?.username as string}
+                src={request?.user?.picture as string}
+                title={request?.user?.username as string}
               />
               <AvatarFallback>
                 <Icons.spinner className=" animate-spin" />
               </AvatarFallback>
             </Avatar>
-            <span className=" font-semibold">{issue?.assigned?.name}</span>
+            <span className=" font-semibold">{request?.user?.name}</span>
           </div>
         </div>
       </DialogTrigger>
