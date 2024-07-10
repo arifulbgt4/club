@@ -1,4 +1,4 @@
-import { IssueState, IssueType } from "@prisma/client";
+import { IntentType, IssueState } from "@prisma/client";
 import db from "~/lib/db";
 import { redirectError } from "~/lib/utils";
 import { octokit, validateRequest } from "~/server/auth";
@@ -11,7 +11,7 @@ export async function POST(req: Request) {
       return new Response("Unauthorized", { status: 401 });
     }
 
-    if (body?.type === IssueType.paid && body?.price < 3) {
+    if (body?.type === IntentType.paid && body?.price < 3) {
       return new Response("Price required minimum $3", { status: 401 });
     }
 
@@ -50,8 +50,6 @@ export async function POST(req: Request) {
         title: issue?.data?.title,
         issueNumber: Number(issue?.data?.number),
         state: IssueState.published,
-        type: body.type as IssueType,
-        ...(body?.type === IssueType.paid && { price: body?.price }),
         topics: [...body?.topics],
         repository: {
           connect: {
@@ -68,9 +66,17 @@ export async function POST(req: Request) {
         published: true,
         active: true,
         state: IssueState.published,
-        type: body.type as IssueType,
         title: issue?.data?.title,
         topics: [...body?.topics],
+        intent: {
+          updateMany: {
+            where: { active: true },
+            data: {
+              type: body.type as IntentType,
+              ...(body?.type === IntentType.paid && { price: body?.price }),
+            },
+          },
+        },
       },
     });
     return new Response(JSON.stringify(published), { status: 200 });

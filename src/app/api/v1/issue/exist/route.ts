@@ -10,8 +10,15 @@ export async function GET(req: Request) {
       return new Response("Unauthorized", { status: 401 });
     }
     const issue = await db.issue.findUnique({
-      where: { id, userId: user?.id, active: true },
+      where: {
+        id,
+        userId: user?.id,
+        active: true,
+      },
       include: {
+        intent: {
+          where: { active: true },
+        },
         assigned: {
           select: {
             id: true,

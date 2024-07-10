@@ -1,5 +1,5 @@
 "use client";
-import { IssueType } from "@prisma/client";
+import { IntentType } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
 import { useState, type FC } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
@@ -41,13 +41,15 @@ const Content: FC<{ issue: IssueOptions }> = ({ issue }) => {
               ""
             )}
           </div>
-          <div className="flex w-28 justify-end pt-3 text-right text-base text-green-500">
-            {issue?.type === IssueType.paid ? (
-              `$ ${issue?.price?.toFixed(2) ?? (0).toFixed(2)}`
-            ) : (
-              <span className=" text-muted-foreground">open-source</span>
-            )}
-          </div>
+          {!!issue?.intent?.length && (
+            <div className="flex w-28 justify-end pt-3 text-right text-base text-green-500">
+              {issue?.intent[0]?.type === IntentType.paid ? (
+                `$ ${issue?.intent[0]?.price?.toFixed(2) ?? (0).toFixed(2)}`
+              ) : (
+                <span className=" text-muted-foreground">open-source</span>
+              )}
+            </div>
+          )}
         </div>
       </DialogTrigger>
       <DialogContent>

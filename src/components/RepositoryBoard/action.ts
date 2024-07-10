@@ -68,6 +68,9 @@ export async function getPublished(repoId: string, page: number = 1) {
     },
     skip: (page - 1) * TAKE,
     include: {
+      intent: {
+        where: { active: true },
+      },
       request: {
         take: 8,
         skip: 0,
@@ -106,6 +109,9 @@ export async function getInProgress(repoId: string, page: number = 1) {
     take: TAKE,
     skip: (page - 1) * TAKE,
     include: {
+      intent: {
+        where: { active: true },
+      },
       assigned: {
         select: {
           id: true,
@@ -146,6 +152,9 @@ export async function getInReview(repoId: string, page: number = 1) {
         },
       },
       repository: true,
+      intent: {
+        where: { active: true },
+      },
     },
   });
   if (!issues) {
@@ -194,6 +203,11 @@ export async function getDraft(repoId: string, page: number = 1) {
     },
     orderBy: {
       updatedAt: "desc",
+    },
+    include: {
+      intent: {
+        where: { active: true },
+      },
     },
     take: TAKE,
     skip: (page - 1) * TAKE,

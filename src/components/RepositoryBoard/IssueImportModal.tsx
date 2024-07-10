@@ -24,7 +24,7 @@ import debounce from "lodash/debounce";
 import { Input } from "~/components/ui/input";
 import Icons from "~/components/shared/icons";
 import { cn } from "~/lib/utils";
-import { IssueState, type IssueType } from "@prisma/client";
+import { type IntentType, IssueState } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import SearchTopics from "../SearchTopics";
 
@@ -46,7 +46,7 @@ const IssueImportModalContent = ({
   const { register, watch } = useForm();
   const [price, setPrice] = useState<number>(0);
   const [searchResults, setSearchResults] = useState([]);
-  const [publishType, setPublishType] = useState<IssueType>("free");
+  const [publishType, setPublishType] = useState<IntentType>("open_source");
   const [draftLoading, setDraftLoading] = useState<boolean>(false);
   const [publishLoading, setPublishLoading] = useState<boolean>(false);
   const searchQuery = watch("query");
@@ -83,12 +83,17 @@ const IssueImportModalContent = ({
       setStep(2);
       return;
     }
+    if (data?.is_exist && data?.issue?.state === undefined) {
+      setTopics(data?.issue?.topics);
+      setStep(2);
+      return;
+    }
     if (data?.is_exist && data?.issue?.state !== IssueState.draft) {
       setStep(1.75);
       return;
     }
     if (data?.is_exist && data?.issue?.state === IssueState.draft) {
-      setPublishType(data?.issue?.type as IssueType);
+      setPublishType(data?.issue?.intent[0]?.type as IntentType);
       setTopics(data?.issue?.topics);
       setStep(PUBLISH_STEP);
     }
@@ -307,24 +312,25 @@ const IssueImportModalContent = ({
               <div
                 onClick={() => {
                   if (publishType === "paid") {
-                    setPublishType("free");
+                    setPublishType("open_source");
                   }
                 }}
                 className={cn(
-                  publishType === "free" && "pointer-events-none bg-accent",
+                  publishType === "open_source" &&
+                    "pointer-events-none bg-accent",
                   "flex cursor-pointer flex-nowrap items-center gap-2 rounded-md border p-3 hover:bg-accent"
                 )}
               >
                 <span className=" flex h-5 w-5 items-center justify-center rounded-full border-2 border-accent-foreground">
-                  {publishType === "free" && (
+                  {publishType === "open_source" && (
                     <span className=" h-3 w-3 rounded-full bg-accent-foreground"></span>
                   )}
                 </span>
-                <span className="text-lg font-semibold">Free</span>
+                <span className="text-lg font-semibold">Open source</span>
               </div>
               <div
                 onClick={() => {
-                  if (publishType === "free") {
+                  if (publishType === "open_source") {
                     setPublishType("paid");
                   }
                 }}
@@ -405,12 +411,12 @@ const IssueImportModalContent = ({
               <Edit2 className="h-4 w-4" />
             </Button>
             <span className="mb-2 font-semibold">Type</span>
-            {publishType === "free" ? (
+            {publishType === "open_source" ? (
               <div className="pointer-events-none flex cursor-pointer flex-nowrap items-center gap-2 rounded-md border bg-accent p-3">
                 <span className=" flex h-5 w-5 items-center justify-center rounded-full border-2 border-accent-foreground">
                   <span className=" h-3 w-3 rounded-full bg-accent-foreground"></span>
                 </span>
-                <span className="text-lg font-semibold">Free</span>
+                <span className="text-lg font-semibold">Open source</span>
               </div>
             ) : (
               <div className="pointer-events-none flex cursor-pointer flex-nowrap items-center gap-2 rounded-md border bg-accent p-3">

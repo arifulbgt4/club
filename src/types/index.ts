@@ -4,6 +4,7 @@ import type {
   Repository,
   Provider,
   Request,
+  Intent,
 } from "@prisma/client";
 import { z } from "zod";
 
@@ -76,6 +77,7 @@ export interface IssueOptions extends Issue {
   repository?: RepositoryOptions;
   request?: Request[];
   assigned?: User;
+  intent?: Intent[];
 }
 
 export interface RequestOptions extends Request {

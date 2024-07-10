@@ -158,7 +158,7 @@ model Issue {
   active       Boolean?     @default(true)
   type         IssueType?
   state        IssueState   @default(draft)
-  published    Boolean?     @default(true)
+  published    Boolean?     @default(false)
   price        Float?
   repository   Repository?  @relation(fields: [repositoryId], references: [id])
   repositoryId String?
