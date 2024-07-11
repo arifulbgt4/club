@@ -60,7 +60,7 @@ const ReAssigned: FC<ReAssignedProps> = async ({ pagination }) => {
       <div className="mt-3">
         <Pagination
           page={page}
-          more={`?t=${TASK_TABS.reassign}`}
+          more={`?t=${TASK_TABS.queue}`}
           totalPages={totalPages}
         />
       </div>

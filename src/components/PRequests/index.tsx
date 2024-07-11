@@ -10,8 +10,8 @@ import Icons from "../shared/icons";
 import Pagination from "../sections/pagination";
 import { TASK_TABS } from "~/types";
 
-const PRequests: FC<PRequestsProps> = async ({ pagination }) => {
-  const { requests, total, take, page } = await getList(pagination);
+const PRequests: FC<PRequestsProps> = async ({ pagination, total }) => {
+  const { requests, take, page } = await getList(pagination);
   if (!total)
     return (
       <EmptyState
@@ -60,7 +60,7 @@ const PRequests: FC<PRequestsProps> = async ({ pagination }) => {
       <div className="mt-3">
         <Pagination
           page={page}
-          more={`?t=${TASK_TABS.requests}`}
+          more={`?t=${TASK_TABS.applyed}`}
           totalPages={totalPages}
         />
       </div>

@@ -46,7 +46,7 @@ const RequestChangesCard = async () => {
       <CardFooter>
         <Link
           className=" font-medium text-lime-500 hover:underline"
-          href={`/task/?t=${TASK_TABS.reassign}`}
+          href={`/task/?t=${TASK_TABS.queue}`}
         >
           See all
         </Link>

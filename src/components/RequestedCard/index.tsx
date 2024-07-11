@@ -46,7 +46,7 @@ const RequestedCard = async () => {
       <CardFooter>
         <Link
           className=" font-medium text-lime-500 hover:underline"
-          href={`/task/?t=${TASK_TABS.requests}`}
+          href={`/task/?t=${TASK_TABS.applyed}`}
         >
           See all
         </Link>

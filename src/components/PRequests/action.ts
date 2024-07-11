@@ -6,9 +6,6 @@ const TAKE = 10;
 
 export async function getList(page: number = 1) {
   const { user } = await validateRequest();
-  const total = await db.request.count({
-    where: { userId: user?.id, state: RequestState.open },
-  });
   const requests = await db.request.findMany({
     where: { userId: user?.id, state: RequestState.open },
     include: {
@@ -27,5 +24,5 @@ export async function getList(page: number = 1) {
     take: TAKE,
     skip: (page - 1) * TAKE,
   });
-  return { requests, total, take: TAKE, page };
+  return { requests, take: TAKE, page };
 }

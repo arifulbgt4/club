@@ -87,9 +87,9 @@ export interface RequestOptions extends Request {
 
 export enum TASK_TABS {
   wip = "wip",
-  requests = "requests",
+  applyed = "applyed",
   str = "str",
-  reassign = "reassign",
+  queue = "queue",
   completed = "completed",
   failed = "failed",
 }
