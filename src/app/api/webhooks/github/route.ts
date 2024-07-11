@@ -252,7 +252,8 @@ export async function POST(req: NextRequest) {
           if (
             (reviewData.state === "changes_requested" ||
               reviewData.state === "commented") &&
-            issue?.state === IssueState.inreview
+            issue?.state === IssueState.inreview &&
+            data?.pull_request?.state !== "closed"
           ) {
             const userIsAvailable = intent?.request?.user?.available;
             await db.intent.update({
