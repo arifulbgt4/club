@@ -33,7 +33,7 @@ export async function POST(req: Request) {
       }
     );
 
-    await db.issue.upsert({
+    const newIssue = await db.issue.upsert({
       where: {
         id: String(issue?.data?.id),
         userId: user?.id,
@@ -44,11 +44,6 @@ export async function POST(req: Request) {
         issueNumber: Number(issue?.data?.number),
         state: IssueState.draft,
         topics: [...body?.topics],
-        intent: {
-          create: {
-            type: body.type as IntentType,
-          },
-        },
         repository: {
           connect: {
             id: repo?.id,
@@ -65,6 +60,17 @@ export async function POST(req: Request) {
         state: IssueState.draft,
         topics: [...body?.topics],
         active: true,
+      },
+    });
+
+    await db.intent.create({
+      data: {
+        issue: {
+          connect: {
+            id: newIssue?.id,
+          },
+        },
+        type: body.type as IntentType,
       },
     });
     return new Response(null, { status: 200 });

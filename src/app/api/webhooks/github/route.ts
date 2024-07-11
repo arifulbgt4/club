@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
             orderBy: { updatedAt: "asc" },
           });
           if (eventData?.merged) {
-            await db.intent.update({
+            const completedIntent = await db.intent.update({
               where: {
                 id: intent?.id,
               },
@@ -129,9 +129,15 @@ export async function POST(req: NextRequest) {
                 },
               },
             });
+            await db.request.update({
+              where: { id: completedIntent?.requestId as string },
+              data: {
+                issueId: null,
+              },
+            });
           }
           if (!eventData?.merged) {
-            await db.intent.update({
+            const completedIntent = await db.intent.update({
               where: {
                 id: intent?.id,
               },
@@ -155,6 +161,13 @@ export async function POST(req: NextRequest) {
                 },
               },
             });
+            await db.request.update({
+              where: { id: completedIntent?.requestId as string },
+              data: {
+                issueId: null,
+              },
+            });
+
             await db.intent.create({
               data: {
                 type: intent?.type,
@@ -278,7 +291,7 @@ export async function POST(req: NextRequest) {
               orderBy: { updatedAt: "asc" },
             });
 
-            await db.intent.update({
+            const completedIntent = await db.intent.update({
               where: {
                 id: intent?.id,
               },
@@ -300,6 +313,13 @@ export async function POST(req: NextRequest) {
                     },
                   },
                 },
+              },
+            });
+
+            await db.request.update({
+              where: { id: completedIntent?.requestId as string },
+              data: {
+                issueId: null,
               },
             });
 
