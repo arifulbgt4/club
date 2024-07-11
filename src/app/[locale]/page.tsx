@@ -18,7 +18,7 @@ export default async function Home({
   const { session } = await validateRequest();
   const topics =
     (!!searchParams?.topics && searchParams?.topics?.split(",")) || [];
-  const { issues, total, take, page } = await getIssues(
+  const { intents, total, take, page } = await getIssues(
     Number(searchParams.page) || 1,
     topics
   );
@@ -30,10 +30,11 @@ export default async function Home({
           <div className="mb-3 flex  w-full items-center space-x-2">
             <SearchByTopics params={topics} isAuthenticate={!!session} />
           </div>
-          {!!issues?.length ? (
+          {!!intents?.length ? (
             <>
-              {issues.map((issue) => (
-                <PublishedIssueItem key={issue.id} {...issue} />
+              {intents.map((intent) => (
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                <PublishedIssueItem key={intent.id} {...(intent as any)} />
               ))}
               <Pagination
                 page={page}

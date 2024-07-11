@@ -6,43 +6,39 @@ import { type PublishedIssueItemProps } from "./Types";
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
 import { getIssue } from "./action";
 import { hexToRgba } from "~/lib/utils";
-import { IssueType } from "@prisma/client";
+import { IntentType } from "@prisma/client";
 import type { RepositoryOptions } from "~/types";
 
 export default async function PublishedIssueItem({
-  id,
-  issueNumber,
-  repository,
-  updatedAt,
-  price,
+  issue,
   type,
-  topics,
+  price,
 }: PublishedIssueItemProps) {
-  const issue = await getIssue(
-    repository as RepositoryOptions,
-    Number(issueNumber)
+  const gitIssue = await getIssue(
+    issue?.repository as RepositoryOptions,
+    Number(issue?.issueNumber)
   );
 
   return (
     <Link
-      href={`/issue/${id}`}
+      href={`/issue/${issue?.id}`}
       className="mb-2 flex flex-col items-start rounded-lg border p-4 text-left text-sm transition-all hover:bg-accent "
     >
       <div className="flex w-full flex-col">
         <div className="mb-1 flex items-center">
           <div className="mb-0.5 flex flex-col">
             <div className="text-xs text-muted-foreground">
-              {formatDistanceToNow(new Date(updatedAt), {
+              {formatDistanceToNow(new Date(issue?.updatedAt as Date), {
                 addSuffix: true,
                 includeSeconds: true,
               })}
             </div>
-            <span className=" text-xl font-semibold">{issue?.title}</span>
+            <span className=" text-xl font-semibold">{gitIssue?.title}</span>
             {/* // TODO: If a issue visit then the dot will not show */}
             {/* <span className="flex h-2 w-2 rounded-full bg-blue-600" /> */}
           </div>
           <div className="ml-auto text-base text-green-500">
-            {type === IssueType.paid ? (
+            {type === IntentType.paid ? (
               `$ ${price?.toFixed(2)}`
             ) : (
               <span className=" text-muted-foreground">open-source</span>
@@ -51,23 +47,23 @@ export default async function PublishedIssueItem({
         </div>
         <div className="mb-2 flex items-center">
           <Avatar className="mr-1 h-[15px] w-[15px] rounded-sm">
-            <AvatarImage src={repository?.provider?.picture as string} />
+            <AvatarImage src={issue?.repository?.provider?.picture as string} />
           </Avatar>
           <p className=" ml-0.5 font-medium text-muted-foreground">
-            {repository?.provider?.name}
+            {issue?.repository?.provider?.name}
           </p>
         </div>
         {/* <div className="text-xs font-medium">{user?.username}</div> */}
       </div>
-      <p className={`mb-4 text-gray-500 ${!issue?.body && " italic"}`}>
-        {issue?.body
-          ? issue?.body?.substring(0, 100) + " ..."
+      <p className={`mb-4 text-gray-500 ${!gitIssue?.body && " italic"}`}>
+        {gitIssue?.body
+          ? gitIssue?.body?.substring(0, 100) + " ..."
           : "No description provided."}
       </p>
 
-      {issue?.labels?.length ? (
+      {gitIssue?.labels?.length ? (
         <div className="flex flex-wrap">
-          {issue?.labels?.map((label: any) => (
+          {gitIssue?.labels?.map((label: any) => (
             <span
               key={label?.id}
               style={{
@@ -84,9 +80,9 @@ export default async function PublishedIssueItem({
       ) : (
         ""
       )}
-      {topics?.length ? (
+      {issue?.topics?.length ? (
         <div className=" my-1 flex flex-wrap gap-1">
-          {topics?.map((t, i) => (
+          {issue?.topics?.map((t, i) => (
             <span
               key={i}
               className="rounded bg-accent px-2 py-0.5 text-sm font-medium text-muted-foreground"
