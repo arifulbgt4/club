@@ -1,3 +1,4 @@
+import type { User } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
 import { buttonVariants } from "~/components/ui/button";
@@ -9,12 +10,20 @@ import {
 import { formatDate } from "~/lib/utils";
 import type { IssueOptions } from "~/types";
 
-const Info = ({ issue }: { issue: IssueOptions }) => (
+const Info = ({
+  issue,
+  user,
+  pr_number,
+}: {
+  issue: IssueOptions;
+  user: User;
+  pr_number: number;
+}) => (
   <>
     <DialogHeader>
       <DialogTitle>{issue?.title}</DialogTitle>
       <DialogDescription>
-        Submitted by <strong>{issue?.assigned?.username}</strong> at{" "}
+        Submitted by <strong>{user?.username}</strong> at{" "}
         {formatDate(issue?.updatedAt)}
       </DialogDescription>
     </DialogHeader>
@@ -36,17 +45,18 @@ const Info = ({ issue }: { issue: IssueOptions }) => (
       <div>
         <strong className="pr-2">Failure:</strong>
         <span>
-          If you review and <strong>Close</strong> pull request, the issue will
-          move to draft, and the developer will receive a failure point.
+          If you review and <strong>Close</strong> the pull request, the issue
+          will move to <strong>Draft</strong>, and the developer will receive a
+          failure.
         </span>
       </div>
     </div>
     <Link
       target="_blank"
       className={buttonVariants()}
-      href={`https://github.com/${issue?.repository?.fullName}/pull/${issue?.prNumber}`}
+      href={`https://github.com/${issue?.repository?.fullName}/pull/${pr_number}`}
     >
-      See pull request #{issue?.prNumber}
+      See pull request #{pr_number}
     </Link>
   </>
 );
