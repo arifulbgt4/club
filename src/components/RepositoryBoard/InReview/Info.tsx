@@ -39,15 +39,15 @@ const Info = ({
         <strong className="pr-2">Done:</strong>
         <span>
           If you review and <strong>Approve</strong> or <strong>Merge</strong>{" "}
-          the pull request, the issue will be marked as done.
+          the pull request, the issue will be marked as <strong>Done</strong>.
         </span>
       </div>
       <div>
         <strong className="pr-2">Failure:</strong>
         <span>
-          If you review and <strong>Close</strong> the pull request, the issue
-          will move to <strong>Draft</strong>, and the developer will receive a
-          failure.
+          If you <strong>Close</strong> the pull request, the issue will move to{" "}
+          <strong>Draft</strong>, and the developer will receive a failure
+          point.
         </span>
       </div>
     </div>

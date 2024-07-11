@@ -1,4 +1,9 @@
-import { IssueState, RequestState, RequestStatus } from "@prisma/client";
+import {
+  IssueState,
+  IssueStatus,
+  RequestState,
+  RequestStatus,
+} from "@prisma/client";
 import { headers } from "next/headers";
 import { type NextRequest } from "next/server";
 import db from "~/lib/db";
@@ -68,54 +73,61 @@ export async function POST(req: NextRequest) {
         break;
       case "pull_request":
         if (action === "closed") {
-          console.log("data: ", data, data?.repository?.login);
           const issue = await db.issue.findFirst({
             where: {
+              state: {
+                not: {
+                  in: [IssueState.published, IssueState.draft],
+                },
+              },
               repository: {
                 fullName: data?.repository?.full_name,
               },
-              prNumber: data?.pull_request?.number,
+              intent: {
+                some: {
+                  pr_number: data?.pull_request?.number,
+                },
+              },
             },
             include: {
-              request: {
-                where: {
-                  approved: true,
-                  state: {
-                    in: [
-                      RequestState.inreview,
-                      RequestState.inprogress,
-                      RequestState.failed,
-                    ],
-                  },
+              repository: true,
+              intent: {
+                include: {
+                  request: true,
                 },
               },
             },
           });
-          if (!issue) break;
-          const queue = await db.request.findMany({
-            where: { userId: issue?.assignedId, status: RequestStatus.queue },
+          if (!issue || !issue?.intent?.length) break;
+          const intent = issue?.intent[0];
+          const queue = await db.intent.findMany({
+            where: {
+              issue: { status: IssueStatus.queue },
+              request: {
+                userId: intent?.request?.userId,
+              },
+            },
             orderBy: { updatedAt: "asc" },
           });
           if (eventData?.merged) {
-            await db.issue.update({
+            await db.intent.update({
               where: {
-                id: issue?.id,
+                id: intent?.id,
               },
               data: {
-                state: IssueState.done,
+                active: false,
+                success: true,
+                issue: {
+                  update: {
+                    state: undefined,
+                    status: IssueStatus.default,
+                  },
+                },
                 request: {
                   update: {
-                    where: {
-                      id: issue?.request[0]?.id as string,
-                    },
-                    data: {
-                      state: RequestState.done,
-                      user: {
-                        update: {
-                          data: {
-                            available: true,
-                          },
-                        },
+                    user: {
+                      update: {
+                        available: true,
                       },
                     },
                   },
@@ -124,27 +136,37 @@ export async function POST(req: NextRequest) {
             });
           }
           if (!eventData?.merged) {
-            await db.issue.update({
+            await db.intent.update({
               where: {
-                id: issue?.id,
+                id: intent?.id,
               },
               data: {
-                state: IssueState.draft,
+                active: false,
+                success: false,
+                issue: {
+                  update: {
+                    state: IssueState.draft,
+                    status: IssueStatus.default,
+                  },
+                },
                 request: {
                   update: {
-                    where: {
-                      id: issue?.request[0]?.id as string,
-                    },
-                    data: {
-                      state: RequestState.failed,
-                      user: {
-                        update: {
-                          data: {
-                            available: true,
-                          },
-                        },
+                    user: {
+                      update: {
+                        available: true,
                       },
                     },
+                  },
+                },
+              },
+            });
+            await db.intent.create({
+              data: {
+                type: intent?.type,
+                price: intent?.price,
+                issue: {
+                  connect: {
+                    id: issue?.id,
                   },
                 },
               },
@@ -152,26 +174,24 @@ export async function POST(req: NextRequest) {
           }
 
           if (!!queue?.length) {
-            await db.request.update({
+            await db.intent.update({
               where: {
                 id: queue[0]?.id,
-                approved: true,
-                status: RequestStatus.queue,
-                user: {
-                  available: true,
-                },
+                active: true,
               },
               data: {
-                status: RequestStatus.default,
-                state: RequestState.reassign,
                 issue: {
                   update: {
-                    state: IssueState.reassign,
+                    status: IssueStatus.default,
                   },
                 },
-                user: {
+                request: {
                   update: {
-                    available: false,
+                    user: {
+                      update: {
+                        available: false,
+                      },
+                    },
                   },
                 },
               },
@@ -187,54 +207,56 @@ export async function POST(req: NextRequest) {
               repository: {
                 fullName: data?.repository?.full_name,
               },
-              prNumber: data?.pull_request?.number,
+              intent: {
+                some: {
+                  pr_number: data?.pull_request?.number,
+                },
+              },
               state: {
-                in: [IssueState.inreview, IssueState.inprogress],
+                in: [
+                  IssueState.inreview,
+                  IssueState.inprogress,
+                  IssueState.reassign,
+                ],
               },
             },
             include: {
-              request: {
-                where: {
-                  approved: true,
-                  state: {
-                    in: [RequestState.inreview, RequestState.inprogress],
+              repository: true,
+              intent: {
+                include: {
+                  request: {
+                    include: {
+                      user: {
+                        select: {
+                          id: true,
+                          available: true,
+                        },
+                      },
+                    },
                   },
                 },
               },
             },
           });
-          if (!issue) break;
-
-          const queue = await db.request.findMany({
-            where: { userId: issue?.assignedId, status: RequestStatus.queue },
-            orderBy: { updatedAt: "asc" },
-          });
+          if (!issue || !issue?.intent?.length) break;
+          const intent = issue?.intent[0];
 
           if (
             (reviewData.state === "changes_requested" ||
               reviewData.state === "commented") &&
             issue?.state === IssueState.inreview
           ) {
-            await db.issue.update({
+            const userIsAvailable = intent?.request?.user?.available;
+            await db.intent.update({
               where: {
-                id: issue?.id,
+                id: intent?.id,
+                issueId: issue?.id,
               },
               data: {
-                state: IssueState.reassign,
-                request: {
+                issue: {
                   update: {
-                    where: {
-                      id: issue?.request[0]?.id as string,
-                    },
-                    data: {
-                      state: RequestState.reassign,
-                      ...(!!queue?.length && { status: RequestStatus.queue }),
-                      user: {
-                        update: {
-                          available: false,
-                        },
-                      },
-                    },
+                    state: IssueState.reassign,
+                    ...(!userIsAvailable && { status: IssueStatus.queue }),
                   },
                 },
               },
@@ -242,25 +264,34 @@ export async function POST(req: NextRequest) {
             break;
           }
           if (reviewData.state === "approved") {
-            await db.issue.update({
+            const queue = await db.intent.findMany({
               where: {
-                id: issue?.id,
+                issue: { status: IssueStatus.queue },
+                request: {
+                  userId: intent?.request?.userId,
+                },
+              },
+              orderBy: { updatedAt: "asc" },
+            });
+
+            await db.intent.update({
+              where: {
+                id: intent?.id,
               },
               data: {
-                state: IssueState.done,
+                active: false,
+                success: true,
+                issue: {
+                  update: {
+                    state: undefined,
+                    status: IssueStatus.default,
+                  },
+                },
                 request: {
                   update: {
-                    where: {
-                      id: issue?.request[0]?.id as string,
-                    },
-                    data: {
-                      state: RequestState.done,
-                      user: {
-                        update: {
-                          data: {
-                            available: true,
-                          },
-                        },
+                    user: {
+                      update: {
+                        available: true,
                       },
                     },
                   },
@@ -269,26 +300,24 @@ export async function POST(req: NextRequest) {
             });
 
             if (!!queue?.length) {
-              await db.request.update({
+              await db.intent.update({
                 where: {
                   id: queue[0]?.id,
-                  approved: true,
-                  status: RequestStatus.queue,
-                  user: {
-                    available: true,
-                  },
+                  active: true,
                 },
                 data: {
-                  status: RequestStatus.default,
-                  state: RequestState.reassign,
                   issue: {
                     update: {
-                      state: IssueState.reassign,
+                      status: IssueStatus.default,
                     },
                   },
-                  user: {
+                  request: {
                     update: {
-                      available: false,
+                      user: {
+                        update: {
+                          available: false,
+                        },
+                      },
                     },
                   },
                 },
