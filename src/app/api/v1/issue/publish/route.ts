@@ -68,17 +68,22 @@ export async function POST(req: Request) {
         state: IssueState.published,
         title: issue?.data?.title,
         topics: [...body?.topics],
-        intent: {
-          updateMany: {
-            where: { active: true },
-            data: {
-              type: body.type as IntentType,
-              ...(body?.type === IntentType.paid && { price: body?.price }),
-            },
-          },
-        },
       },
     });
+
+    await db.intent.updateMany({
+      where: {
+        active: true,
+        issueId: published?.id,
+      },
+      data: {
+        type: body.type as IntentType,
+        ...(body?.type === IntentType.paid
+          ? { price: body?.price }
+          : { price: null }),
+      },
+    });
+
     return new Response(JSON.stringify(published), { status: 200 });
   } catch (error) {
     redirectError(error);
