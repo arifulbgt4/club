@@ -14,10 +14,21 @@ export async function getCounts(repoId: string) {
     where: { userId: user?.id, repositoryId: repoId },
   });
 
+  const doneCounts = await db.intent.count({
+    where: {
+      active: false,
+      success: true,
+      issue: {
+        userId: user?.id,
+        repositoryId: repoId,
+      },
+    },
+  });
+
   // Initialize counts object with all states set to 0
   const result = {
     reassigned: 0,
-    done: 0,
+    done: doneCounts,
     inreview: 0,
     draft: 0,
     published: 0,
@@ -29,9 +40,6 @@ export async function getCounts(repoId: string) {
     switch (state) {
       case IssueState.reassign:
         result.reassigned = _count.state;
-        break;
-      case IssueState.done:
-        result.done = _count.state;
         break;
       case IssueState.inprogress:
         result.inprogress = _count.state;
