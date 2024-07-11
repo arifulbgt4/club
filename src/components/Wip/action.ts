@@ -9,7 +9,9 @@ export async function getInProgress() {
     where: {
       active: true,
       issue: {
-        state: IssueState.inprogress,
+        state: {
+          in: [IssueState.inprogress, IssueState.reassign],
+        },
         status: IssueStatus.default,
       },
       request: {
@@ -68,6 +70,8 @@ export async function getInProgress() {
       requestId: inprogressIntent.requestId,
       intentId: inprogressIntent.id,
       issueId: inprogressIntent.issueId,
+      state: inprogressIntent?.issue?.state,
+      previous_pr: inprogressIntent?.pr_number || 0,
     },
   };
 }

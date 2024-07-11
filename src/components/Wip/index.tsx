@@ -7,6 +7,7 @@ import IssueComment from "../IssueComment";
 import Submit from "./Submit";
 import { Suspense } from "react";
 import EmptyState from "../shared/empty-state";
+import { IssueState } from "@prisma/client";
 
 async function Wip({}: WipProps) {
   const data = await getInProgress();
@@ -61,6 +62,8 @@ async function Wip({}: WipProps) {
               requestId={inprogress?.requestId as string}
               intentId={inprogress?.intentId as string}
               issueId={inprogress?.issueId as string}
+              isReSubmit={inprogress.state === IssueState.reassign}
+              previous_pr={inprogress?.previous_pr}
             />
           </Suspense>
         </div>

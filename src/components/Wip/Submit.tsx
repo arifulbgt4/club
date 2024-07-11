@@ -1,5 +1,5 @@
 "use client";
-import { useTransition, type FC } from "react";
+import { useState, useTransition, type FC } from "react";
 import { type SubmitProps } from "./Types";
 import {
   Card,
@@ -41,10 +41,16 @@ const prNumberSchema = z.object({
 
 type PRValues = z.infer<typeof prNumberSchema>;
 
-const Submit: FC<SubmitProps> = ({ requestId, intentId, issueId }) => {
+const Submit: FC<SubmitProps> = ({
+  requestId,
+  intentId,
+  issueId,
+  isReSubmit,
+  previous_pr,
+}) => {
   const [pending, startTransition] = useTransition();
+  const [loadin, setLoadin] = useState(false);
   const router = useRouter();
-
   const form = useForm<PRValues>({
     resolver: zodResolver(prNumberSchema),
     mode: "onChange",
@@ -80,48 +86,89 @@ const Submit: FC<SubmitProps> = ({ requestId, intentId, issueId }) => {
     });
   }
 
+  async function reSubmit() {
+    setLoadin(true);
+    await fetch("/api/v1/request/re_submit", {
+      method: "PUT",
+      body: JSON.stringify({
+        requestId,
+        issueId,
+        intentId,
+        prNumber: previous_pr,
+      }),
+    });
+    router.refresh();
+  }
+
   return (
     <Card>
       <CardHeader className=" border-b px-3 py-4">
         <CardTitle className=" text-xl ">Submit pull request number</CardTitle>
       </CardHeader>
-      <CardContent className="pt-3 text-muted-foreground">
-        <p>
-          After submitting your pull request, your profile will become
-          available.
-        </p>
-      </CardContent>
-      <CardFooter aria-disabled="true" className="flex px-3">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex">
-            <FormField
-              control={form.control}
-              name="prNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input type="number" placeholder="#PR number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button
-              type="submit"
-              className="ml-2"
-              disabled={formState.isSubmitting || pending || !formState.isDirty}
-            >
-              {formState.isSubmitting || pending ? (
+      {!isReSubmit ? (
+        <>
+          <CardContent className="pt-3 text-muted-foreground">
+            <p>
+              After submitting your pull request, your profile will become
+              available.
+            </p>
+          </CardContent>
+          <CardFooter aria-disabled="true" className="flex px-3">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="flex">
+                <FormField
+                  control={form.control}
+                  name="prNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="#PR number"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  className="ml-2"
+                  disabled={
+                    formState.isSubmitting || pending || !formState.isDirty
+                  }
+                >
+                  {formState.isSubmitting || pending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    </>
+                  ) : (
+                    "Submit"
+                  )}
+                </Button>
+              </form>
+            </Form>
+          </CardFooter>
+        </>
+      ) : (
+        <>
+          <CardContent className="pt-3 text-muted-foreground">
+            <p>After re-submit, your profile will become available.</p>
+          </CardContent>
+          <CardFooter>
+            <Button disabled={loadin} onClick={reSubmit}>
+              {loadin ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 </>
               ) : (
-                "Submit"
+                "Re-Submit"
               )}
             </Button>
-          </form>
-        </Form>
-      </CardFooter>
+          </CardFooter>
+        </>
+      )}
     </Card>
   );
 };
