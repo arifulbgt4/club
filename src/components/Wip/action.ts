@@ -1,16 +1,20 @@
-import { IssueState, RequestState } from "@prisma/client";
+import { IssueState, IssueStatus } from "@prisma/client";
 import db from "~/lib/db";
 import { app } from "~/lib/octokit";
 import { validateRequest } from "~/server/auth";
 
 export async function getInProgress() {
   const { user } = await validateRequest();
-  const inprogress = await db.request.findFirst({
+  const inprogressIntent = await db.intent.findFirst({
     where: {
-      userId: user?.id,
-      approved: true,
-      state: RequestState.inprogress,
-      issue: { assignedId: user?.id, state: IssueState.inprogress },
+      active: true,
+      issue: {
+        state: IssueState.inprogress,
+        status: IssueStatus.default,
+      },
+      request: {
+        userId: user?.id,
+      },
     },
     include: {
       issue: {
@@ -24,9 +28,9 @@ export async function getInProgress() {
       },
     },
   });
-  if (!inprogress) return null;
+  if (!inprogressIntent) return null;
 
-  const provider = inprogress.issue?.repository?.provider;
+  const provider = inprogressIntent.issue?.repository?.provider;
   const octo = await app.getInstallationOctokit(
     Number(provider?.installationId)
   );
@@ -35,8 +39,8 @@ export async function getInProgress() {
     "GET /repos/{owner}/{repo}/issues/{issue_number}",
     {
       owner: provider?.name as string,
-      repo: inprogress?.issue?.repository?.name as string,
-      issue_number: Number(inprogress?.issue?.issueNumber),
+      repo: inprogressIntent?.issue?.repository?.name as string,
+      issue_number: Number(inprogressIntent?.issue?.issueNumber),
       headers: {
         authorization: `token ${provider?.accessToken}`,
       },
@@ -47,8 +51,8 @@ export async function getInProgress() {
     "GET /repos/{owner}/{repo}/issues/{issue_number}/comments",
     {
       owner: provider?.name as string,
-      repo: inprogress?.issue?.repository?.name as string,
-      issue_number: Number(inprogress?.issue?.issueNumber),
+      repo: inprogressIntent?.issue?.repository?.name as string,
+      issue_number: Number(inprogressIntent?.issue?.issueNumber),
       headers: {
         authorization: `token ${provider?.accessToken}`,
       },
@@ -59,8 +63,8 @@ export async function getInProgress() {
     issue: issue.data,
     comments: comments.data,
     inprogress: {
-      id: inprogress?.id,
-      updatedAt: inprogress?.updatedAt,
+      id: inprogressIntent?.id,
+      updatedAt: inprogressIntent?.updatedAt,
       userName: provider?.name,
     },
   };

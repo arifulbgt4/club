@@ -1,51 +1,57 @@
-import { RequestState } from "@prisma/client";
+import { IssueState, IssueStatus, type Prisma } from "@prisma/client";
 import db from "~/lib/db";
 import { validateRequest } from "~/server/auth";
+
+async function countIntents(where: Prisma.IntentWhereInput) {
+  return db.intent.count({ where });
+}
+
+async function countRequests(where: Prisma.RequestWhereInput) {
+  return db.request.count({ where });
+}
 
 export async function getCounts() {
   try {
     const { user } = await validateRequest();
+    const userId = user?.id;
 
-    // Use a single query with aggregation
-    const counts = await db.request.groupBy({
-      by: ["state"],
-      _count: {
-        state: true,
-      },
-      where: { userId: user?.id },
-    });
+    const [inreview, reassigned, requests, completed, failed] =
+      await Promise.all([
+        countIntents({
+          active: true,
+          issue: { state: IssueState.inreview, status: IssueStatus.default },
+          request: { userId },
+        }),
+        countIntents({
+          active: true,
+          issue: { state: IssueState.reassign, status: IssueStatus.queue },
+          request: { userId },
+        }),
+        countRequests({
+          userId,
+          issue: { state: IssueState.published, status: IssueStatus.default },
+        }),
+        countIntents({
+          active: false,
+          success: true,
+          issue: { status: IssueStatus.default },
+          request: { userId },
+        }),
+        countIntents({
+          active: false,
+          success: false,
+          issue: { status: IssueStatus.default },
+          request: { userId },
+        }),
+      ]);
 
-    // Initialize counts object with all states set to 0
-    const result = {
-      reassigned: 0,
-      requests: 0,
-      inreview: 0,
-      completed: 0,
-      failed: 0,
+    return {
+      reassigned: reassigned,
+      requests: requests,
+      inreview: inreview,
+      completed: completed,
+      failed: failed,
     };
-
-    // Map the counts to the corresponding state
-    counts.forEach(({ state, _count }) => {
-      switch (state) {
-        case RequestState.reassign:
-          result.reassigned = _count.state;
-          break;
-        case RequestState.open:
-          result.requests = _count.state;
-          break;
-        case RequestState.inreview:
-          result.inreview = _count.state;
-          break;
-        case RequestState.done:
-          result.completed = _count.state;
-          break;
-        case RequestState.failed:
-          result.failed = _count.state;
-          break;
-      }
-    });
-
-    return result;
   } catch (error) {
     console.log(error);
   }
