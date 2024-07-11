@@ -1,9 +1,4 @@
-import {
-  IssueState,
-  IssueStatus,
-  RequestState,
-  RequestStatus,
-} from "@prisma/client";
+import { IssueState, IssueStatus } from "@prisma/client";
 import { headers } from "next/headers";
 import { type NextRequest } from "next/server";
 import db from "~/lib/db";
