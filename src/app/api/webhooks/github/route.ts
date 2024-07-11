@@ -254,6 +254,15 @@ export async function POST(req: NextRequest) {
                     ...(!userIsAvailable && { status: IssueStatus.queue }),
                   },
                 },
+                request: {
+                  update: {
+                    user: {
+                      update: {
+                        ...(userIsAvailable && { available: false }),
+                      },
+                    },
+                  },
+                },
               },
             });
             break;

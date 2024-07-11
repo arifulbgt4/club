@@ -97,6 +97,7 @@ const Submit: FC<SubmitProps> = ({
         prNumber: previous_pr,
       }),
     });
+    setLoadin(false);
     router.refresh();
   }
 

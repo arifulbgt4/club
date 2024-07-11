@@ -34,7 +34,7 @@ export async function PUT(req: Request) {
 
     await db.request.update({
       where: { id: body.requestId },
-      data: { approved: true },
+      data: { approved: true, user: { update: { available: false } } },
     });
 
     await db.request.deleteMany({

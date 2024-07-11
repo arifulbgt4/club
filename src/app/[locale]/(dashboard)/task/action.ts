@@ -24,7 +24,10 @@ export async function getCounts() {
         }),
         countIntents({
           active: true,
-          issue: { state: IssueState.reassign, status: IssueStatus.queue },
+          issue: {
+            state: { in: [IssueState.reassign, IssueState.inprogress] },
+            status: IssueStatus.queue,
+          },
           request: { userId },
         }),
         countRequests({

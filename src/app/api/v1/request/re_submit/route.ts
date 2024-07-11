@@ -37,6 +37,10 @@ export async function PUT(req: Request) {
           update: {
             state: IssueState.inreview,
             status: IssueStatus.default,
+          },
+        },
+        request: {
+          update: {
             user: {
               update: {
                 available: true,
@@ -78,6 +82,10 @@ export async function PUT(req: Request) {
             update: {
               state: IssueState.inprogress,
               status: IssueStatus.default,
+            },
+          },
+          request: {
+            update: {
               user: {
                 update: {
                   available: false,

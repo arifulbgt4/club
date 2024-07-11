@@ -82,6 +82,7 @@ export async function getPublished(repoId: string, page: number = 1) {
       issue: {
         include: {
           request: {
+            where: { user: { available: true } },
             take: 8,
             skip: 0,
             include: {
