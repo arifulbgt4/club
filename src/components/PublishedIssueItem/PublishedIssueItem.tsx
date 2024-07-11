@@ -13,6 +13,7 @@ export default async function PublishedIssueItem({
   issue,
   type,
   price,
+  updatedAt,
 }: PublishedIssueItemProps) {
   const gitIssue = await getIssue(
     issue?.repository as RepositoryOptions,
@@ -28,7 +29,7 @@ export default async function PublishedIssueItem({
         <div className="mb-1 flex items-center">
           <div className="mb-0.5 flex flex-col">
             <div className="text-xs text-muted-foreground">
-              {formatDistanceToNow(new Date(issue?.updatedAt as Date), {
+              {formatDistanceToNow(new Date(updatedAt as Date), {
                 addSuffix: true,
                 includeSeconds: true,
               })}
