@@ -80,7 +80,6 @@ export async function PUT(req: Request) {
         data: {
           issue: {
             update: {
-              state: IssueState.inprogress,
               status: IssueStatus.default,
             },
           },

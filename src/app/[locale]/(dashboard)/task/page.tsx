@@ -42,10 +42,16 @@ async function TaskPage({
           />
         </TabsContent>
         <TabsContent value={TASK_TABS.completed}>
-          <Completed pagination={Number(searchParams?.page || 1)} />
+          <Completed
+            pagination={Number(searchParams?.page || 1)}
+            total={total?.completed as number}
+          />
         </TabsContent>
         <TabsContent value={TASK_TABS.failed}>
-          <Failed pagination={Number(searchParams?.page || 1)} />
+          <Failed
+            pagination={Number(searchParams?.page || 1)}
+            total={total?.failed as number}
+          />
         </TabsContent>
       </div>
     </Tabs>

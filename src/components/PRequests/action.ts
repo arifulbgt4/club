@@ -17,6 +17,9 @@ export async function getList(page: number = 1) {
     include: {
       issue: true,
     },
+    orderBy: {
+      updatedAt: "desc",
+    },
     take: TAKE,
     skip: (page - 1) * TAKE,
   });
