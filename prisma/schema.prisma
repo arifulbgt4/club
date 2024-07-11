@@ -136,6 +136,7 @@ enum IssueState {
   inreview
   done
   draft
+  inactive
 }
 
 enum IssueType {

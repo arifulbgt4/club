@@ -114,7 +114,7 @@ export async function POST(req: NextRequest) {
                 success: true,
                 issue: {
                   update: {
-                    state: undefined,
+                    state: IssueState.inactive,
                     status: IssueStatus.default,
                   },
                 },
@@ -278,7 +278,7 @@ export async function POST(req: NextRequest) {
                 success: true,
                 issue: {
                   update: {
-                    state: undefined,
+                    state: IssueState.inactive,
                     status: IssueStatus.default,
                   },
                 },

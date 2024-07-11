@@ -83,7 +83,7 @@ const IssueImportModalContent = ({
       setStep(2);
       return;
     }
-    if (data?.is_exist && data?.issue?.state === undefined) {
+    if (data?.is_exist && data?.issue?.state === IssueState.inactive) {
       setTopics(data?.issue?.topics);
       setStep(2);
       return;
