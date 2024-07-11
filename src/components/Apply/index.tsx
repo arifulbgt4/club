@@ -1,17 +1,11 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState, type FC } from "react";
 import { type ApplyProps } from "./Types";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+import { Card, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import Icons from "../shared/icons";
-import { IssueType } from "@prisma/client";
+import { IntentType } from "@prisma/client";
 
 const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
   const [applyed, setApplyed] = useState<boolean>();
@@ -36,6 +30,7 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
     } else {
       setLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApplyed]);
 
   async function onApply() {
@@ -49,10 +44,11 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
   }
 
   const getPrice = useMemo(() => {
-    if (price === 0 || price < 3 || issueType === IssueType.free) {
+    if (price === 0 || price < 3 || issueType === IntentType.open_source) {
       return (
         <span>
-          Free <span className=" text-sm text-muted-foreground">$0.00</span>
+          Open source{" "}
+          <span className=" text-sm text-muted-foreground">$0.00</span>
         </span>
       );
     }

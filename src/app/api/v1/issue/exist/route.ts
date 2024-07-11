@@ -19,19 +19,6 @@ export async function GET(req: Request) {
         intent: {
           where: { active: true },
         },
-        assigned: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            picture: true,
-          },
-        },
-        request: {
-          where: {
-            approved: true,
-          },
-        },
       },
     });
     if (!issue) {

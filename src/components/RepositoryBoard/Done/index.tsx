@@ -2,7 +2,7 @@ import EmptyState from "~/components/shared/empty-state";
 import { getDone } from "../action";
 import Pagination from "~/components/sections/pagination";
 import { formatDistanceToNow } from "date-fns";
-import { IssueType } from "@prisma/client";
+import { IntentType } from "@prisma/client";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import Icons from "~/components/shared/icons";
 
@@ -50,7 +50,7 @@ const Done = async ({
                       </span>
                     </div>
                     <div className="ml-auto text-base text-green-500">
-                      {intent?.type === IssueType.paid ? (
+                      {intent?.type === IntentType.paid ? (
                         `$ ${intent?.price?.toFixed(2)}`
                       ) : (
                         <span className=" text-muted-foreground">

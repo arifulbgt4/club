@@ -6,7 +6,7 @@ import { getAnIssue } from "../action";
 import IssueComment from "~/components/IssueComment";
 import Apply from "~/components/Apply";
 import Description from "./description";
-import { type IssueType } from "@prisma/client";
+import { type IntentType } from "@prisma/client";
 import SignUpPromotion from "~/components/SignUpPromotion";
 import { hexToRgba } from "~/lib/utils";
 
@@ -65,12 +65,14 @@ const IssuePage = async ({ params: { issueId } }: IssuePageProps) => {
               <SignUpPromotion />
             </div>
           )}
-          <Apply
-            issueId={issueId}
-            price={dbIssue?.price as number}
-            issueType={dbIssue.type as IssueType}
-            disabled={isOwn || !isAuthenticated}
-          />
+          {!!dbIssue?.intent?.length && (
+            <Apply
+              issueId={issueId}
+              price={dbIssue?.intent[0]?.price as number}
+              issueType={dbIssue?.intent[0].type as IntentType}
+              disabled={isOwn || !isAuthenticated}
+            />
+          )}
           <div className="mb-6">
             {dbIssue?.topics?.length ? (
               <div className="flex flex-col">

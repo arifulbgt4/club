@@ -31,7 +31,6 @@ model User {
   picture                 String?
   accessToken             String?
   refreshToken            String?
-  installId               Int?
   available               Boolean?                 @default(true)
   active                  Boolean?                 @default(true)
   githubId                Int?                     @unique
@@ -41,18 +40,16 @@ model User {
   stripeSubscriptionId    String?                  @unique @map("stripe_subscription_id")
   stripePriceId           String?                  @map("stripe_price_id")
   stripeCurrentPeriodEnd  DateTime?                @map("stripe_current_period_end")
-  createdAt               DateTime                 @default(now())
-  updatedAt               DateTime                 @updatedAt
   emailVerificationTokens EmailVerificationToken[]
-  organizations           Organization[]
   sessions                Session[]
   repository              Repository[]
   request                 Request[]
-  assignedIssues          Issue[]                  @relation("AssignedIssues")
   issue                   Issue[]
   stripeAccount           StripeAccount[]
   provider                Provider[]
   reviewer                Intent[]
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
 }
 
 model StripeAccount {
@@ -68,22 +65,6 @@ model StripeAccount {
   userId               String?
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
-
-  @@index([userId])
-}
-
-model Organization {
-  id         String       @id @unique @default(cuid())
-  name       String
-  installId  Int?
-  active     Boolean?     @default(true)
-  picture    String?
-  token      String?
-  userId     String?
-  user       User?        @relation(fields: [userId], references: [id])
-  repository Repository[]
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
 
   @@index([userId])
 }
@@ -109,22 +90,20 @@ model Provider {
 }
 
 model Repository {
-  id             String        @id @unique
-  name           String?
-  fullName       String?
-  language       String?
-  private        Boolean?
-  active         Boolean?      @default(true)
-  topics         String[]
-  user           User?         @relation(fields: [userId], references: [id])
-  userId         String?
-  issue          Issue[]
-  provider       Provider?     @relation(fields: [providerId], references: [id])
-  providerId     String?
-  Organization   Organization? @relation(fields: [organizationId], references: [id])
-  organizationId String?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  id         String    @id @unique
+  name       String?
+  fullName   String?
+  language   String?
+  private    Boolean?
+  active     Boolean?  @default(true)
+  topics     String[]
+  user       User?     @relation(fields: [userId], references: [id])
+  userId     String?
+  issue      Issue[]
+  provider   Provider? @relation(fields: [providerId], references: [id])
+  providerId String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   @@index([userId, providerId])
 }
@@ -153,55 +132,32 @@ model Issue {
   id           String       @id @unique
   title        String?
   issueNumber  Int?
-  prNumber     Int?
   topics       String[]
   status       IssueStatus? @default(default)
   active       Boolean?     @default(true)
-  type         IssueType?
   state        IssueState   @default(draft)
-  published    Boolean?     @default(false)
-  price        Float?
   repository   Repository?  @relation(fields: [repositoryId], references: [id])
   repositoryId String?
   user         User?        @relation(fields: [userId], references: [id])
   userId       String?
-  assigned     User?        @relation("AssignedIssues", fields: [assignedId], references: [id])
-  assignedId   String?
   request      Request[]
   intent       Intent[]
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 
-  @@index([repositoryId, userId, assignedId])
-}
-
-enum RequestState {
-  open
-  inprogress
-  reassign
-  inreview
-  done
-  failed
-}
-
-enum RequestStatus {
-  default
-  queue
+  @@index([repositoryId, userId])
 }
 
 model Request {
-  id        String         @id @unique @default(cuid())
+  id        String   @id @unique @default(cuid())
   days      Int?
-  approved  Boolean?       @default(false)
-  state     RequestState?  @default(open)
-  status    RequestStatus? @default(default)
-  user      User?          @relation(fields: [userId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id])
   userId    String?
-  issue     Issue?         @relation(fields: [issueId], references: [id])
+  issue     Issue?   @relation(fields: [issueId], references: [id])
   issueId   String?
   intent    Intent?
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([userId, issueId])
 }

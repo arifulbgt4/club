@@ -1,3 +1,4 @@
+import { IssueState } from "@prisma/client";
 import { NextResponse } from "next/server";
 import db from "~/lib/db";
 
@@ -6,7 +7,7 @@ export async function GET(request: Request) {
   const id = searchParams.get("id");
 
   const isPublished = await db.issue.findUnique({
-    where: { id: String(id), published: true },
+    where: { id: String(id), state: IssueState.published },
   });
   return NextResponse.json(!!isPublished);
 }

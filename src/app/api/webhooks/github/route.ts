@@ -38,32 +38,15 @@ export async function POST(req: NextRequest) {
         break;
       case "installation":
         if (action === "deleted") {
-          if (eventData.account.type === "User") {
-            await db.user.update({
-              where: {
-                githubId: sender.id,
-              },
-              data: {
-                accessToken: null,
-                installId: null,
-                active: false,
-              },
-            });
-          }
-
-          if (eventData.account.type === "Organization") {
-            const org = await db.organization.findFirst({
-              where: { name: eventData.account.login },
-            });
-            await db.organization.update({
-              where: { id: org?.id, name: eventData.account.login },
-              data: {
-                token: null,
-                installId: null,
-                active: false,
-              },
-            });
-          }
+          const org = await db.provider.findFirst({
+            where: { name: eventData.account.login },
+          });
+          await db.provider.update({
+            where: { id: org?.id, name: eventData.account.login },
+            data: {
+              active: false,
+            },
+          });
         }
         break;
       case "pull_request":

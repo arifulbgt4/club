@@ -12,7 +12,7 @@ import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { useRouter } from "next/navigation";
 import { useStripe } from "@stripe/react-stripe-js";
-import { IssueType } from "@prisma/client";
+import { IntentType } from "@prisma/client";
 import { TagsInput } from "react-tag-input-component";
 import { Button } from "../ui/button";
 
@@ -111,7 +111,7 @@ const PublishForm: FC<PublishFormProps> = ({
               issueNumber,
               repoId,
               title,
-              type: IssueType.paid,
+              type: IntentType.paid,
               price: price,
               topics: value?.topics,
             }),
@@ -132,7 +132,7 @@ const PublishForm: FC<PublishFormProps> = ({
           issueNumber,
           repoId,
           title,
-          type: IssueType.free,
+          type: IntentType.open_source,
           topics: value?.topics,
         }),
       });

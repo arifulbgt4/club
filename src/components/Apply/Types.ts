@@ -1,8 +1,8 @@
-import { type IssueType } from "@prisma/client";
+import { type IntentType } from "@prisma/client";
 
 export interface ApplyProps {
   issueId: string;
   price: number;
-  issueType: IssueType;
+  issueType: IntentType;
   disabled: boolean;
 }

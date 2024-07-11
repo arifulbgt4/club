@@ -10,7 +10,6 @@ export async function GET(req: Request) {
     const getall = await db.issue.findMany({
       where: {
         repositoryId: repoId,
-        published: true,
         userId: user?.id,
       },
       include: {
@@ -26,9 +25,6 @@ export async function GET(req: Request) {
               select: { id: true, picture: true, username: true },
             },
           },
-        },
-        assigned: {
-          select: { id: true, picture: true, username: true },
         },
       },
       orderBy: {

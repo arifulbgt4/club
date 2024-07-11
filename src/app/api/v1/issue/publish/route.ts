@@ -63,7 +63,6 @@ export async function POST(req: Request) {
         },
       },
       update: {
-        published: true,
         active: true,
         state: IssueState.published,
         title: issue?.data?.title,

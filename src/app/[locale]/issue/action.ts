@@ -8,7 +8,7 @@ export async function getAnIssue(id: string) {
   const { session, user } = await validateRequest();
   const dbIssue = await db.issue.findUnique({
     where: { id, active: true, state: IssueState.published },
-    include: { repository: { include: { provider: true } } },
+    include: { intent: true, repository: { include: { provider: true } } },
   });
 
   if (!dbIssue) {
