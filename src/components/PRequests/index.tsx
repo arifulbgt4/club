@@ -4,9 +4,7 @@ import { type PRequestsProps } from "./Types";
 import EmptyState from "../shared/empty-state";
 import { getList } from "./action";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { formatDistanceToNow } from "date-fns";
-import Icons from "../shared/icons";
 import Pagination from "../sections/pagination";
 import { TASK_TABS } from "~/types";
 
@@ -38,23 +36,6 @@ const PRequests: FC<PRequestsProps> = async ({ pagination, total }) => {
             })}
           </span>
           <span className=" text-xl">{d?.issue?.title}</span>
-          <div className="mt-3 flex ">
-            <div className="box-border flex items-center  rounded-full border pr-2">
-              <Avatar className=" h-5 w-5">
-                <AvatarImage
-                  src={d?.issue?.user?.picture as string}
-                  alt={d?.issue?.user?.username as string}
-                  title={d?.issue?.user?.name as string}
-                />
-                <AvatarFallback>
-                  <Icons.spinner className=" animate-spin" />
-                </AvatarFallback>
-              </Avatar>
-              <span className=" ml-1.5 text-sm font-semibold text-muted-foreground">
-                {d?.issue?.user?.username}
-              </span>
-            </div>
-          </div>
         </Link>
       ))}
       <div className="mt-3">

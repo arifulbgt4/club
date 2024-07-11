@@ -1,4 +1,4 @@
-import { RequestState } from "@prisma/client";
+import { IssueState, IssueStatus } from "@prisma/client";
 import db from "~/lib/db";
 import { validateRequest } from "~/server/auth";
 
@@ -6,26 +6,25 @@ const TAKE = 10;
 
 export async function getList(page: number = 1) {
   const { user } = await validateRequest();
-  const total = await db.request.count({
-    where: { userId: user?.id, state: RequestState.reassign },
-  });
-  const requests = await db.request.findMany({
-    where: { userId: user?.id, state: RequestState.reassign },
-    include: {
+
+  const intents = await db.intent.findMany({
+    where: {
+      active: true,
       issue: {
-        include: {
-          user: {
-            select: {
-              name: true,
-              username: true,
-              picture: true,
-            },
-          },
+        state: {
+          in: [IssueState.reassign, IssueState.inprogress],
         },
+        status: IssueStatus.queue,
       },
+      request: {
+        userId: user?.id,
+      },
+    },
+    include: {
+      issue: true,
     },
     take: TAKE,
     skip: (page - 1) * TAKE,
   });
-  return { requests, total, take: TAKE, page };
+  return { intents, take: TAKE, page };
 }

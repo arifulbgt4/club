@@ -24,7 +24,10 @@ async function TaskPage({
           <Wip />
         </TabsContent>
         <TabsContent value={TASK_TABS.queue}>
-          <ReAssigned pagination={Number(searchParams?.page || 1)} />
+          <ReAssigned
+            pagination={Number(searchParams?.page || 1)}
+            total={total?.reassigned as number}
+          />
         </TabsContent>
         <TabsContent value={TASK_TABS.applyed}>
           <PRequests
@@ -33,7 +36,10 @@ async function TaskPage({
           />
         </TabsContent>
         <TabsContent value={TASK_TABS.str}>
-          <Str pagination={Number(searchParams?.page || 1)} />
+          <Str
+            pagination={Number(searchParams?.page || 1)}
+            total={total?.inreview as number}
+          />
         </TabsContent>
         <TabsContent value={TASK_TABS.completed}>
           <Completed pagination={Number(searchParams?.page || 1)} />
