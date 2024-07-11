@@ -41,7 +41,7 @@ const prNumberSchema = z.object({
 
 type PRValues = z.infer<typeof prNumberSchema>;
 
-const Submit: FC<SubmitProps> = ({ requestId }) => {
+const Submit: FC<SubmitProps> = ({ requestId, intentId, issueId }) => {
   const [pending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -59,7 +59,9 @@ const Submit: FC<SubmitProps> = ({ requestId }) => {
       return fetch("/api/v1/request/submit", {
         method: "PUT",
         body: JSON.stringify({
-          id: requestId,
+          requestId,
+          issueId,
+          intentId,
           prNumber: data.prNumber,
         }),
       })

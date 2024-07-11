@@ -1,5 +1,4 @@
-import { IssueState, RequestState } from "@prisma/client";
-import { NextResponse } from "next/server";
+import { IssueState, IssueStatus } from "@prisma/client";
 import db from "~/lib/db";
 import { app } from "~/lib/octokit";
 import { validateRequest } from "~/server/auth";
@@ -7,10 +6,23 @@ import { validateRequest } from "~/server/auth";
 export async function PUT(req: Request) {
   const body = await req.json();
   try {
-    const { user } = await validateRequest();
-    const request = await db.request.findUnique({
+    const { user, session } = await validateRequest();
+    if (!session || !body?.issueId || !body?.intentId || !body?.requestId) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
+    const intent = await db.intent.findUnique({
       where: {
-        id: body?.id,
+        id: body?.intentId,
+        active: true,
+        issue: {
+          id: body?.issueId,
+          state: IssueState.inprogress,
+          status: IssueStatus.default,
+        },
+        request: {
+          id: body?.requestId,
+        },
       },
       include: {
         issue: {
@@ -25,9 +37,9 @@ export async function PUT(req: Request) {
       },
     });
 
-    const provider = request?.issue?.repository?.provider;
+    const provider = intent?.issue?.repository?.provider;
 
-    const repo = request?.issue?.repository;
+    const repo = intent?.issue?.repository;
 
     const octo = await app.getInstallationOctokit(
       Number(provider?.installationId)
@@ -50,30 +62,75 @@ export async function PUT(req: Request) {
       pull?.data?.base?.repo?.name !== repo?.name &&
       !pull?.data?.merged
     ) {
-      return new Response(null, { status: 400 });
+      return new Response(`Wrong pull request #${body?.prNumber}`, {
+        status: 401,
+      });
     }
-    const res = await db.request.update({
+
+    await db.intent.update({
       where: {
         id: body?.id,
-        userId: user?.id,
-        issueId: request?.issueId,
+        issueId: intent?.issueId,
+        requestId: intent?.requestId as string,
       },
       data: {
-        state: RequestState.inreview,
+        pr_number: Number(body?.prNumber),
         issue: {
           update: {
-            prNumber: Number(body?.prNumber),
             state: IssueState.inreview,
-          },
-        },
-        user: {
-          update: {
-            available: true,
+            user: {
+              update: {
+                available: true,
+              },
+            },
           },
         },
       },
     });
-    return NextResponse.json(res);
+
+    const isQueue = await db.intent.findMany({
+      where: {
+        issue: {
+          state: {
+            in: [IssueState.inprogress, IssueState.reassign],
+          },
+          status: IssueStatus.queue,
+        },
+        request: {
+          userId: user?.id,
+        },
+      },
+      orderBy: {
+        updatedAt: "asc",
+      },
+    });
+
+    if (!!isQueue?.length) {
+      const queueIntent = isQueue[0];
+      await db.intent.update({
+        where: {
+          id: queueIntent.id,
+          issue: {
+            status: IssueStatus.queue,
+          },
+        },
+        data: {
+          issue: {
+            update: {
+              state: IssueState.inprogress,
+              status: IssueStatus.default,
+              user: {
+                update: {
+                  available: false,
+                },
+              },
+            },
+          },
+        },
+      });
+    }
+
+    return new Response("Update successfully", { status: 200 });
   } catch (error) {
     return new Response(null, { status: 500 });
   }

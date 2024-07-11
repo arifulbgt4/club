@@ -63,9 +63,11 @@ export async function getInProgress() {
     issue: issue.data,
     comments: comments.data,
     inprogress: {
-      id: inprogressIntent?.id,
       updatedAt: inprogressIntent?.updatedAt,
       userName: provider?.name,
+      requestId: inprogressIntent.requestId,
+      intentId: inprogressIntent.id,
+      issueId: inprogressIntent.issueId,
     },
   };
 }

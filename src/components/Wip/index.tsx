@@ -10,7 +10,7 @@ import EmptyState from "../shared/empty-state";
 
 async function Wip({}: WipProps) {
   const data = await getInProgress();
-  if (!data)
+  if (!data?.issue)
     return (
       <EmptyState
         title="Currently no issues in progress"
@@ -57,7 +57,11 @@ async function Wip({}: WipProps) {
         </div>
         <div className="flex w-[30%] flex-auto">
           <Suspense>
-            <Submit requestId={inprogress?.id as string} />
+            <Submit
+              requestId={inprogress?.requestId as string}
+              intentId={inprogress?.intentId as string}
+              issueId={inprogress?.issueId as string}
+            />
           </Suspense>
         </div>
       </div>
