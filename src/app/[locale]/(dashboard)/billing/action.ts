@@ -35,3 +35,12 @@ export async function getPaymentMethods() {
 
   return { primary: primary[0], additional };
 }
+
+export async function getInvoice() {
+  const { user } = await validateRequest();
+  const invoice = await stripe.invoices.list({
+    customer: user?.stripeCustomerId,
+  });
+
+  return invoice;
+}
