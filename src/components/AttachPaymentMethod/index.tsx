@@ -35,7 +35,7 @@ const AttachPaymentMethod = ({
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [cardType, setCardType] = useState("");
-  const [message, setMessage] = useState("");
+  const [addressError, setAddressError] = useState("");
   const [cardErrors, setCardErrors] = useState({
     cardNumber: "",
     cardExpiry: "",
@@ -51,18 +51,22 @@ const AttachPaymentMethod = ({
     }
     setLoading(true);
     const cardNumber = elements.getElement(CardNumberElement);
+    const addressElement = elements.getElement(AddressElement);
+
+    const billingInfo = await addressElement?.getValue();
+
     // Create a payment method
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: "card",
       card: cardNumber,
-      // TODO: add billing details
-      // billing_details:{
-      //   address: elements.getElement(AddressElement)
-      // }
+      billing_details: {
+        address: billingInfo?.value?.address,
+        name: billingInfo?.value?.name,
+      },
     });
 
-    if (error) {
-      setMessage(error.message);
+    if (error || !billingInfo?.complete) {
+      setAddressError("Please complete the address form");
       setLoading(false);
       return;
     }
@@ -72,9 +76,11 @@ const AttachPaymentMethod = ({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ paymentMethodId: paymentMethod.id }),
     });
-    setMessage("Payment method created successfully!");
+    addressElement?.clear();
+    setAddressError("");
     setLoading(false);
     setOpen(false);
+    setCardType("");
     onUpdate && onUpdate(true);
     router.refresh();
   };
@@ -224,7 +230,14 @@ const AttachPaymentMethod = ({
             </div>
           </div>
 
-          {/* <AddressElement options={{ ...inputStyle, mode: "billing" }} /> */}
+          <div className="mb-6">
+            {!!addressError && (
+              <div className=" mb-1 text-sm text-destructive">
+                {addressError}
+              </div>
+            )}
+            <AddressElement options={{ ...inputStyle, mode: "billing" }} />
+          </div>
 
           <Button
             type="submit"
