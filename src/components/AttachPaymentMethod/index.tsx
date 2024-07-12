@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   useStripe,
   useElements,
@@ -21,6 +21,8 @@ import { Button } from "../ui/button";
 import Icons from "../shared/icons";
 import { PlusCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import getPaymentMethodIcon from "~/components/shared/payment-method-icons";
+
 import { cn } from "~/lib/utils";
 
 const AttachPaymentMethod = ({
@@ -87,15 +89,7 @@ const AttachPaymentMethod = ({
       setCardErrors((prevState) => ({ ...prevState, cardNumber: "" }));
     }
 
-    if (event.brand === "visa") {
-      setCardType("visa");
-    } else if (event.brand === "mastercard") {
-      setCardType("mastercard");
-    } else if (event.brand === "amex") {
-      setCardType("amex");
-    } else {
-      setCardType("");
-    }
+    setCardType(event.brand);
   };
 
   const handleCardExpiryChange = (event: any) => {
@@ -137,6 +131,12 @@ const AttachPaymentMethod = ({
       },
     },
   };
+
+  const methodIcon = useMemo(
+    () => <span className=" w-6">{getPaymentMethodIcon(cardType)()}</span>,
+    [cardType]
+  );
+
   return (
     <Dialog open={open} onOpenChange={(v) => setOpen(v)}>
       <DialogTrigger asChild>
@@ -160,15 +160,20 @@ const AttachPaymentMethod = ({
             >
               Card Number
             </label>
-            <CardNumberElement
-              id="card-number"
-              options={inputStyle}
+            <div
               className={cn(
                 cardErrors.cardNumber && "border-destructive",
-                " rounded border p-3 shadow-sm"
+                " flex flex-nowrap items-center gap-3 rounded border p-2.5 shadow-sm"
               )}
-              onChange={handleCardNumberChange}
-            />
+            >
+              {methodIcon}
+              <CardNumberElement
+                id="card-number"
+                options={inputStyle}
+                className="w-full"
+                onChange={handleCardNumberChange}
+              />
+            </div>
             {cardErrors.cardNumber && (
               <div className=" text-sm text-destructive">
                 {cardErrors.cardNumber}
