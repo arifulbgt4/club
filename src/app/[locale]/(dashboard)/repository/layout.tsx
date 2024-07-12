@@ -28,6 +28,7 @@ const RepositoryLayout = async ({
               <EmptyState
                 size="sm"
                 title="Empty"
+                border={false}
                 description="No repository imported yet"
               />
             )}

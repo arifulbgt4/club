@@ -40,6 +40,7 @@ const RequestedCard = async () => {
             title="Applyed List Empty"
             description="Your applied issue list is empty. Explore and apply additional issues to get started"
             size="sm"
+            border={false}
           />
         )}
       </CardContent>

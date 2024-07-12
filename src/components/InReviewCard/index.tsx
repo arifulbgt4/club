@@ -40,6 +40,7 @@ const InReviewCard = async () => {
             title="No Issues Submitted for Review"
             description="The review queue is currently empty. This indicates there are no submissions pending your assessment"
             size="sm"
+            border={false}
           />
         )}
       </CardContent>

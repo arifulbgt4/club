@@ -47,7 +47,7 @@ export default async function Home({
               />
             </>
           ) : (
-            <EmptyState title="No issues found" />
+            <EmptyState title="No issues found" border={false} full={false} />
           )}
         </div>
         <div className="flex w-[30%] flex-col pl-6">

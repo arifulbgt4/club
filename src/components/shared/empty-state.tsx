@@ -1,5 +1,4 @@
 import React, { type FC } from "react";
-import { Button } from "../ui/button";
 import Icons from "./icons";
 import { cn } from "~/lib/utils";
 
@@ -9,6 +8,7 @@ interface EmptyStateProps {
   children?: React.ReactNode;
   border?: boolean;
   size?: "default" | "sm";
+  full?: boolean;
 }
 
 const EmptyState: FC<EmptyStateProps> = ({
@@ -17,13 +17,15 @@ const EmptyState: FC<EmptyStateProps> = ({
   children,
   border = true,
   size = "default",
+  full = true,
 }) => {
   return (
     <div
       className={cn(
         size === "sm" ? "px-3" : "p-16",
-        border && size === "default" && "border",
-        " flex flex-1 flex-col items-center justify-center gap-2 rounded text-center"
+        border && "border",
+        full && "flex-1",
+        " flex flex-col items-center justify-center gap-2 rounded text-center"
       )}
     >
       <Icons.emptyIllustration
