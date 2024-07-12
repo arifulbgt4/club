@@ -24,7 +24,7 @@ model EmailVerificationToken {
 }
 
 model User {
-  id                      String                   @id @unique @default(cuid())
+  id                      String                   @id @default(cuid())
   name                    String?
   email                   String?                  @unique
   emailVerified           Boolean?                 @default(false)
@@ -53,7 +53,7 @@ model User {
 }
 
 model StripeAccount {
-  id                   String   @id @unique @default(cuid())
+  id                   String   @id @default(cuid())
   stripeUserId         String   @unique // Unique identifier for the Stripe account
   accessToken          String // Access token for making API requests
   scope                String // Scope granted to the access token
@@ -113,7 +113,6 @@ enum IssueState {
   inprogress
   reassign
   inreview
-  done
   draft
   inactive
 }
@@ -149,7 +148,7 @@ model Issue {
 }
 
 model Request {
-  id        String   @id @unique @default(cuid())
+  id        String   @id @default(cuid())
   days      Int?
   user      User?    @relation(fields: [userId], references: [id])
   userId    String?
@@ -168,7 +167,7 @@ enum IntentType {
 }
 
 model Intent {
-  id         String      @id @unique @default(cuid())
+  id         String      @id @default(cuid())
   price      Float?
   type       IntentType?
   reviewer   User?       @relation(fields: [reviewerId], references: [id])
@@ -182,4 +181,6 @@ model Intent {
   requestId  String?     @unique
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
+
+  @@index([issueId, requestId, reviewerId])
 }
