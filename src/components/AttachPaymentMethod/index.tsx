@@ -21,6 +21,7 @@ import { Button } from "../ui/button";
 import Icons from "../shared/icons";
 import { PlusCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { cn } from "~/lib/utils";
 
 const AttachPaymentMethod = ({
   onUpdate,
@@ -143,7 +144,7 @@ const AttachPaymentMethod = ({
           <PlusCircleIcon className="mr-2 h-5 w-5" /> Add a billing method
         </Button>
       </DialogTrigger>
-      <DialogContent className=" max-h-[90vh] overflow-auto">
+      <DialogContent className=" liting max-h-[90vh] overflow-auto">
         <DialogHeader>
           <DialogTitle>Add a billing methode</DialogTitle>
           <DialogDescription>
@@ -153,40 +154,67 @@ const AttachPaymentMethod = ({
         <form className=" flex flex-1 flex-col" onSubmit={handleSubmit}>
           {/* {message && <div id="payment-message">{message}</div>} */}
           <div className=" mb-4 flex flex-col">
-            <label htmlFor="card-number">Card Number</label>
+            <label
+              htmlFor="card-number"
+              className=" mb-1 text-sm font-semibold"
+            >
+              Card Number
+            </label>
             <CardNumberElement
               id="card-number"
               options={inputStyle}
-              className=" rounded border p-3 shadow-sm"
+              className={cn(
+                cardErrors.cardNumber && "border-destructive",
+                " rounded border p-3 shadow-sm"
+              )}
               onChange={handleCardNumberChange}
             />
             {cardErrors.cardNumber && (
-              <div className=" text-destructive">{cardErrors.cardNumber}</div>
+              <div className=" text-sm text-destructive">
+                {cardErrors.cardNumber}
+              </div>
             )}
           </div>
           <div className="mb-6 flex">
             <div className=" flex w-[60%] flex-col">
-              <label htmlFor="card-expiry">Expiration Date</label>
+              <label
+                htmlFor="card-expiry"
+                className=" mb-1 text-sm font-semibold"
+              >
+                Expiration Date
+              </label>
               <CardExpiryElement
                 id="card-expiry"
                 options={inputStyle}
                 onChange={handleCardExpiryChange}
-                className=" rounded border p-3 shadow-sm"
+                className={cn(
+                  cardErrors.cardExpiry && "border-destructive",
+                  " rounded border p-3 shadow-sm"
+                )}
               />
               {cardErrors.cardExpiry && (
-                <div className=" text-destructive">{cardErrors.cardExpiry}</div>
+                <div className=" text-sm text-destructive">
+                  {cardErrors.cardExpiry}
+                </div>
               )}
             </div>
             <div className=" ml-3 flex w-[40%] flex-col">
-              <label htmlFor="card-cvc">CVC</label>
+              <label htmlFor="card-cvc" className=" mb-1 text-sm font-semibold">
+                CVC
+              </label>
               <CardCvcElement
                 id="card-cvc"
                 options={inputStyle}
                 onChange={handleCardCvcChange}
-                className=" rounded border p-3 shadow-sm"
+                className={cn(
+                  cardErrors.cardCvc && "border-destructive",
+                  " rounded border p-3 shadow-sm"
+                )}
               />
               {cardErrors.cardCvc && (
-                <div className=" text-destructive">{cardErrors.cardCvc}</div>
+                <div className=" text-sm text-destructive">
+                  {cardErrors.cardCvc}
+                </div>
               )}
             </div>
           </div>
