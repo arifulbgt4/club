@@ -57,13 +57,15 @@ export async function PUT(req: Request) {
       }
     );
     if (
-      pull?.data?.state !== "open" &&
-      pull?.data?.user?.login !== user?.username &&
-      pull?.data?.base?.repo?.name !== repo?.name &&
-      !pull?.data?.merged
+      pull?.data?.state !== "open" ||
+      pull?.data?.user?.login !== user?.username ||
+      pull?.data?.base?.repo?.name !== repo?.name ||
+      pull?.data?.merged ||
+      !pull?.data?.mergeable ||
+      pull?.data?.author_association === "OWNER"
     ) {
       return new Response(`Wrong pull request #${body?.prNumber}`, {
-        status: 401,
+        status: 301,
       });
     }
 

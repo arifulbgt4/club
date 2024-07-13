@@ -86,7 +86,7 @@ const InReview = async ({
                     <div className="flex flex-col items-center justify-center gap-5">
                       <div className=" font-mono font-semibold tracking-wide">
                         {intent?.type === IntentType.paid ? (
-                          `$ ${intent?.price?.toFixed(2)}`
+                          `$${intent?.price?.toFixed(2)}`
                         ) : (
                           <span className=" font-normal tracking-normal">
                             open-source
@@ -94,7 +94,7 @@ const InReview = async ({
                         )}
                       </div>
                       <span className="flex items-center gap-1 text-indigo-500">
-                        <GitPullRequestArrow className="h-5 w-5" />
+                        <GitPullRequestArrow className="h-4 w-4" />
                         <span className="text-lg font-medium ">
                           {intent?.pr_number}
                         </span>

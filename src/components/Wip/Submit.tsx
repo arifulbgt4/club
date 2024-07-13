@@ -58,32 +58,32 @@ const Submit: FC<SubmitProps> = ({
 
   const { formState } = form;
 
-  function onSubmit(data: PRValues) {
+  async function onSubmit(data: PRValues) {
     if (!formState.isDirty) return;
-
-    startTransition(() => {
-      return fetch("/api/v1/request/submit", {
-        method: "PUT",
-        body: JSON.stringify({
-          requestId,
-          issueId,
-          intentId,
-          prNumber: data.prNumber,
-        }),
-      })
-        .then(() => {
-          toast({
-            title: "PR submit successfully!",
-          });
-          router.refresh();
-        })
-        .catch(() => {
-          toast({
-            title: "Something went wrong.",
-            variant: "destructive",
-          });
-        });
+    setLoadin(true);
+    const res = await fetch("/api/v1/request/submit", {
+      method: "PUT",
+      body: JSON.stringify({
+        requestId,
+        issueId,
+        intentId,
+        prNumber: data.prNumber,
+      }),
     });
+    const text = await res.text();
+    if (!res.ok) {
+      toast({
+        title: text,
+        variant: "destructive",
+      });
+      setLoadin(false);
+      return;
+    }
+    toast({
+      title: text,
+    });
+    router.refresh();
+    setLoadin(false);
   }
 
   async function reSubmit() {

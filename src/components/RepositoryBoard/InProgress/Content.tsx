@@ -27,8 +27,13 @@ const Content = ({
               <div className="mb-0.5 flex flex-col">
                 <div className="flex flex-nowrap items-center text-xs text-muted-foreground">
                   #{issue?.issueNumber} {" • "}
-                  {issue?.status === IssueStatus.queue &&
-                    <span className="text-yellow-500">Queue</span> + " • "}{" "}
+                  {issue?.status === IssueStatus.queue && (
+                    <>
+                      {" "}
+                      <span className="px-1 text-yellow-500">Queue</span>
+                      {" • "}
+                    </>
+                  )}{" "}
                   in-progress{" "}
                   {formatDistanceToNow(new Date(issue?.updatedAt), {
                     addSuffix: true,
