@@ -159,7 +159,6 @@ export const GET = async (request: NextRequest) => {
         await db.provider.upsert({
           where: { name: install.login as string },
           create: {
-            id: String(installation_id),
             name: install.login,
             accessToken: newAccessToken,
             installationId: Number(installation_id),
@@ -174,6 +173,9 @@ export const GET = async (request: NextRequest) => {
             },
           },
           update: {
+            accessToken: newAccessToken,
+            installationId: Number(installation_id),
+            picture: install.avatar_url,
             active: true,
           },
         });
@@ -221,7 +223,6 @@ export const GET = async (request: NextRequest) => {
         await db.provider.upsert({
           where: { name: install?.login },
           create: {
-            id: String(installation_id),
             name: install.login,
             accessToken: newAccessToken,
             installationId: Number(installation_id),
@@ -236,6 +237,9 @@ export const GET = async (request: NextRequest) => {
             },
           },
           update: {
+            accessToken: newAccessToken,
+            installationId: Number(installation_id),
+            picture: install.avatar_url,
             active: true,
           },
         });
