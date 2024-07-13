@@ -45,27 +45,33 @@ export async function PUT(req: Request) {
       Number(provider?.installationId)
     );
 
-    const pull = await octo.request(
-      "GET /repos/{owner}/{repo}/pulls/{pull_number}",
-      {
-        owner: provider?.name as string,
-        repo: repo?.name as string,
-        pull_number: Number(body?.prNumber),
-        headers: {
-          authorization: `token ${provider?.accessToken}`,
-        },
+    try {
+      const pull = await octo.request(
+        "GET /repos/{owner}/{repo}/pulls/{pull_number}",
+        {
+          owner: provider?.name as string,
+          repo: repo?.name as string,
+          pull_number: Number(body?.prNumber),
+          headers: {
+            authorization: `token ${provider?.accessToken}`,
+          },
+        }
+      );
+      if (
+        pull?.data?.state !== "open" ||
+        pull?.data?.user?.login !== user?.username ||
+        pull?.data?.base?.repo?.name !== repo?.name ||
+        pull?.data?.merged ||
+        !pull?.data?.mergeable ||
+        pull?.data?.author_association === "OWNER"
+      ) {
+        return new Response(`Wrong pull request #${body?.prNumber}`, {
+          status: 301,
+        });
       }
-    );
-    if (
-      pull?.data?.state !== "open" ||
-      pull?.data?.user?.login !== user?.username ||
-      pull?.data?.base?.repo?.name !== repo?.name ||
-      pull?.data?.merged ||
-      !pull?.data?.mergeable ||
-      pull?.data?.author_association === "OWNER"
-    ) {
-      return new Response(`Wrong pull request #${body?.prNumber}`, {
-        status: 301,
+    } catch (error) {
+      return new Response(`Pull request not found #${body?.prNumber}`, {
+        status: 401,
       });
     }
 

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useTransition, type FC } from "react";
+import { useState, type FC } from "react";
 import { type SubmitProps } from "./Types";
 import {
   Card,
@@ -48,8 +48,7 @@ const Submit: FC<SubmitProps> = ({
   isReSubmit,
   previous_pr,
 }) => {
-  const [pending, startTransition] = useTransition();
-  const [loadin, setLoadin] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const form = useForm<PRValues>({
     resolver: zodResolver(prNumberSchema),
@@ -60,7 +59,7 @@ const Submit: FC<SubmitProps> = ({
 
   async function onSubmit(data: PRValues) {
     if (!formState.isDirty) return;
-    setLoadin(true);
+    setLoading(true);
     const res = await fetch("/api/v1/request/submit", {
       method: "PUT",
       body: JSON.stringify({
@@ -76,18 +75,18 @@ const Submit: FC<SubmitProps> = ({
         title: text,
         variant: "destructive",
       });
-      setLoadin(false);
+      setLoading(false);
       return;
     }
     toast({
       title: text,
     });
     router.refresh();
-    setLoadin(false);
+    setLoading(false);
   }
 
   async function reSubmit() {
-    setLoadin(true);
+    setLoading(true);
     await fetch("/api/v1/request/re_submit", {
       method: "PUT",
       body: JSON.stringify({
@@ -97,7 +96,7 @@ const Submit: FC<SubmitProps> = ({
         prNumber: previous_pr,
       }),
     });
-    setLoadin(false);
+    setLoading(false);
     router.refresh();
   }
 
@@ -137,10 +136,10 @@ const Submit: FC<SubmitProps> = ({
                   type="submit"
                   className="ml-2"
                   disabled={
-                    formState.isSubmitting || pending || !formState.isDirty
+                    formState.isSubmitting || !formState.isDirty || loading
                   }
                 >
-                  {formState.isSubmitting || pending ? (
+                  {formState.isSubmitting || loading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     </>
@@ -158,8 +157,8 @@ const Submit: FC<SubmitProps> = ({
             <p>After re-submit, your profile will become available.</p>
           </CardContent>
           <CardFooter>
-            <Button disabled={loadin} onClick={reSubmit}>
-              {loadin ? (
+            <Button disabled={loading} onClick={reSubmit}>
+              {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 </>
