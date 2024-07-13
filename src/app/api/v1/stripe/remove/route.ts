@@ -15,6 +15,7 @@ export async function POST(req: Request) {
       where: {
         active: true,
         issue: {
+          userId: user?.id,
           state: {
             in: [
               IssueState.inprogress,
