@@ -154,7 +154,8 @@ export async function POST(req: NextRequest) {
             await db.intent.create({
               data: {
                 type: intent?.type,
-                price: intent?.price,
+                // * Always set price null when move to draft
+                price: null,
                 issue: {
                   connect: {
                     id: issue?.id,
