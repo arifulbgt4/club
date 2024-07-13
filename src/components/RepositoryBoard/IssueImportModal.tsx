@@ -23,7 +23,7 @@ import { useForm } from "react-hook-form";
 import debounce from "lodash/debounce";
 import { Input } from "~/components/ui/input";
 import Icons from "~/components/shared/icons";
-import { cn } from "~/lib/utils";
+import { cn, formatDate } from "~/lib/utils";
 import { type IntentType, IssueState } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import SearchTopics from "../SearchTopics";
@@ -201,7 +201,12 @@ const IssueImportModalContent = ({
                     <span className="mt-1 h-5 w-5">
                       <CircleDot className="h-5 w-5 text-green-500" />
                     </span>
-                    <span className="text-lg">{result?.title}</span>
+                    <div className="flex flex-col">
+                      <span className="text-lg">{result?.title}</span>
+                      <span className="text-sm text-muted-foreground">
+                        last updated at {formatDate(result?.updated_at)}
+                      </span>
+                    </div>
                   </div>
                   <div>
                     <span className="h-5 w-5">
