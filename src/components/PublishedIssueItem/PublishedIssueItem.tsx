@@ -38,11 +38,11 @@ export default async function PublishedIssueItem({
             {/* // TODO: If a issue visit then the dot will not show */}
             {/* <span className="flex h-2 w-2 rounded-full bg-blue-600" /> */}
           </div>
-          <div className="ml-auto text-base text-green-500">
+          <div className="ml-auto font-mono text-base font-semibold tracking-wide">
             {type === IntentType.paid ? (
-              `$ ${price?.toFixed(2)}`
+              `$${price?.toFixed(2)}`
             ) : (
-              <span className=" text-muted-foreground">open-source</span>
+              <span className="font-normal tracking-normal">open-source</span>
             )}
           </div>
         </div>

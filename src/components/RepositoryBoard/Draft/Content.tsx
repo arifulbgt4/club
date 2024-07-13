@@ -41,11 +41,11 @@ const Content: FC<{ issue: Issue; intent: Intent }> = ({ issue, intent }) => {
             )}
           </div>
 
-          <div className="flex w-28 justify-end pt-3 text-right text-base text-green-500">
+          <div className="flex w-28 justify-end pt-3 text-right font-mono font-semibold tracking-wide">
             {intent?.type === IntentType.paid ? (
-              `$ ${intent?.price?.toFixed(2) ?? (0).toFixed(2)}`
+              `$${intent?.price?.toFixed(2) ?? (0).toFixed(2)}`
             ) : (
-              <span className=" text-muted-foreground">open-source</span>
+              <span className="font-normal tracking-normal">open-source</span>
             )}
           </div>
         </div>

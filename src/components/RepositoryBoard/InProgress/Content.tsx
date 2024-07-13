@@ -37,11 +37,13 @@ const Content = ({
                 </div>
                 <span className=" text-xl font-semibold">{issue?.title}</span>
               </div>
-              <div className="ml-auto text-base text-green-500">
+              <div className="ml-auto font-mono font-semibold tracking-wider">
                 {intent?.type === IntentType.paid ? (
-                  `$ ${intent?.price?.toFixed(2)}`
+                  `$${intent?.price?.toFixed(2)}`
                 ) : (
-                  <span className=" text-muted-foreground">open-source</span>
+                  <span className="font-normal tracking-normal">
+                    open-source
+                  </span>
                 )}
               </div>
             </div>

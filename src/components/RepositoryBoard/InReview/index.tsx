@@ -84,11 +84,11 @@ const InReview = async ({
                       </div>
                     </div>
                     <div className="flex flex-col items-center justify-center gap-5">
-                      <div className=" text-base text-green-500">
+                      <div className=" font-mono font-semibold tracking-wide">
                         {intent?.type === IntentType.paid ? (
                           `$ ${intent?.price?.toFixed(2)}`
                         ) : (
-                          <span className=" text-muted-foreground">
+                          <span className=" font-normal tracking-normal">
                             open-source
                           </span>
                         )}

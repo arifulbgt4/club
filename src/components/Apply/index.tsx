@@ -46,9 +46,9 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
   const getPrice = useMemo(() => {
     if (price === 0 || price < 3 || issueType === IntentType.open_source) {
       return (
-        <span>
+        <span className="font-normal tracking-normal">
           Open source{" "}
-          <span className=" text-sm text-muted-foreground">$0.00</span>
+          <span className=" font-semibold tracking-wide">$0.00</span>
         </span>
       );
     }
@@ -58,7 +58,9 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
   return (
     <Card className="mb-6">
       <CardHeader className=" mb-6 border-b">
-        <CardTitle className=" text-green-500">{getPrice}</CardTitle>
+        <CardTitle className="font-mono font-semibold tracking-wide">
+          {getPrice}
+        </CardTitle>
       </CardHeader>
       {/* <CardContent>
         <p>To apply for a paid issue, you must first complete 30 free tasks</p>
