@@ -55,7 +55,7 @@ export async function getRepositoryByID(id: string) {
 export async function getProviders() {
   const { user } = await validateRequest();
   const provider = await db.provider.findMany({
-    where: { userId: user?.id },
+    where: { userId: user?.id, active: true },
     select: {
       id: true,
       name: true,

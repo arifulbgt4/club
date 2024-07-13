@@ -83,7 +83,7 @@ export const GET = async (request: NextRequest) => {
 
     const existingUser = await db.user.findUnique({
       where: {
-        githubId: githubUser.id,
+        githubId: String(githubUser.id),
       },
       include: {
         provider: {
@@ -157,7 +157,7 @@ export const GET = async (request: NextRequest) => {
 
       if (setup_action === "install") {
         await db.provider.upsert({
-          where: { id: String(installation_id) },
+          where: { name: install.login as string },
           create: {
             id: String(installation_id),
             name: install.login,
@@ -200,62 +200,73 @@ export const GET = async (request: NextRequest) => {
     const customer = await stripe.customers.create({
       email: userEmail,
     });
-
-    const newUser = await db.user.create({
-      data: {
-        githubId: githubUser.id,
-        name: githubUser.name || githubUser.login,
-        email: userEmail,
-        username: githubUser.login,
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken,
-        stripeCustomerId: customer.id,
-        picture: githubUser.avatar_url,
-      },
-    });
-
-    if (setup_action === "install") {
-      await db.provider.upsert({
-        where: { id: String(installation_id) },
-        create: {
-          id: String(installation_id),
-          name: install.login,
-          accessToken: newAccessToken,
-          installationId: Number(installation_id),
-          picture: install.avatar_url,
-          ...(install.type === "Organization" && {
-            ownerType: OwnerTypeState.organization,
-          }),
-          user: {
-            connect: {
-              id: newUser.id,
-            },
+    try {
+      const newUser = await db.user.create({
+        data: {
+          githubId: String(githubUser.id),
+          name: githubUser.name || githubUser.login,
+          email: userEmail,
+          username: githubUser.login,
+          accessToken: tokens.accessToken,
+          refreshToken: tokens.refreshToken,
+          stripeCustomerId: customer.id,
+          picture: githubUser.avatar_url,
+          account: {
+            create: {},
           },
-        },
-        update: {
-          active: true,
         },
       });
 
-      // sendWelcomeEmail({ toMail: newUser.email!, userName: newUser.name! });
-      const session = await lucia.createSession(newUser.id, {});
-      const sessionCookie = lucia.createSessionCookie(session.id);
-      cookies().set(
-        sessionCookie.name,
-        sessionCookie.value,
-        sessionCookie.attributes
+      if (setup_action === "install") {
+        await db.provider.upsert({
+          where: { name: install?.login },
+          create: {
+            id: String(installation_id),
+            name: install.login,
+            accessToken: newAccessToken,
+            installationId: Number(installation_id),
+            picture: install.avatar_url,
+            ...(install.type === "Organization" && {
+              ownerType: OwnerTypeState.organization,
+            }),
+            user: {
+              connect: {
+                id: newUser.id,
+              },
+            },
+          },
+          update: {
+            active: true,
+          },
+        });
+
+        // sendWelcomeEmail({ toMail: newUser.email!, userName: newUser.name! });
+        const session = await lucia.createSession(newUser.id, {});
+        const sessionCookie = lucia.createSessionCookie(session.id);
+        cookies().set(
+          sessionCookie.name,
+          sessionCookie.value,
+          sessionCookie.attributes
+        );
+        return new Response(null, {
+          status: 302,
+          headers: {
+            Location: "/ok",
+          },
+        });
+      }
+
+      return Response.redirect(
+        `https://github.com/apps/issueclub/installations/new/permissions?target_id=${newUser.githubId}`
       );
+    } catch {
       return new Response(null, {
-        status: 302,
+        status: 404,
         headers: {
-          Location: "/ok",
+          Location: "/login",
         },
       });
     }
-
-    return Response.redirect(
-      `https://github.com/apps/issueclub/installations/new/permissions?target_id=${newUser.githubId}`
-    );
   } catch (e) {
     console.log(e);
     // the specific error message depends on the provider
@@ -263,10 +274,16 @@ export const GET = async (request: NextRequest) => {
       // invalid code
       return new Response(null, {
         status: 400,
+        headers: {
+          Location: "/login",
+        },
       });
     }
     return new Response(null, {
       status: 500,
+      headers: {
+        Location: "/login",
+      },
     });
   }
 };

@@ -33,7 +33,7 @@ model User {
   refreshToken            String?
   available               Boolean?                 @default(true)
   active                  Boolean?                 @default(true)
-  githubId                Int?                     @unique
+  githubId                String?                  @unique
   username                String?                  @unique
   stripeCustomerId        String?                  @unique @map("stripe_customer_id")
   stripeAccountId         String?                  @unique @map("stripe_account_id")
@@ -48,8 +48,22 @@ model User {
   stripeAccount           StripeAccount[]
   provider                Provider[]
   reviewer                Intent[]
+  account                 Account?
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @updatedAt
+}
+
+model Account {
+  id        String   @id @default(cuid())
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?  @unique
+  bio       String?
+  skills    String[]
+  balance   Float?   @default(0.0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model StripeAccount {
@@ -75,9 +89,9 @@ enum OwnerTypeState {
 }
 
 model Provider {
-  id             String          @id @unique
-  name           String?
-  installationId Int?
+  id             String          @id @default(cuid())
+  name           String?         @unique
+  installationId Int?            @unique
   active         Boolean?        @default(true)
   picture        String?
   accessToken    String?

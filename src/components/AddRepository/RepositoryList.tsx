@@ -111,7 +111,6 @@ const RepositoryList: FC<RepositoryListProps> = ({ providers, setOpen }) => {
               </SelectGroup>
               <Link
                 href="https://github.com/apps/issueclub/installations/select_target"
-                target="_blank"
                 className={cn(
                   buttonVariants({ variant: "ghost", size: "sm" }),
                   "mt-3"

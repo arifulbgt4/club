@@ -27,26 +27,26 @@ export async function POST(req: NextRequest) {
         if (action === "revoked") {
           await db.user.update({
             where: {
-              githubId: sender.id,
+              githubId: String(sender.id),
             },
             data: {
               active: false,
             },
           });
         }
-
         break;
       case "installation":
         if (action === "deleted") {
-          const org = await db.provider.findFirst({
-            where: { name: eventData.account.login },
-          });
-          await db.provider.update({
-            where: { id: org?.id, name: eventData.account.login },
-            data: {
-              active: false,
-            },
-          });
+          try {
+            await db.provider.update({
+              where: { installationId: Number(eventData?.id) },
+              data: {
+                active: false,
+              },
+            });
+          } catch (error) {
+            new Response("Provider not found", { status: 401 });
+          }
         }
         break;
       case "pull_request":
