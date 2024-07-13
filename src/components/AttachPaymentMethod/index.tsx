@@ -22,8 +22,8 @@ import Icons from "../shared/icons";
 import { PlusCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import getPaymentMethodIcon from "~/components/shared/payment-method-icons";
-
 import { cn } from "~/lib/utils";
+import Link from "next/link";
 
 const AttachPaymentMethod = ({
   onUpdate,
@@ -124,7 +124,8 @@ const AttachPaymentMethod = ({
     style: {
       base: {
         color: "#32325d",
-        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+        fontFamily:
+          'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
         fontSmoothing: "antialiased",
         fontSize: "16px",
         "::placeholder": {
@@ -154,7 +155,13 @@ const AttachPaymentMethod = ({
         <DialogHeader>
           <DialogTitle>Add a billing methode</DialogTitle>
           <DialogDescription>
-            Visa, Mastercard, American Express, Discover, Diners
+            <Link
+              href="https://docs.stripe.com/payments/cards#supported-card-brands"
+              target="_blank"
+              className=" text-blue-500 underline"
+            >
+              Supported card brands
+            </Link>
           </DialogDescription>
         </DialogHeader>
         <form className=" flex flex-1 flex-col" onSubmit={handleSubmit}>
@@ -162,7 +169,7 @@ const AttachPaymentMethod = ({
           <div className=" mb-4 flex flex-col">
             <label
               htmlFor="card-number"
-              className=" mb-1 text-sm font-semibold"
+              className=" mb-1 font-mono text-sm font-semibold tracking-wide"
             >
               Card Number
             </label>
@@ -190,7 +197,7 @@ const AttachPaymentMethod = ({
             <div className=" flex w-[60%] flex-col">
               <label
                 htmlFor="card-expiry"
-                className=" mb-1 text-sm font-semibold"
+                className=" font-mon mb-1 text-sm font-semibold tracking-wide"
               >
                 Expiration Date
               </label>
@@ -210,7 +217,10 @@ const AttachPaymentMethod = ({
               )}
             </div>
             <div className=" ml-3 flex w-[40%] flex-col">
-              <label htmlFor="card-cvc" className=" mb-1 text-sm font-semibold">
+              <label
+                htmlFor="card-cvc"
+                className=" font-mon mb-1 text-sm font-semibold tracking-wide"
+              >
                 CVC
               </label>
               <CardCvcElement

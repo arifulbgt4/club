@@ -77,9 +77,9 @@ export default async function Billing() {
                       {getPaymentMethodIcon(primary?.brand as string)()}
                     </div>
 
-                    <span className=" ml-4 font-medium">
-                      <span className=" capitalize"> {primary?.brand}</span>{" "}
-                      ending in {primary?.last4}
+                    <span className=" ml-4 font-mono text-sm tracking-wide">
+                      <span className=" mr-3 uppercase"> {primary?.brand}</span>{" "}
+                      •••• {primary?.last4}
                     </span>
                   </div>
                   <Remove id={primary?.id as string} />
@@ -101,12 +101,12 @@ export default async function Billing() {
                     className=" flex max-w-[600px] flex-col items-center justify-between border-b p-5 sm:flex-row"
                   >
                     <div className="flex items-center">
-                      <div className=" scale-150">
+                      <div className=" scale-125">
                         {getPaymentMethodIcon(c?.brand as string)()}
                       </div>{" "}
-                      <span className=" ml-4 font-medium">
-                        <span className=" capitalize"> {c?.brand}</span> ending
-                        in {c?.last4}
+                      <span className=" ml-4 font-mono text-sm tracking-wide">
+                        <span className="mr-3 uppercase"> {c?.brand}</span> ••••{" "}
+                        {c?.last4}
                       </span>
                     </div>
                     <div className="flex">
