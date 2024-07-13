@@ -1,4 +1,5 @@
 import { IntentType } from "@prisma/client";
+import { siteConfig } from "~/config/site";
 import db from "~/lib/db";
 import { redirectError } from "~/lib/utils";
 import { octokit, validateRequest } from "~/server/auth";
@@ -11,8 +12,14 @@ export async function PUT(req: Request) {
       return new Response("Unauthorized", { status: 401 });
     }
 
-    if (body?.type === IntentType.paid && body?.price < 3) {
-      return new Response("Price required minimum $3", { status: 401 });
+    if (
+      body?.type === IntentType.paid &&
+      body?.price < siteConfig().minimumAmount
+    ) {
+      return new Response(
+        `Price required minimum $${siteConfig().minimumAmount}`,
+        { status: 401 }
+      );
     }
 
     if (body?.topics?.length > 10 || !body?.topics?.length) {

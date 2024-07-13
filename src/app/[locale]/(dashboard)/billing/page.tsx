@@ -1,9 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AlertTriangleIcon, PlusCircleIcon } from "lucide-react";
 import AttachPaymentMethod from "~/components/AttachPaymentMethod";
-import { BillingForm } from "~/components/billing-form";
-import { Alert, AlertDescription } from "~/components/ui/alert";
-import { Button } from "~/components/ui/button";
 import {
   Table,
   TableBody,
@@ -22,9 +18,6 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { stripe } from "~/lib/stripe";
-import { getUserSubscriptionPlan } from "~/lib/subscription";
-import { validateRequest } from "~/server/auth";
 import { getInvoice, getPaymentMethods } from "./action";
 import getPaymentMethodIcon from "~/components/shared/payment-method-icons";
 import Remove from "./Remove";
@@ -34,17 +27,6 @@ export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
 export default async function Billing() {
-  // const subscriptionPlan = await getUserSubscriptionPlan(user?.id as string);
-
-  // // If user has a pro plan, check cancel status on Stripe.
-  // let isCanceled = false;
-  // if (subscriptionPlan.isPro && subscriptionPlan.stripeSubscriptionId) {
-  //   const stripePlan = await stripe.subscriptions.retrieve(
-  //     subscriptionPlan.stripeSubscriptionId
-  //   );
-  //   isCanceled = stripePlan.cancel_at_period_end;
-  // }
-
   const { primary, additional } = await getPaymentMethods();
   const invoice = await getInvoice();
   console.log(invoice.data);
@@ -125,33 +107,6 @@ export default async function Billing() {
       <CardFooter className=" flex-1 flex-col items-start justify-start">
         <AttachPaymentMethod />
       </CardFooter>
-      {/* <Alert>
-        <div className=" flex items-center gap-2">
-          <AlertTriangleIcon className="h-5 w-5 shrink-0" />
-          <div>
-            <AlertDescription>
-              <strong>Otask</strong> just demonstrates how to use Stripe in
-              Next.js App router. Please use test cards from{" "}
-              <a
-                href="https://stripe.com/docs/testing#cards"
-                target="_blank"
-                rel="noreferrer"
-                className="font-medium underline underline-offset-4"
-              >
-                Stripe docs
-              </a>
-              .
-            </AlertDescription>
-          </div>
-        </div>
-      </Alert>
-      <BillingForm
-        subscriptionPlan={{
-          ...subscriptionPlan,
-          isCanceled,
-        }}
-      />
-      */}
     </Card>
   );
 }

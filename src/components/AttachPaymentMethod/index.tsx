@@ -147,7 +147,7 @@ const AttachPaymentMethod = ({
   return (
     <Dialog open={open} onOpenChange={(v) => setOpen(v)}>
       <DialogTrigger asChild>
-        <Button variant="secondary">
+        <Button>
           <PlusCircleIcon className="mr-2 h-5 w-5" /> Add a billing method
         </Button>
       </DialogTrigger>

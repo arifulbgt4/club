@@ -10,6 +10,7 @@ export const siteConfig = (locale?: string) => ({
     twitter: "https://x.com/arifulbgt4",
     github: "https://github.com/arifulbgt4",
   },
+  minimumAmount: 3,
 });
 
 export type SiteConfig = typeof siteConfig;

@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ArrowLeft, Edit2 } from "lucide-react";
+import { ArrowLeft, Edit2, TriangleAlert } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -17,6 +17,8 @@ import { cn } from "~/lib/utils";
 import { IntentType, type Issue } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import SearchTopics from "~/components/SearchTopics";
+import Payment from "~/components/Payment";
+import { siteConfig } from "~/config/site";
 
 const UPDATE_STEP = 4;
 
@@ -41,6 +43,7 @@ const IssueImportModalContent = ({
     });
     const data = await response.json();
     setIssue(data?.issue);
+    setPrice(data?.issue?.intent[0]?.price ?? 0);
     setPublishType(data?.issue?.intent[0]?.type as IntentType);
     setTopics(data?.issue?.topics);
     setStep(UPDATE_STEP);
@@ -245,17 +248,29 @@ const IssueImportModalContent = ({
                 <span className="text-lg font-semibold">Open source</span>
               </div>
             ) : (
-              <div className="pointer-events-none flex cursor-pointer flex-nowrap items-center gap-2 rounded-md border bg-accent p-3">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-accent-foreground">
-                  <span className=" h-3 w-3 rounded-full bg-accent-foreground"></span>
-                </span>
-                <span className="text-lg font-semibold">Paid</span>
+              <div className="flex flex-col gap-2">
+                <div className="pointer-events-none flex cursor-pointer flex-nowrap items-center gap-2 rounded-md border bg-accent p-3">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-accent-foreground">
+                    <span className=" h-3 w-3 rounded-full bg-accent-foreground"></span>
+                  </span>
+                  <span className="text-lg font-semibold">Paid</span>
+                </div>
+                <Payment value={price} onChange={setPrice} />
               </div>
             )}
           </div>
+          <p className=" text-sm text-yellow-500">
+            <TriangleAlert className="mr-0.5 inline-block h-4 w-4" />
+            <strong className="italic">Warning: </strong> If you update the
+            payment information, all requests related to the issue will be
+            deleted, and the issue will be republished
+          </p>
 
           <Button
-            disabled={updateLoading || (publishType === "paid" && price < 3)}
+            disabled={
+              updateLoading ||
+              (publishType === "paid" && price < siteConfig().minimumAmount)
+            }
             onClick={onUpdate}
           >
             {!updateLoading ? (

@@ -2,6 +2,7 @@ import type { IntentType, Issue } from "@prisma/client";
 import { ArrowLeft, Edit2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
+import Payment from "~/components/Payment";
 import SearchTopics from "~/components/SearchTopics";
 import Icons from "~/components/shared/icons";
 import { Button } from "~/components/ui/button";
@@ -10,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
+import { siteConfig } from "~/config/site";
 import { cn } from "~/lib/utils";
 
 const UPDATE_STEP = 4;
@@ -241,17 +243,23 @@ const Update = ({
                 <span className="text-lg font-semibold">Open source</span>
               </div>
             ) : (
-              <div className="pointer-events-none flex cursor-pointer flex-nowrap items-center gap-2 rounded-md border bg-accent p-3">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-accent-foreground">
-                  <span className=" h-3 w-3 rounded-full bg-accent-foreground"></span>
-                </span>
-                <span className="text-lg font-semibold">Paid</span>
+              <div className="flex flex-col gap-2">
+                <div className="pointer-events-none flex cursor-pointer flex-nowrap items-center gap-2 rounded-md border bg-accent p-3">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-accent-foreground">
+                    <span className=" h-3 w-3 rounded-full bg-accent-foreground"></span>
+                  </span>
+                  <span className="text-lg font-semibold">Paid</span>
+                </div>
+                <Payment value={price} onChange={setPrice} />
               </div>
             )}
           </div>
 
           <Button
-            disabled={updateLoading || (publishType === "paid" && price < 3)}
+            disabled={
+              updateLoading ||
+              (publishType === "paid" && price < siteConfig().minimumAmount)
+            }
             onClick={onUpdate}
           >
             {!updateLoading ? (

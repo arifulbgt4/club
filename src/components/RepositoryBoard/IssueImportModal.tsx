@@ -27,6 +27,8 @@ import { cn } from "~/lib/utils";
 import { type IntentType, IssueState } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import SearchTopics from "../SearchTopics";
+import Payment from "../Payment";
+import { siteConfig } from "~/config/site";
 
 const PUBLISH_STEP = 4;
 
@@ -160,7 +162,6 @@ const IssueImportModalContent = ({
     debouncedFetchResults(searchQuery);
     // }
   }, [searchQuery, debouncedFetchResults]);
-
   return (
     <>
       {step === 1 && (
@@ -323,6 +324,7 @@ const IssueImportModalContent = ({
                 onClick={() => {
                   if (publishType === "paid") {
                     setPublishType("open_source");
+                    setPrice(0);
                   }
                 }}
                 className={cn(
@@ -429,17 +431,23 @@ const IssueImportModalContent = ({
                 <span className="text-lg font-semibold">Open source</span>
               </div>
             ) : (
-              <div className="pointer-events-none flex cursor-pointer flex-nowrap items-center gap-2 rounded-md border bg-accent p-3">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-accent-foreground">
-                  <span className=" h-3 w-3 rounded-full bg-accent-foreground"></span>
-                </span>
-                <span className="text-lg font-semibold">Paid</span>
+              <div className="flex flex-col gap-2">
+                <div className="pointer-events-none flex cursor-pointer flex-nowrap items-center gap-2 rounded-md border bg-accent p-3">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-accent-foreground">
+                    <span className=" h-3 w-3 rounded-full bg-accent-foreground"></span>
+                  </span>
+                  <span className="text-lg font-semibold">Paid</span>
+                </div>
+                <Payment value={price} onChange={setPrice} />
               </div>
             )}
           </div>
 
           <Button
-            disabled={publishLoading || (publishType === "paid" && price < 3)}
+            disabled={
+              publishLoading ||
+              (publishType === "paid" && price < siteConfig().minimumAmount)
+            }
             onClick={onPublish}
           >
             {!publishLoading ? (
