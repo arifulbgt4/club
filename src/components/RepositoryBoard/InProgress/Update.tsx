@@ -1,3 +1,4 @@
+import { IssueStatus } from "@prisma/client";
 import React, { useCallback, useEffect, useState } from "react";
 import Countdown from "~/components/sections/Countdown";
 import Icons from "~/components/shared/icons";
@@ -62,36 +63,44 @@ const Update = ({
         </div>
         <span>Working on this issue</span>
       </div>
-      <div className="flex flex-col gap-1">
-        <div className=" flex gap-5">
+      {issue?.status === IssueStatus.default ? (
+        <div className="flex flex-col gap-1">
+          <div className=" flex gap-5">
+            <div className="flex items-center gap-3">
+              <span className="text-sm">Started:</span>
+              <span className="font-medium">
+                {formatDate(issue?.updatedAt as Date)}
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-sm">Ending:</span>
+              <span className="font-medium">
+                {formatDate(
+                  addDays(issue?.updatedAt as Date, Number(request?.days))
+                )}
+              </span>
+            </div>
+          </div>
           <div className="flex items-center gap-3">
-            <span className="text-sm">Started:</span>
-            <span className="font-medium">
-              {formatDate(issue?.updatedAt as Date)}
+            <span className="text-sm">Remaining time:</span>
+            <span className="text-lg font-bold">
+              <Countdown
+                endDate={addDays(
+                  issue?.updatedAt as Date,
+                  Number(request?.days)
+                )}
+              />
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-sm">Ending:</span>
-            <span className="font-medium">
-              {formatDate(
-                addDays(issue?.updatedAt as Date, Number(request?.days))
-              )}
-            </span>
+            <span className="text-sm">Working period:</span>
+            <span className="font-medium">{request?.days} days</span>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="text-sm">Remaining time:</span>
-          <span className="text-lg font-bold">
-            <Countdown
-              endDate={addDays(issue?.updatedAt as Date, Number(request?.days))}
-            />
-          </span>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-sm">Working period:</span>
-          <span className="font-medium">{request?.days} days</span>
-        </div>
-      </div>
+      ) : (
+        <div className="text-yellow-500">In Queue</div>
+      )}
+
       <DialogFooter className=" !flex-col !justify-start gap-3 border-t">
         <div className="w-full">
           <em className="text-sm">
