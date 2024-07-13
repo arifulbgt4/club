@@ -1,4 +1,4 @@
-import { IssueState } from "@prisma/client";
+import { IntentType, IssueState } from "@prisma/client";
 import db from "~/lib/db";
 import { stripe } from "~/lib/stripe";
 import { validateRequest } from "~/server/auth";
@@ -14,6 +14,7 @@ export async function POST(req: Request) {
     const paidIntents = await db.intent.count({
       where: {
         active: true,
+        type: IntentType.paid,
         issue: {
           userId: user?.id,
           state: {

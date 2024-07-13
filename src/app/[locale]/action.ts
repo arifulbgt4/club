@@ -30,7 +30,7 @@ export async function getIssues(page: number = 1, topics?: string[]) {
   const intents = await db.intent.findMany({
     where: FILTER,
     orderBy: {
-      createdAt: "desc",
+      updatedAt: "desc",
     },
     take: TAKE,
     skip: (page - 1) * TAKE,

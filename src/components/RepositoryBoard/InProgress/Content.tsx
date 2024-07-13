@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 import Update from "./Update";
 import type { IssueOptions, RequestOptions } from "~/types";
-import { type Intent, IntentType } from "@prisma/client";
+import { type Intent, IntentType, IssueStatus } from "@prisma/client";
 
 const Content = ({
   intent,
@@ -25,8 +25,11 @@ const Content = ({
           <div className="flex w-full flex-col">
             <div className="mb-1 flex items-center">
               <div className="mb-0.5 flex flex-col">
-                <div className="text-xs text-muted-foreground">
-                  #{issue?.issueNumber} {" • "} in-progress{" "}
+                <div className="flex flex-nowrap items-center text-xs text-muted-foreground">
+                  #{issue?.issueNumber} {" • "}
+                  {issue?.status === IssueStatus.queue &&
+                    <span className="text-yellow-500">Queue</span> + " • "}{" "}
+                  in-progress{" "}
                   {formatDistanceToNow(new Date(issue?.updatedAt), {
                     addSuffix: true,
                     includeSeconds: true,
