@@ -2,6 +2,7 @@ import { IssueState, IssueStatus } from "@prisma/client";
 import { headers } from "next/headers";
 import { type NextRequest } from "next/server";
 import db from "~/lib/db";
+import { acceptPullRequest } from "~/lib/githubWebhooks";
 
 export async function POST(req: NextRequest) {
   // * webhooks event type
@@ -88,36 +89,7 @@ export async function POST(req: NextRequest) {
             orderBy: { updatedAt: "asc" },
           });
           if (eventData?.merged) {
-            const completedIntent = await db.intent.update({
-              where: {
-                id: intent?.id,
-              },
-              data: {
-                active: false,
-                success: true,
-                issue: {
-                  update: {
-                    state: IssueState.inactive,
-                    status: IssueStatus.default,
-                  },
-                },
-                request: {
-                  update: {
-                    user: {
-                      update: {
-                        available: true,
-                      },
-                    },
-                  },
-                },
-              },
-            });
-            await db.request.update({
-              where: { id: completedIntent?.requestId as string },
-              data: {
-                issueId: null,
-              },
-            });
+            await acceptPullRequest(intent);
           }
           if (!eventData?.merged) {
             const completedIntent = await db.intent.update({
@@ -226,6 +198,7 @@ export async function POST(req: NextRequest) {
                       },
                     },
                   },
+                  issue: true,
                 },
               },
             },
@@ -276,37 +249,7 @@ export async function POST(req: NextRequest) {
               orderBy: { updatedAt: "asc" },
             });
 
-            const completedIntent = await db.intent.update({
-              where: {
-                id: intent?.id,
-              },
-              data: {
-                active: false,
-                success: true,
-                issue: {
-                  update: {
-                    state: IssueState.inactive,
-                    status: IssueStatus.default,
-                  },
-                },
-                request: {
-                  update: {
-                    user: {
-                      update: {
-                        available: true,
-                      },
-                    },
-                  },
-                },
-              },
-            });
-
-            await db.request.update({
-              where: { id: completedIntent?.requestId as string },
-              data: {
-                issueId: null,
-              },
-            });
+            await acceptPullRequest(intent);
 
             if (!!queue?.length) {
               await db.intent.update({
