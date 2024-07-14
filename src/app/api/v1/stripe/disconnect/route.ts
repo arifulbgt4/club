@@ -5,7 +5,7 @@ import { validateRequest } from "~/server/auth";
 export async function GET() {
   try {
     const { session, user } = await validateRequest();
-    if (!session || !user?.stripeCustomerId) {
+    if (!session) {
       return new Response("Unauthorized", { status: 401 });
     }
 

@@ -213,12 +213,12 @@ export const GET = async (request: NextRequest) => {
           name: githubUser.name || githubUser.login,
           email: userEmail,
           username: githubUser.login,
-          stripeCustomerId: customer.id,
           picture: githubUser.avatar_url,
           account: {
             create: {
               accessToken: tokens.accessToken,
               refreshToken: tokens.refreshToken,
+              stripeCustomerId: customer.id,
             },
           },
         },

@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
   }
   try {
     const { session, user } = await validateRequest();
-    if (!session || !user?.stripeCustomerId) {
+    if (!session) {
       return new Response("Unauthorized", { status: 401 });
     }
     const response = await stripe.oauth.token({

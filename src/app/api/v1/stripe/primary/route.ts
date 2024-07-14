@@ -1,16 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
+import db from "~/lib/db";
 import { stripe } from "~/lib/stripe";
 import { validateRequest } from "~/server/auth";
 
 export async function GET() {
   try {
     const { session, user } = await validateRequest();
-    if (!session || !user?.stripeCustomerId) {
+    if (!session) {
       return new Response("Unauthorized", { status: 401 });
     }
+
+    const account = await db.account.findUnique({
+      where: { userId: user?.id },
+      select: { stripeCustomerId: true },
+    });
+
+    if (!account?.stripeCustomerId) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
     const customer: any = await stripe.customers.retrieve(
-      user.stripeCustomerId
+      account?.stripeCustomerId
     );
     if (!customer || !customer?.invoice_settings?.default_payment_method) {
       return NextResponse.json({ status: 301 });
@@ -33,10 +44,20 @@ export async function POST(req: Request) {
   const body = await req.json();
   try {
     const { session, user } = await validateRequest();
-    if (!session || !user?.stripeCustomerId) {
+    if (!session) {
       return new Response("Unauthorized", { status: 401 });
     }
-    await stripe.customers.update(user?.stripeCustomerId, {
+
+    const account = await db.account.findUnique({
+      where: { userId: user?.id },
+      select: { stripeCustomerId: true },
+    });
+
+    if (!account?.stripeCustomerId) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
+    await stripe.customers.update(account?.stripeCustomerId, {
       invoice_settings: {
         default_payment_method: body?.paymentMethodId,
       },

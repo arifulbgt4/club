@@ -2,7 +2,6 @@
 import { type Session, type User } from "lucia";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { TimeSpan, createDate } from "oslo";
 import { cache } from "react";
 import db from "~/lib/db";
 import { Octokit } from "octokit";
@@ -61,25 +60,6 @@ export async function logout() {
     sessionCookie.attributes
   );
   return redirect("/login");
-}
-
-export async function createEmailVerificationToken(
-  userId: string,
-  email: string
-): Promise<string> {
-  await db.emailVerificationToken.deleteMany({
-    where: {
-      userId,
-    },
-  });
-  const newToken = await db.emailVerificationToken.create({
-    data: {
-      userId,
-      email,
-      expiresAt: createDate(new TimeSpan(3, "m")),
-    },
-  });
-  return newToken.id;
 }
 
 export const octokit = cache(async () => {

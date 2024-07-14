@@ -1,15 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import db from "~/lib/db";
 import { stripe } from "~/lib/stripe";
 import { validateRequest } from "~/server/auth";
 
 export async function getPaymentMethods() {
-  const { user } = await validateRequest();
-  if (!user?.stripeCustomerId) {
+  const { user, session } = await validateRequest();
+  if (!session) {
     return {};
   }
-  const customer: any = await stripe.customers.retrieve(user.stripeCustomerId);
+  const account = await db.account.findUnique({
+    where: { userId: user?.id },
+    select: { stripeCustomerId: true },
+  });
+  const customer: any = await stripe.customers.retrieve(
+    account?.stripeCustomerId as string
+  );
   const paymentMethods = await stripe.paymentMethods.list({
-    customer: user.stripeCustomerId,
+    customer: account?.stripeCustomerId as string,
     type: "card",
   });
 
@@ -37,9 +44,16 @@ export async function getPaymentMethods() {
 }
 
 export async function getInvoice() {
-  const { user } = await validateRequest();
+  const { user, session } = await validateRequest();
+  if (!session) {
+    return {};
+  }
+  const account = await db.account.findUnique({
+    where: { userId: user?.id },
+    select: { stripeCustomerId: true },
+  });
   const invoice = await stripe.invoices.list({
-    customer: user?.stripeCustomerId,
+    customer: account?.stripeCustomerId as string,
   });
 
   return invoice;

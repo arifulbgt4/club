@@ -18,7 +18,6 @@ export const lucia = new Lucia(adapter, {
       email: attributes.email,
       picture: attributes.picture,
       username: attributes.username,
-      stripeCustomerId: attributes.stripeCustomerId,
     };
   },
 });

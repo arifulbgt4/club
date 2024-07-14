@@ -11,13 +11,19 @@ export async function POST(req: Request) {
     if (!session) {
       return new Response("Unauthorized", { status: 401 });
     }
-    let stripeCustomerId = user.stripeCustomerId;
+
+    const account = await db.account.findUnique({
+      where: { userId: user?.id },
+      select: { stripeCustomerId: true },
+    });
+
+    let stripeCustomerId = account?.stripeCustomerId;
     if (!stripeCustomerId) {
       const customer = await stripe.customers.create({
         email: user?.email,
       });
-      await db.user.update({
-        where: { id: user?.id },
+      await db.account.update({
+        where: { userId: user?.id },
         data: { stripeCustomerId: customer.id },
       });
       stripeCustomerId = customer.id;

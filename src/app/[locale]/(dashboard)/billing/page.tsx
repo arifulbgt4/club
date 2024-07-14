@@ -29,7 +29,7 @@ export const dynamic = "force-dynamic";
 export default async function Billing() {
   const { primary, additional } = await getPaymentMethods();
   const invoice = await getInvoice();
-  console.log(invoice.data);
+  // console.log(invoice.data);
   return (
     <Card className="mb-10">
       <CardHeader className="mb-5">

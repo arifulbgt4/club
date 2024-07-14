@@ -11,6 +11,15 @@ export async function POST(req: Request) {
       return new Response("Unauthorized", { status: 401 });
     }
 
+    const account = await db.account.findUnique({
+      where: { userId: user?.id },
+      select: { stripeCustomerId: true },
+    });
+
+    if (!account?.stripeCustomerId) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
     const paidIntents = await db.intent.count({
       where: {
         active: true,
@@ -30,7 +39,7 @@ export async function POST(req: Request) {
     });
 
     const initPaymentMethods = await stripe.paymentMethods.list({
-      customer: user.stripeCustomerId,
+      customer: account?.stripeCustomerId,
       type: "card",
     });
 
@@ -41,12 +50,12 @@ export async function POST(req: Request) {
     await stripe.paymentMethods.detach(body?.paymentMethodId);
 
     const paymentMethods = await stripe.paymentMethods.list({
-      customer: user.stripeCustomerId,
+      customer: account?.stripeCustomerId,
       type: "card",
     });
 
     if (!!paymentMethods?.data?.length) {
-      await stripe.customers.update(user?.stripeCustomerId, {
+      await stripe.customers.update(account?.stripeCustomerId, {
         invoice_settings: {
           default_payment_method: paymentMethods?.data[0].id,
         },

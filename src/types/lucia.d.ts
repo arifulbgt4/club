@@ -9,6 +9,5 @@ declare module "lucia" {
     email: string;
     picture: string;
     username: string;
-    stripeCustomerId: string;
   }
 }

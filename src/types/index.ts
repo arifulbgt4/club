@@ -46,18 +46,6 @@ export const settingsSchema = z.object({
 
 export type SettingsValues = z.infer<typeof settingsSchema>;
 
-export type SubscriptionPlan = {
-  name: string;
-  description: string;
-  stripePriceId: string;
-};
-
-export type UserSubscriptionPlan = SubscriptionPlan &
-  Pick<User, "stripeCustomerId" | "stripeSubscriptionId"> & {
-    stripeCurrentPeriodEnd: number;
-    isPro: boolean;
-  };
-
 export interface SendWelcomeEmailProps {
   toMail: string;
   userName: string;
