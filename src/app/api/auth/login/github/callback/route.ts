@@ -123,8 +123,12 @@ export const GET = async (request: NextRequest) => {
           id: existingUser.id,
         },
         data: {
-          accessToken: tokens.accessToken,
-          refreshToken: tokens.refreshToken,
+          account: {
+            update: {
+              accessToken: tokens.accessToken,
+              refreshToken: tokens.refreshToken,
+            },
+          },
         },
       });
       if (!existingUser.active) {
@@ -209,12 +213,13 @@ export const GET = async (request: NextRequest) => {
           name: githubUser.name || githubUser.login,
           email: userEmail,
           username: githubUser.login,
-          accessToken: tokens.accessToken,
-          refreshToken: tokens.refreshToken,
           stripeCustomerId: customer.id,
           picture: githubUser.avatar_url,
           account: {
-            create: {},
+            create: {
+              accessToken: tokens.accessToken,
+              refreshToken: tokens.refreshToken,
+            },
           },
         },
       });

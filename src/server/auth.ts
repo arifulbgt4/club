@@ -95,7 +95,10 @@ export const octokit = cache(async () => {
   if (Number(accessTokenExpires) < Date.now()) {
     return redirect("/api/auth/login/github/refresh/");
   }
-  const theUser = await db.user.findUnique({ where: { id: user?.id } });
+  const account = await db.account.findUnique({
+    where: { userId: user?.id },
+    select: { accessToken: true },
+  });
 
-  return new Octokit({ auth: theUser?.accessToken });
+  return new Octokit({ auth: account?.accessToken });
 });

@@ -29,10 +29,10 @@ model User {
   email                   String?                  @unique
   emailVerified           Boolean?                 @default(false)
   picture                 String?
-  accessToken             String?
-  refreshToken            String?
   available               Boolean?                 @default(true)
   active                  Boolean?                 @default(true)
+  bio                     String?
+  skills                  String[]
   githubId                String?                  @unique
   username                String?                  @unique
   stripeCustomerId        String?                  @unique @map("stripe_customer_id")
@@ -54,14 +54,14 @@ model User {
 }
 
 model Account {
-  id        String   @id @default(cuid())
-  user      User?    @relation(fields: [userId], references: [id])
-  userId    String?  @unique
-  bio       String?
-  skills    String[]
-  balance   Float?   @default(0.0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(cuid())
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String   @unique
+  accessToken  String?
+  refreshToken String?
+  balance      Float?   @default(0.0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@index([userId])
 }

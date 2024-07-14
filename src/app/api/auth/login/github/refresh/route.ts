@@ -11,7 +11,12 @@ export async function GET(req: Request) {
     }
     const accessTokenExpires = cookies().get("refresh")?.value || null;
 
-    const theUser = await db.user.findUnique({ where: { id: user?.id } });
+    const account = await db.account.findUnique({
+      where: { userId: user?.id },
+      select: {
+        refreshToken: true,
+      },
+    });
 
     if (Number(accessTokenExpires) < Date.now()) {
       const access_token = await fetch(
@@ -26,14 +31,14 @@ export async function GET(req: Request) {
             client_id: process.env.GITHUB_CLIENT_ID,
             client_secret: process.env.GITHUB_CLIENT_SECRET,
             grant_type: "refresh_token",
-            refresh_token: theUser?.refreshToken,
+            refresh_token: account?.refreshToken,
           }),
         }
       );
       const res_token = await access_token.json();
       const expiresTime = Date.now() + res_token?.expires_in * 1000;
-      await db.user.update({
-        where: { id: user?.id },
+      await db.account.update({
+        where: { userId: user?.id },
         data: {
           accessToken: res_token?.access_token,
           refreshToken: res_token?.refresh_token,
