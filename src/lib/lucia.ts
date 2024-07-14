@@ -18,6 +18,8 @@ export const lucia = new Lucia(adapter, {
       email: attributes.email,
       picture: attributes.picture,
       username: attributes.username,
+      active: attributes.active,
+      available: attributes.available,
     };
   },
 });

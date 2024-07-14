@@ -30,7 +30,7 @@ export const validateRequest = cache(
           sessionCookie.attributes
         );
       }
-      if (!result.session) {
+      if (!result.session || !result.user.active) {
         const sessionCookie = lucia.createBlankSessionCookie();
         cookies().set(
           sessionCookie.name,
@@ -72,7 +72,7 @@ export const octokit = cache(async () => {
     };
   }
 
-  if (Number(accessTokenExpires) < Date.now()) {
+  if (Number(accessTokenExpires) < Date.now() || !user?.active) {
     return redirect("/api/auth/login/github/refresh/");
   }
   const account = await db.account.findUnique({

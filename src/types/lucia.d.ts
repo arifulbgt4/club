@@ -9,5 +9,7 @@ declare module "lucia" {
     email: string;
     picture: string;
     username: string;
+    available: boolean;
+    active: boolean;
   }
 }
