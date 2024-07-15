@@ -54,7 +54,7 @@ const IssuePage = async ({ params: { issueId } }: IssuePageProps) => {
                 key={com?.id}
                 imgSrc={com?.user?.avatar_url as string}
                 username={com?.user?.login as string}
-                body={com?.body}
+                body={com?.body_html}
                 updatedAt={com?.updated_at}
                 createdAt={com?.created_at}
                 authorAssociation={com?.author_association}

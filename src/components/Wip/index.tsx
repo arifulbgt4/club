@@ -1,13 +1,13 @@
 "use server";
 import { type WipProps } from "./Types";
 import { getInProgress } from "./action";
-import Description from "~/app/[locale]/issue/[issueId]/description";
 import { formatDistanceToNow } from "date-fns";
 import IssueComment from "../IssueComment";
 import Submit from "./Submit";
 import { Suspense } from "react";
 import EmptyState from "../shared/empty-state";
 import { IssueState } from "@prisma/client";
+import Markdown from "../sections/Markdown";
 
 async function Wip({}: WipProps) {
   const data = await getInProgress();
@@ -37,7 +37,10 @@ async function Wip({}: WipProps) {
       <div className="my-5 flex">
         <div className=" mr-9 flex w-[70%] flex-col">
           <div className="mb-6 flex flex-auto">
-            <Description body={issue?.body as string} />
+            <Markdown
+              className="rounded-md border p-4"
+              body={issue?.body_html}
+            />
           </div>
           <div className="flex flex-col">
             {!!issue?.comments && (
@@ -48,7 +51,7 @@ async function Wip({}: WipProps) {
                 key={com?.id}
                 imgSrc={com?.user?.avatar_url as string}
                 username={com?.user?.login as string}
-                body={com?.body}
+                body={com?.body_html}
                 updatedAt={com?.updated_at}
                 createdAt={com?.created_at}
                 authorAssociation={com?.author_association}

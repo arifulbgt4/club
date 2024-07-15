@@ -45,6 +45,7 @@ export async function getInProgress() {
       issue_number: Number(inprogressIntent?.issue?.issueNumber),
       headers: {
         authorization: `token ${provider?.accessToken}`,
+        accept: "application/vnd.github.html+json",
       },
     }
   );
@@ -57,6 +58,7 @@ export async function getInProgress() {
       issue_number: Number(inprogressIntent?.issue?.issueNumber),
       headers: {
         authorization: `token ${provider?.accessToken}`,
+        accept: "application/vnd.github.html+json",
       },
     }
   );
