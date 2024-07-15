@@ -83,27 +83,29 @@ export async function POST(req: Request) {
               (v) => v.user?.username === e?.login
             );
 
-            let findUser = await db.user.findUnique({
-              where: { username: e?.login },
+            const gitUser = await octo.request("GET /users/{username}", {
+              username: e?.login,
             });
 
-            if (!findUser) {
-              const gitUser = await octo.request("GET /users/{username}", {
-                username: e?.login,
-              });
-              findUser = await db.user.create({
-                data: {
-                  name: gitUser?.data?.name ?? gitUser?.data?.login,
-                  username: gitUser?.data?.login,
-                  picture: gitUser?.data?.avatar_url,
-                  githubId: String(gitUser?.data?.id),
-                  email: gitUser?.data?.email ?? null,
-                  bio: gitUser?.data?.bio ?? null,
-                  active: false,
-                  available: false,
-                },
-              });
-            }
+            const findUser = await db.user.upsert({
+              where: { githubId: e?.id },
+              create: {
+                name: gitUser?.data?.name ?? gitUser?.data?.login,
+                username: gitUser?.data?.login,
+                picture: gitUser?.data?.avatar_url,
+                githubId: String(gitUser?.data?.id),
+                email: gitUser?.data?.email ?? null,
+                bio: gitUser?.data?.bio ?? null,
+                active: false,
+                available: false,
+              },
+              update: {
+                name: gitUser?.data?.name ?? gitUser?.data?.login,
+                username: gitUser?.data?.login,
+                picture: gitUser?.data?.avatar_url,
+                bio: gitUser?.data?.bio ?? null,
+              },
+            });
 
             await db.collaborate.upsert({
               where: {
