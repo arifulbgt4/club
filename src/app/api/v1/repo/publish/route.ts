@@ -88,7 +88,7 @@ export async function POST(req: Request) {
             });
 
             const findUser = await db.user.upsert({
-              where: { githubId: e?.id },
+              where: { githubId: String(e?.id) },
               create: {
                 name: gitUser?.data?.name ?? gitUser?.data?.login,
                 username: gitUser?.data?.login,
@@ -98,6 +98,10 @@ export async function POST(req: Request) {
                 bio: gitUser?.data?.bio ?? null,
                 active: false,
                 available: false,
+                inactive: true,
+                account: {
+                  create: {},
+                },
               },
               update: {
                 name: gitUser?.data?.name ?? gitUser?.data?.login,

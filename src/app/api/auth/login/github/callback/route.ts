@@ -94,6 +94,13 @@ export const GET = async (request: NextRequest) => {
       },
     });
 
+    const inactiveUser = await db.user.findUnique({
+      where: {
+        githubId: String(githubUser.id),
+        inactive: true,
+      },
+    });
+
     if (setup_action === "install") {
       //** App installation */
       const installation = await app.octokit.request(
@@ -117,12 +124,13 @@ export const GET = async (request: NextRequest) => {
       newAccessToken = accessToken.data.token;
     }
 
-    if (existingUser) {
+    if (existingUser && !inactiveUser) {
       await db.user.update({
         where: {
           id: existingUser.id,
         },
         data: {
+          active: true,
           name: githubUser.name || githubUser.login,
           username: githubUser.login,
           picture: githubUser.avatar_url,
@@ -134,16 +142,6 @@ export const GET = async (request: NextRequest) => {
           },
         },
       });
-      if (!existingUser.active) {
-        await db.user.update({
-          where: {
-            id: existingUser.id,
-          },
-          data: {
-            active: true,
-          },
-        });
-      }
 
       if (
         setup_action !== "install" &&
@@ -210,8 +208,11 @@ export const GET = async (request: NextRequest) => {
       email: userEmail,
     });
     try {
-      const newUser = await db.user.create({
-        data: {
+      const newUser = await db.user.upsert({
+        where: {
+          id: inactiveUser?.id ?? "",
+        },
+        create: {
           githubId: String(githubUser.id),
           name: githubUser.name || githubUser.login,
           email: userEmail,
@@ -224,6 +225,22 @@ export const GET = async (request: NextRequest) => {
               stripeCustomerId: customer.id,
             },
           },
+        },
+        update: {
+          name: githubUser.name || githubUser.login,
+          email: userEmail,
+          username: githubUser.login,
+          picture: githubUser.avatar_url,
+          account: {
+            update: {
+              accessToken: tokens.accessToken,
+              refreshToken: tokens.refreshToken,
+              stripeCustomerId: customer.id,
+            },
+          },
+          inactive: false,
+          active: true,
+          available: true,
         },
       });
 

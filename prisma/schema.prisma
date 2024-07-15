@@ -26,6 +26,7 @@ model User {
   skills        String[]
   githubId      String?         @unique
   username      String?         @unique
+  inactive      Boolean?        @default(false)
   sessions      Session[]
   repository    Repository[]
   request       Request[]
