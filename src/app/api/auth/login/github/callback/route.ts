@@ -123,6 +123,9 @@ export const GET = async (request: NextRequest) => {
           id: existingUser.id,
         },
         data: {
+          name: githubUser.name || githubUser.login,
+          username: githubUser.login,
+          picture: githubUser.avatar_url,
           account: {
             update: {
               accessToken: tokens.accessToken,
