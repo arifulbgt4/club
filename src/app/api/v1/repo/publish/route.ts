@@ -55,62 +55,61 @@ export async function POST(req: Request) {
       },
     });
 
-    if (pub?.private) {
-      const collaborators = await octo.request(
-        "GET /repos/{owner}/{repo}/collaborators",
-        {
-          owner: repo?.data?.owner?.login,
-          repo: repo?.data?.name,
-        }
-      );
+    const collaborators = await octo.request(
+      "GET /repos/{owner}/{repo}/collaborators",
+      {
+        owner: repo?.data?.owner?.login,
+        repo: repo?.data?.name,
+      }
+    );
 
-      if (!!collaborators?.data?.length) {
-        const repoCollaborators = await db.collaborate.findMany({
-          where: { repositoryId: pub?.id },
-          include: {
-            user: {
-              select: {
-                id: true,
-                username: true,
-              },
+    if (!!collaborators?.data?.length) {
+      const repoCollaborators = await db.collaborate.findMany({
+        where: { repositoryId: pub?.id },
+        include: {
+          user: {
+            select: {
+              id: true,
+              username: true,
             },
           },
-        });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        collaborators?.data?.forEach(async (e: any) => {
-          if (e?.role_name !== "admin") {
-            const contriId = repoCollaborators.find(
-              (v) => v.user?.username === e?.login
-            );
+        },
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      collaborators?.data?.forEach(async (e: any) => {
+        if (e?.role_name !== "admin") {
+          const contriId = repoCollaborators.find(
+            (v) => v.user?.username === e?.login
+          );
 
-            const gitUser = await octo.request("GET /users/{username}", {
-              username: e?.login,
-            });
+          const gitUser = await octo.request("GET /users/{username}", {
+            username: e?.login,
+          });
 
-            const findUser = await db.user.upsert({
-              where: { githubId: String(e?.id) },
-              create: {
-                name: gitUser?.data?.name ?? gitUser?.data?.login,
-                username: gitUser?.data?.login,
-                picture: gitUser?.data?.avatar_url,
-                githubId: String(gitUser?.data?.id),
-                email: gitUser?.data?.email ?? null,
-                bio: gitUser?.data?.bio ?? null,
-                active: false,
-                available: false,
-                inactive: true,
-                account: {
-                  create: {},
-                },
+          const findUser = await db.user.upsert({
+            where: { githubId: String(e?.id) },
+            create: {
+              name: gitUser?.data?.name ?? gitUser?.data?.login,
+              username: gitUser?.data?.login,
+              picture: gitUser?.data?.avatar_url,
+              githubId: String(gitUser?.data?.id),
+              email: gitUser?.data?.email ?? null,
+              bio: gitUser?.data?.bio ?? null,
+              active: false,
+              available: false,
+              inactive: true,
+              account: {
+                create: {},
               },
-              update: {
-                name: gitUser?.data?.name ?? gitUser?.data?.login,
-                username: gitUser?.data?.login,
-                picture: gitUser?.data?.avatar_url,
-                bio: gitUser?.data?.bio ?? null,
-              },
-            });
-
+            },
+            update: {
+              name: gitUser?.data?.name ?? gitUser?.data?.login,
+              username: gitUser?.data?.login,
+              picture: gitUser?.data?.avatar_url,
+              bio: gitUser?.data?.bio ?? null,
+            },
+          });
+          if (pub?.private) {
             await db.collaborate.upsert({
               where: {
                 id: contriId?.id ?? "",
@@ -135,9 +134,10 @@ export async function POST(req: Request) {
               },
             });
           }
-        });
-      }
+        }
+      });
     }
+
     return new Response(JSON.stringify(pub?.id), { status: 200 });
   } catch (error) {
     redirectError(error);
