@@ -34,6 +34,7 @@ model User {
   provider      Provider[]
   reviewer      Intent[]
   account       Account?
+  collaborate   Collaborate[]
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
 }
@@ -90,22 +91,37 @@ model Provider {
 }
 
 model Repository {
-  id         String    @id @unique
-  name       String?
-  fullName   String?
-  language   String?
-  private    Boolean?
-  active     Boolean?  @default(true)
-  topics     String[]
-  user       User?     @relation(fields: [userId], references: [id])
-  userId     String?
-  issue      Issue[]
-  provider   Provider? @relation(fields: [providerId], references: [id])
-  providerId String?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id          String        @id @unique
+  name        String?
+  fullName    String?
+  language    String?
+  private     Boolean?
+  active      Boolean?      @default(true)
+  topics      String[]
+  user        User?         @relation(fields: [userId], references: [id])
+  userId      String?
+  issue       Issue[]
+  provider    Provider?     @relation(fields: [providerId], references: [id])
+  providerId  String?
+  collaborate Collaborate[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
   @@index([userId, providerId])
+}
+
+model Collaborate {
+  id           String      @id @default(cuid())
+  repository   Repository? @relation(fields: [repositoryId], references: [id])
+  repositoryId String?
+  active       Boolean     @default(true)
+  accept       Boolean     @default(false)
+  user         User?       @relation(fields: [userId], references: [id])
+  userId       String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@index([repositoryId, userId])
 }
 
 enum IssueState {
