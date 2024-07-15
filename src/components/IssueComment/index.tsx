@@ -3,7 +3,7 @@ import { type FC } from "react";
 import { type IssueCommentProps } from "./Types";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { formatDistanceToNow } from "date-fns";
-import MarkdownPreview from "@uiw/react-markdown-preview";
+import Markdown from "../sections/Markdown";
 
 const IssueComment: FC<IssueCommentProps> = ({
   imgSrc,
@@ -39,7 +39,7 @@ const IssueComment: FC<IssueCommentProps> = ({
             </span>
           )}
         </div>
-        <MarkdownPreview className=" rounded p-3" source={body} />
+        <Markdown className="p-3" body={body} />
       </div>
     </div>
   );

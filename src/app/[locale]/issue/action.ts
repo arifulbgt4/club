@@ -27,6 +27,7 @@ export async function getAnIssue(id: string) {
       issue_number: Number(dbIssue?.issueNumber),
       headers: {
         authorization: `token ${provider?.accessToken}`,
+        accept: "application/vnd.github.html+json",
       },
     }
   );

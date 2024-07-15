@@ -66,6 +66,26 @@
 
     --ring: 217.2 32.6% 17.5%;
   }
+  .dark .prose {
+    --tw-prose-body: #d1d5db;
+    --tw-prose-headings: #fff;
+    --tw-prose-lead: #9ca3af;
+    --tw-prose-links: #fff;
+    --tw-prose-bold: #fff;
+    --tw-prose-counters: #9ca3af;
+    --tw-prose-bullets: #4b5563;
+    --tw-prose-hr: #374151;
+    --tw-prose-quotes: #f3f4f6;
+    --tw-prose-quote-borders: #374151;
+    --tw-prose-captions: #9ca3af;
+    --tw-prose-kbd: #fff;
+    --tw-prose-kbd-shadows: 255 255 255;
+    --tw-prose-code: #fff;
+    --tw-prose-pre-code: #d1d5db;
+    --tw-prose-pre-bg: rgb(0 0 0 / 50%);
+    --tw-prose-th-borders: #4b5563;
+    --tw-prose-td-borders: #374151;
+  }
   .liting {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;

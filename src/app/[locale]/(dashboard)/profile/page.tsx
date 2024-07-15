@@ -1,8 +1,8 @@
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
 import { octokit, validateRequest } from "~/server/auth";
-import Readme from "./Readme";
 import { Button } from "~/components/ui/button";
+import Markdown from "~/components/sections/Markdown";
 
 const ProfilePage = async () => {
   const { user } = await validateRequest();
@@ -17,7 +17,7 @@ const ProfilePage = async () => {
         owner: user?.username as string,
         repo: user?.username as string,
         headers: {
-          accept: "application/vnd.github.raw+json",
+          accept: "application/vnd.github.html+json",
         },
       });
       return res?.data;
@@ -50,7 +50,7 @@ const ProfilePage = async () => {
 
       <div className="mt-3">
         {readMe ? (
-          <Readme source={String(readMe)} />
+          <Markdown body={readMe} />
         ) : (
           <div className="flex flex-col">
             <span className=" my-3 text-sm">

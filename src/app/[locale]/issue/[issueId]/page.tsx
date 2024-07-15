@@ -5,10 +5,10 @@ import { formatDistanceToNow } from "date-fns";
 import { getAnIssue } from "../action";
 import IssueComment from "~/components/IssueComment";
 import Apply from "~/components/Apply";
-import Description from "./description";
 import { type IntentType } from "@prisma/client";
 import SignUpPromotion from "~/components/SignUpPromotion";
 import { hexToRgba } from "~/lib/utils";
+import Markdown from "~/components/sections/Markdown";
 
 interface IssuePageProps {
   params: { issueId: string };
@@ -40,7 +40,10 @@ const IssuePage = async ({ params: { issueId } }: IssuePageProps) => {
       <div className="my-5 flex">
         <div className=" mr-9 flex w-[75%] flex-col">
           <div className="mb-6 flex flex-auto">
-            <Description body={issue?.body as string} />
+            <Markdown
+              className="rounded-md border p-4"
+              body={issue?.body_html as string}
+            />
           </div>
           <div className="flex flex-col">
             {!!issue?.comments && (
