@@ -1,6 +1,8 @@
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import { cookies } from "next/headers";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 import { cn } from "~/lib/utils";
 import Cookies from "~/components/Cookies";
 import "./globals.css";
@@ -33,6 +35,8 @@ export default function RootLayout({
       >
         {children}
         <Cookies />
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
