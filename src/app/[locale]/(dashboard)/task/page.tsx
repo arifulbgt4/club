@@ -17,44 +17,47 @@ async function TaskPage({
 }) {
   const total = await getCounts();
   return (
-    <Tabs defaultValue={searchParams?.t || TASK_TABS.wip}>
-      <Triggers total={total} />
-      <div>
-        <TabsContent value={TASK_TABS.wip}>
-          <Wip />
-        </TabsContent>
-        <TabsContent value={TASK_TABS.queue}>
-          <ReAssigned
-            pagination={Number(searchParams?.page || 1)}
-            total={total?.reassigned as number}
-          />
-        </TabsContent>
-        <TabsContent value={TASK_TABS.applyed}>
-          <PRequests
-            pagination={Number(searchParams?.page || 1)}
-            total={total?.requests as number}
-          />
-        </TabsContent>
-        <TabsContent value={TASK_TABS.str}>
-          <Str
-            pagination={Number(searchParams?.page || 1)}
-            total={total?.inreview as number}
-          />
-        </TabsContent>
-        <TabsContent value={TASK_TABS.completed}>
-          <Completed
-            pagination={Number(searchParams?.page || 1)}
-            total={total?.completed as number}
-          />
-        </TabsContent>
-        <TabsContent value={TASK_TABS.failed}>
-          <Failed
-            pagination={Number(searchParams?.page || 1)}
-            total={total?.failed as number}
-          />
-        </TabsContent>
-      </div>
-    </Tabs>
+    <div className=" mb-10 flex flex-col">
+      {/* <span className=" mb-4 text-xl">Manage your tasks</span> */}
+      <Tabs defaultValue={searchParams?.t || TASK_TABS.wip}>
+        <Triggers total={total} />
+        <>
+          <TabsContent value={TASK_TABS.wip}>
+            <Wip />
+          </TabsContent>
+          <TabsContent value={TASK_TABS.queue}>
+            <ReAssigned
+              pagination={Number(searchParams?.page || 1)}
+              total={total?.reassigned as number}
+            />
+          </TabsContent>
+          <TabsContent value={TASK_TABS.applyed}>
+            <PRequests
+              pagination={Number(searchParams?.page || 1)}
+              total={total?.requests as number}
+            />
+          </TabsContent>
+          <TabsContent value={TASK_TABS.str}>
+            <Str
+              pagination={Number(searchParams?.page || 1)}
+              total={total?.inreview as number}
+            />
+          </TabsContent>
+          <TabsContent value={TASK_TABS.completed}>
+            <Completed
+              pagination={Number(searchParams?.page || 1)}
+              total={total?.completed as number}
+            />
+          </TabsContent>
+          <TabsContent value={TASK_TABS.failed}>
+            <Failed
+              pagination={Number(searchParams?.page || 1)}
+              total={total?.failed as number}
+            />
+          </TabsContent>
+        </>
+      </Tabs>
+    </div>
   );
 }
 
