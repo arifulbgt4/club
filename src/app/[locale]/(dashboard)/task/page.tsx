@@ -5,10 +5,10 @@ import Str from "~/components/Str";
 import PRequests from "~/components/PRequests";
 import Completed from "~/components/Completed";
 import Failed from "~/components/Failed";
-import { getCounts } from "./action";
-import Triggers from "./Triggers";
 import { TASK_TABS } from "~/types";
 import ReAssigned from "~/components/ReAssigned";
+import Triggers from "./Triggers";
+import { getCounts } from "./action";
 
 async function TaskPage({
   searchParams,

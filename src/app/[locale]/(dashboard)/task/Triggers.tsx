@@ -1,6 +1,6 @@
 "use client";
-import { useRouter } from "next/navigation";
 import { type FC } from "react";
+import { useRouter } from "next/navigation";
 import { Badge } from "~/components/ui/badge";
 import { TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { cn } from "~/lib/utils";
