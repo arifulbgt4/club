@@ -1,6 +1,9 @@
 "use client";
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState, useEffect, useCallback } from "react";
+import { useForm } from "react-hook-form";
+import debounce from "lodash/debounce";
 import {
   ArrowLeft,
   CircleDot,
@@ -9,6 +12,8 @@ import {
   Search,
   StepForward,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { type IntentType, IssueState } from "@prisma/client";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -18,17 +23,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
-import React, { useState, useEffect, useCallback } from "react";
-import { useForm } from "react-hook-form";
-import debounce from "lodash/debounce";
+
 import { Input } from "~/components/ui/input";
 import Icons from "~/components/shared/icons";
 import { cn, formatDate } from "~/lib/utils";
-import { type IntentType, IssueState } from "@prisma/client";
-import { useRouter } from "next/navigation";
+import { siteConfig } from "~/config/site";
 import SearchTopics from "../SearchTopics";
 import Payment from "../Payment";
-import { siteConfig } from "~/config/site";
 
 const PUBLISH_STEP = 4;
 
