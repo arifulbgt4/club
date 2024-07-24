@@ -1,9 +1,9 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type User } from "lucia";
 import { Loader2 } from "lucide-react";
-import dynamic from "next/dynamic";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";

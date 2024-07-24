@@ -5,7 +5,7 @@ import Icons from "~/components/shared/icons";
 import { Button } from "~/components/ui/button";
 import { toast } from "~/components/ui/use-toast";
 
-const Remove = ({ id }: { id: string }) => {
+export default function Remove({ id }: { id: string }) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   async function removeMethod() {
@@ -42,6 +42,4 @@ const Remove = ({ id }: { id: string }) => {
       {loading ? <Icons.spinner className="animate-spin" /> : "Remove"}
     </Button>
   );
-};
-
-export default Remove;
+}

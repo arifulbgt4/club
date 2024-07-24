@@ -1,10 +1,10 @@
 "use client";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Icons from "~/components/shared/icons";
 import { Button } from "~/components/ui/button";
 
-const SetPrimary = ({ id }: { id: string }) => {
+export default function SetPrimary({ id }: { id: string }) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   async function removeMethod() {
@@ -29,6 +29,4 @@ const SetPrimary = ({ id }: { id: string }) => {
       {loading ? <Icons.spinner className="animate-spin" /> : "Set as primary"}
     </Button>
   );
-};
-
-export default SetPrimary;
+}

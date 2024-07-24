@@ -6,14 +6,14 @@ import { getImageKeyFromUrl, isOurCdnUrl } from "~/lib/utils";
 import { utapi } from "~/server/utapi";
 import { type payload } from "~/types";
 
-export const updateUser = async (id: string, payload: payload) => {
+export async function updateUser(id: string, payload: payload) {
   await db.user.update({
     where: { id },
     data: { ...payload },
   });
 
   revalidatePath("/settings");
-};
+}
 
 export async function removeUserOldImageFromCDN(
   id: string,
