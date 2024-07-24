@@ -1,16 +1,16 @@
 "use server";
+import { validateRequest } from "~/server/auth";
 import PublishedIssueItem from "~/components/PublishedIssueItem/PublishedIssueItem";
 import { getIssues } from "./action";
 import Pagination from "~/components/sections/pagination";
 import RequestedCard from "~/components/RequestedCard";
-import { validateRequest } from "~/server/auth";
 import InReviewCard from "~/components/InReviewCard";
 import SignUpPromotion from "~/components/SignUpPromotion";
 import RequestChangesCard from "~/components/RequestChangesCard";
 import EmptyState from "~/components/shared/empty-state";
 import SearchByTopics from "~/components/SearchByTopics";
 
-export default async function Home({
+export default async function HomePage({
   searchParams,
 }: {
   searchParams: { page: string; topics: string };

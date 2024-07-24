@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import Icons from "~/components/shared/icons";
 
-const RefreshPage = () => {
+export default function RefreshPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const location = searchParams.get("l");
@@ -21,6 +21,4 @@ const RefreshPage = () => {
       <Icons.spinner className=" h-9 w-9 animate-spin" />
     </div>
   );
-};
-
-export default RefreshPage;
+}
