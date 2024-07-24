@@ -3,6 +3,7 @@ import AddRepository from "~/components/AddRepository";
 import { getProviders, getRepository } from "./action";
 import EmptyState from "~/components/shared/empty-state";
 import RepoListItem from "~/components/RepoListItem";
+import { Button } from "~/components/ui/button";
 
 const RepositoryLayout = async ({
   children,
@@ -13,8 +14,11 @@ const RepositoryLayout = async ({
   const repos = await getRepository();
   return (
     <div className=" flex flex-col gap-2">
-      <div className="flex flex-nowrap gap-9">
-        <div className="flex w-[300px] flex-col rounded-tr-md border-r">
+      <div className="flex flex-col flex-nowrap gap-4 lg:flex-row lg:gap-9">
+        <div className=" lg:hidden">
+          <Button>Reopsitory</Button>
+        </div>
+        <div className="absolute -left-[300px] flex flex-col rounded-tr-md border-r lg:relative lg:left-0 lg:w-[300px]">
           <AddRepository providers={providers} />
           {/* // TODO: should add a filter by provider  */}
           <span className="mt-1 p-2 text-sm font-medium text-muted-foreground">
@@ -34,7 +38,7 @@ const RepositoryLayout = async ({
             )}
           </ul>
         </div>
-        <div className="w-[calc(100%-300px)]">{children}</div>
+        <div className="w-full lg:w-[calc(100%-300px)]">{children}</div>
       </div>
     </div>
   );

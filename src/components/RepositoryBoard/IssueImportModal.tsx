@@ -472,7 +472,10 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="lg" variant="ghost" className="text-lg text-green-500">
+        <Button
+          variant="ghost"
+          className=" min-w-[170px] text-green-500 xl:text-lg"
+        >
           <PlusCircle className="mr-2 h-5 w-5" />
           Publish an issue
         </Button>

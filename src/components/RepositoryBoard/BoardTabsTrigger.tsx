@@ -35,10 +35,10 @@ const BoardTabsTrigger = ({
   const router = useRouter();
   const pathname = usePathname();
   return (
-    <TabsList className=" h-auto">
+    <TabsList className="flex h-auto flex-wrap items-center justify-start space-y-1">
       <TabsTrigger
         value={TAB_VALUE.published}
-        className="px-2.5 text-base"
+        className="px-2.5  xl:text-base"
         onClick={() => {
           if (b !== undefined || b !== TAB_VALUE.published) {
             router.push(pathname);
@@ -50,7 +50,7 @@ const BoardTabsTrigger = ({
       </TabsTrigger>
       <TabsTrigger
         value={TAB_VALUE.inprogress}
-        className="px-2.5 text-base"
+        className="px-2.5 xl:text-base"
         onClick={() => {
           if (b !== TAB_VALUE.inprogress) {
             router.push(pathname + "?b=" + TAB_VALUE.inprogress);
@@ -62,7 +62,7 @@ const BoardTabsTrigger = ({
       </TabsTrigger>
       <TabsTrigger
         value={TAB_VALUE.inreview}
-        className="px-2.5 text-base"
+        className="px-2.5 xl:text-base"
         onClick={() => {
           if (b !== TAB_VALUE.inreview) {
             router.push(pathname + "?b=" + TAB_VALUE.inreview);
@@ -74,7 +74,7 @@ const BoardTabsTrigger = ({
       </TabsTrigger>
       <TabsTrigger
         value={TAB_VALUE.done}
-        className="px-2.5 text-base"
+        className="px-2.5 xl:text-base"
         onClick={() => {
           if (b !== TAB_VALUE.done) {
             router.push(pathname + "?b=" + TAB_VALUE.done);
@@ -86,7 +86,7 @@ const BoardTabsTrigger = ({
       </TabsTrigger>
       <TabsTrigger
         value={TAB_VALUE.draft}
-        className="px-2.5 text-base"
+        className="px-2.5 xl:text-base"
         onClick={() => {
           if (b !== TAB_VALUE.draft) {
             router.push(pathname + "?b=" + TAB_VALUE.draft);
