@@ -5,7 +5,9 @@ import { validateRequest } from "~/server/auth";
 
 export default async function Login() {
   const { session } = await validateRequest();
+
   if (session) redirect("/");
+
   return (
     <section>
       <div className="container ">
