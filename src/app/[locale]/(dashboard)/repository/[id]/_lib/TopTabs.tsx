@@ -10,7 +10,7 @@ import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import { Button } from "~/components/ui/button";
 
-const TopTabs = ({ t }: { t: string }) => {
+export default function TopTabs({ t }: { t: string }) {
   const router = useRouter();
   const pathname = usePathname();
   return (
@@ -54,6 +54,4 @@ const TopTabs = ({ t }: { t: string }) => {
       </TooltipProvider>
     </div>
   );
-};
-
-export default TopTabs;
+}

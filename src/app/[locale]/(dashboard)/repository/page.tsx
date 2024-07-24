@@ -3,7 +3,7 @@ import EmptyState from "~/components/shared/empty-state";
 import AddRepository from "~/components/AddRepository";
 import { getProviders } from "./action";
 
-const RepositoryPage = async () => {
+export default async function RepositoryPage() {
   const providers = await getProviders();
   return (
     <div className="flex min-h-full min-w-full flex-1 pb-10">
@@ -18,6 +18,4 @@ const RepositoryPage = async () => {
       </EmptyState>
     </div>
   );
-};
-
-export default RepositoryPage;
+}

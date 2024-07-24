@@ -12,13 +12,13 @@ import TopTabs from "./_lib/TopTabs";
 import RepositoryBoard from "~/components/RepositoryBoard";
 import EmptyState from "~/components/shared/empty-state";
 
-const ARepositoryPage = async ({
+export default async function ARepositoryPage({
   params: { id },
   searchParams: { t, b, page },
 }: {
   params: { id: string };
   searchParams: { t: string; page: string; b: string };
-}) => {
+}) {
   const data = await getRepositoryByID(id);
   if (!data) return <EmptyState title="Repository is not found" />;
   const { dbRepo, gitRepo } = data;
@@ -72,6 +72,4 @@ const ARepositoryPage = async ({
       </div>
     </div>
   );
-};
-
-export default ARepositoryPage;
+}

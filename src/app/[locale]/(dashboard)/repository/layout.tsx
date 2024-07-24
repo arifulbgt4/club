@@ -1,17 +1,17 @@
-import React from "react";
 import AddRepository from "~/components/AddRepository";
-import { getProviders, getRepository } from "./action";
 import EmptyState from "~/components/shared/empty-state";
 import RepoListItem from "~/components/RepoListItem";
 import { Button } from "~/components/ui/button";
+import { getProviders, getRepository } from "./action";
 
-const RepositoryLayout = async ({
+export default async function RepositoryLayout({
   children,
 }: {
   children: React.ReactNode;
-}) => {
+}) {
   const providers = await getProviders();
   const repos = await getRepository();
+
   return (
     <div className=" flex flex-col gap-2">
       <div className="flex flex-col flex-nowrap gap-4 lg:flex-row lg:gap-9">
@@ -42,6 +42,4 @@ const RepositoryLayout = async ({
       </div>
     </div>
   );
-};
-
-export default RepositoryLayout;
+}
