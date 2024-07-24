@@ -1,6 +1,6 @@
-import { type Change, changes } from "content";
-import dayjs from "dayjs";
 import { type Metadata } from "next";
+import dayjs from "dayjs";
+import { type Change, changes } from "content";
 
 function ChangeCard(change: Change) {
   return (

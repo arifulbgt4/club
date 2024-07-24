@@ -1,8 +1,8 @@
-import { type IssueOptions } from "~/types";
+import { IssueState } from "@prisma/client";
+import { validateRequest } from "~/server/auth";
 import db from "~/lib/db";
 import { app } from "~/lib/octokit";
-import { validateRequest } from "~/server/auth";
-import { IssueState } from "@prisma/client";
+import { type IssueOptions } from "~/types";
 
 export async function getAnIssue(id: string) {
   const { session, user } = await validateRequest();
@@ -19,6 +19,7 @@ export async function getAnIssue(id: string) {
   const octo = await app.getInstallationOctokit(
     Number(provider?.installationId)
   );
+
   const issue = await octo.request(
     "GET /repos/{owner}/{repo}/issues/{issue_number}",
     {

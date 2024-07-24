@@ -1,24 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { formatDistanceToNow } from "date-fns";
-
-import { getAnIssue } from "../action";
+import { type IntentType } from "@prisma/client";
 import IssueComment from "~/components/IssueComment";
 import Apply from "~/components/Apply";
-import { type IntentType } from "@prisma/client";
 import SignUpPromotion from "~/components/SignUpPromotion";
-import { hexToRgba } from "~/lib/utils";
 import Markdown from "~/components/sections/Markdown";
+import { hexToRgba } from "~/lib/utils";
+import { getAnIssue } from "../action";
 
 interface IssuePageProps {
   params: { issueId: string };
 }
 
-const IssuePage = async ({ params: { issueId } }: IssuePageProps) => {
+export default async function IssuePage({
+  params: { issueId },
+}: IssuePageProps) {
   const data = await getAnIssue(issueId);
+
   if (data === null) {
     return <span>No issue Found</span>;
   }
+
   const { issue, dbIssue, comments, isOwn, isAuthenticated } = data;
 
   return (
@@ -121,6 +124,4 @@ const IssuePage = async ({ params: { issueId } }: IssuePageProps) => {
       </div>
     </div>
   );
-};
-
-export default IssuePage;
+}

@@ -1,5 +1,5 @@
-import { abouts, type About } from "content";
 import { type Metadata } from "next";
+import { abouts, type About } from "content";
 
 function AboutCard(about: About) {
   return (
