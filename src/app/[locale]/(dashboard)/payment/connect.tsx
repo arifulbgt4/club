@@ -3,7 +3,7 @@ import { useState } from "react";
 import Icons from "~/components/shared/icons";
 import { Button } from "~/components/ui/button";
 
-const Connection = () => {
+export default function Connection() {
   const [loading, setLoading] = useState(false);
   async function connect() {
     setLoading(true);
@@ -22,6 +22,4 @@ const Connection = () => {
       </Button>
     </div>
   );
-};
-
-export default Connection;
+}

@@ -4,7 +4,7 @@ import { octokit, validateRequest } from "~/server/auth";
 import { Button } from "~/components/ui/button";
 import Markdown from "~/components/sections/Markdown";
 
-const ProfilePage = async () => {
+export default async function ProfilePage() {
   const { user } = await validateRequest();
   const octo = await octokit();
   const { data } = await octo.request("GET /users/{username}", {
@@ -68,6 +68,4 @@ const ProfilePage = async () => {
       </div>
     </div>
   );
-};
-
-export default ProfilePage;
+}

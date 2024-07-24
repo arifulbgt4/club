@@ -1,10 +1,10 @@
 "use client";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Icons from "~/components/shared/icons";
 import { Button } from "~/components/ui/button";
 
-const DisConnection = () => {
+export default function DisConnection() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   async function connect() {
@@ -22,6 +22,4 @@ const DisConnection = () => {
       </Button>
     </div>
   );
-};
-
-export default DisConnection;
+}
