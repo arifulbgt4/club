@@ -16,7 +16,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
@@ -92,23 +91,21 @@ export default function Navbar({
                 <DropdownMenuGroup>
                   <DropdownMenuItem onClick={() => router.push("/profile")}>
                     <span>Profile</span>
-                    <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push("/repository")}>
                     <span>Repository</span>
-                    <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push("/task")}>
                     <span>Task</span>
-                    <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push("/collaborate")}>
+                    <span>Collaborate</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push("/billing")}>
                     <span>Billing</span>
-                    <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push("/settings")}>
                     <span>Settings</span>
-                    <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
