@@ -2,7 +2,7 @@ import { IssueState, IssueStatus } from "@prisma/client";
 import { headers } from "next/headers";
 import { type NextRequest } from "next/server";
 import db from "~/lib/db";
-import { acceptPullRequest } from "~/lib/githubWebhooks";
+import { acceptPullRequest, addCollaborator } from "~/lib/githubWebhooks";
 
 export async function POST(req: NextRequest) {
   // * webhooks event type
@@ -19,8 +19,8 @@ export async function POST(req: NextRequest) {
   const eventData = data[eventType];
   const sender = data.sender;
 
-  console.log("first: ", eventType);
-  console.log("first: ", data);
+  console.log("eventType: ", eventType);
+  console.log("data: ", data);
 
   try {
     switch (eventType) {
@@ -277,6 +277,26 @@ export async function POST(req: NextRequest) {
             }
             break;
           }
+        }
+        break;
+      case "member":
+        const repoId = data?.repository?.id;
+        const githubId = data?.member?.id;
+        const senderGithubId = data?.sender?.id;
+        if (action === "removed") {
+          await db.collaborate.updateMany({
+            where: {
+              repositoryId: repoId,
+              user: { githubId: String(githubId) },
+            },
+            data: {
+              accept: false,
+              active: false,
+            },
+          });
+        }
+        if (action === "added") {
+          await addCollaborator(repoId, githubId, senderGithubId);
         }
         break;
       default:

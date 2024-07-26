@@ -132,3 +132,27 @@ export async function acceptPullRequest(intent: any) {
     console.log(error);
   }
 }
+
+export async function addCollaborator(
+  repoId: string,
+  githubId: string,
+  senderGithubId: string
+) {
+  const collaborateId = await db.collaborate.findFirst({
+    where: {
+      repositoryId: String(repoId),
+      user: { githubId: String(githubId) },
+    },
+  });
+
+  // await db.collaborate.upsert({
+  //   where: {
+  //     id: collaborateId?.id || "",
+  //   },
+  //   create: {},
+  //   update: {
+  //     active: true,
+  //     accept: true,
+  //   },
+  // });
+}
