@@ -1,6 +1,7 @@
 import { IntentType, IssueState, IssueStatus } from "@prisma/client";
 import db from "./db";
 import { stripe } from "./stripe";
+import { app } from "./octokit";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function acceptPullRequest(intent: any) {
@@ -135,24 +136,89 @@ export async function acceptPullRequest(intent: any) {
 
 export async function addCollaborator(
   repoId: string,
-  githubId: string,
-  senderGithubId: string
+  memberGithubId: string,
+  memberUsername: string,
+  senderGithubId: string,
+  senderGithubUsername: string
 ) {
-  const collaborateId = await db.collaborate.findFirst({
+  const provider = await db.provider.findFirst({
     where: {
-      repositoryId: String(repoId),
-      user: { githubId: String(githubId) },
+      name: senderGithubUsername,
+      user: {
+        githubId: String(senderGithubId),
+      },
     },
   });
 
-  // await db.collaborate.upsert({
-  //   where: {
-  //     id: collaborateId?.id || "",
-  //   },
-  //   create: {},
-  //   update: {
-  //     active: true,
-  //     accept: true,
-  //   },
-  // });
+  const octo = await app.getInstallationOctokit(
+    Number(provider?.installationId)
+  );
+
+  const gitUser = await octo.request("GET /users/{username}", {
+    username: memberUsername,
+    headers: {
+      authorization: `token ${provider?.accessToken}`,
+    },
+  });
+
+  const findUser = await db.user.upsert({
+    where: { githubId: String(memberGithubId) },
+    create: {
+      name: gitUser?.data?.name ?? gitUser?.data?.login,
+      username: gitUser?.data?.login,
+      picture: gitUser?.data?.avatar_url,
+      githubId: String(gitUser?.data?.id),
+      email: gitUser?.data?.email ?? null,
+      bio: gitUser?.data?.bio ?? null,
+      active: false,
+      available: false,
+      inactive: true,
+      account: {
+        create: {},
+      },
+    },
+    update: {
+      name: gitUser?.data?.name ?? gitUser?.data?.login,
+      username: gitUser?.data?.login,
+      picture: gitUser?.data?.avatar_url,
+      bio: gitUser?.data?.bio ?? null,
+    },
+  });
+
+  const existRepo = await db.repository.findUnique({
+    where: { id: String(repoId), active: true },
+  });
+
+  if (!!existRepo) {
+    const collaborateId = await db.collaborate.findFirst({
+      where: {
+        repositoryId: String(repoId),
+        user: { githubId: String(memberGithubId) },
+      },
+    });
+
+    await db.collaborate.upsert({
+      where: {
+        id: collaborateId?.id || "",
+      },
+      create: {
+        repository: {
+          connect: {
+            id: existRepo.id,
+          },
+        },
+        user: {
+          connect: {
+            id: findUser?.id,
+          },
+        },
+        accept: true,
+        active: true,
+      },
+      update: {
+        accept: true,
+        active: true,
+      },
+    });
+  }
 }

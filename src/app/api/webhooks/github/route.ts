@@ -281,13 +281,15 @@ export async function POST(req: NextRequest) {
         break;
       case "member":
         const repoId = data?.repository?.id;
-        const githubId = data?.member?.id;
+        const memberGithubId = data?.member?.id;
+        const memberUsername = data?.member?.login;
         const senderGithubId = data?.sender?.id;
+        const senderGithubUsername = data?.sender?.login;
         if (action === "removed") {
           await db.collaborate.updateMany({
             where: {
               repositoryId: repoId,
-              user: { githubId: String(githubId) },
+              user: { githubId: String(memberGithubId) },
             },
             data: {
               accept: false,
@@ -296,7 +298,13 @@ export async function POST(req: NextRequest) {
           });
         }
         if (action === "added") {
-          await addCollaborator(repoId, githubId, senderGithubId);
+          await addCollaborator(
+            repoId,
+            memberGithubId,
+            memberUsername,
+            senderGithubId,
+            senderGithubUsername
+          );
         }
         break;
       default:
