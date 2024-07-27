@@ -134,7 +134,8 @@ export async function acceptPullRequest(intent: any) {
   }
 }
 
-export async function addCollaborator(
+export async function addRemoveCollaborator(
+  action: string,
   repoId: string,
   memberGithubId: string,
   memberUsername: string,
@@ -192,33 +193,41 @@ export async function addCollaborator(
   if (!!existRepo) {
     const collaborateId = await db.collaborate.findFirst({
       where: {
-        repositoryId: String(repoId),
+        repositoryId: existRepo.id,
         user: { githubId: String(memberGithubId) },
       },
     });
-
-    await db.collaborate.upsert({
-      where: {
-        id: collaborateId?.id || "",
-      },
-      create: {
-        repository: {
-          connect: {
-            id: existRepo.id,
-          },
+    if (action === "removed" && !!collaborateId) {
+      await db.collaborate.update({
+        where: { id: collaborateId?.id },
+        data: { accept: false, active: false },
+      });
+      return;
+    }
+    if (action === "added") {
+      await db.collaborate.upsert({
+        where: {
+          id: collaborateId?.id || "",
         },
-        user: {
-          connect: {
-            id: findUser?.id,
+        create: {
+          repository: {
+            connect: {
+              id: existRepo.id,
+            },
           },
+          user: {
+            connect: {
+              id: findUser?.id,
+            },
+          },
+          accept: true,
+          active: true,
         },
-        accept: true,
-        active: true,
-      },
-      update: {
-        accept: true,
-        active: true,
-      },
-    });
+        update: {
+          accept: true,
+          active: true,
+        },
+      });
+    }
   }
 }

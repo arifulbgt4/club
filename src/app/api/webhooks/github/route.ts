@@ -2,7 +2,7 @@ import { IssueState, IssueStatus } from "@prisma/client";
 import { headers } from "next/headers";
 import { type NextRequest } from "next/server";
 import db from "~/lib/db";
-import { acceptPullRequest, addCollaborator } from "~/lib/githubWebhooks";
+import { acceptPullRequest, addRemoveCollaborator } from "~/lib/githubWebhooks";
 
 export async function POST(req: NextRequest) {
   // * webhooks event type
@@ -285,27 +285,16 @@ export async function POST(req: NextRequest) {
         const memberUsername = data?.member?.login;
         const senderGithubId = data?.sender?.id;
         const senderGithubUsername = data?.sender?.login;
-        if (action === "removed") {
-          await db.collaborate.updateMany({
-            where: {
-              repositoryId: repoId,
-              user: { githubId: String(memberGithubId) },
-            },
-            data: {
-              accept: false,
-              active: false,
-            },
-          });
-        }
-        if (action === "added") {
-          await addCollaborator(
-            repoId,
-            memberGithubId,
-            memberUsername,
-            senderGithubId,
-            senderGithubUsername
-          );
-        }
+
+        await addRemoveCollaborator(
+          action,
+          repoId,
+          memberGithubId,
+          memberUsername,
+          senderGithubId,
+          senderGithubUsername
+        );
+
         break;
       default:
         console.log("Alert! Comming Unknown github webhook event.");
