@@ -204,7 +204,7 @@ export async function addRemoveCollaborator(
       });
       return;
     }
-    if (action === "added") {
+    if (action === "added" && existRepo.private) {
       await db.collaborate.upsert({
         where: {
           id: collaborateId?.id || "",
