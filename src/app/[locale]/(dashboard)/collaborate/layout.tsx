@@ -11,7 +11,10 @@ export default async function Layout({
 
   return (
     <div className="flex flex-col flex-nowrap gap-4 lg:flex-row lg:gap-9">
-      <div className="absolute -left-[300px] flex flex-col rounded-tr-md border-r lg:relative lg:left-0 lg:w-[300px]">
+      <div className="absolute -left-[300px] flex flex-col  border-r lg:relative lg:left-0 lg:w-[300px]">
+        <span className="p-2 pt-0 text-sm font-medium text-muted-foreground">
+          Collaborate repositories
+        </span>
         <ul className="h-[calc(100vh-142px)] overflow-auto rounded-md pr-3">
           {!!collaborates?.length ? (
             collaborates?.map((r) => (
