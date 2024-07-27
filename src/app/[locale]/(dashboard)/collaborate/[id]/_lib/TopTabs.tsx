@@ -5,7 +5,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
-import { Settings, SquareKanban } from "lucide-react";
+import { CircleCheckBig, CircleDot, CircleX } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import { Button } from "~/components/ui/button";
@@ -14,7 +14,7 @@ export default function TopTabs({ t }: { t: string }) {
   const router = useRouter();
   const pathname = usePathname();
   return (
-    <div className="flex w-20  justify-end gap-2">
+    <div className="flex w-28  justify-end gap-2">
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -24,11 +24,11 @@ export default function TopTabs({ t }: { t: string }) {
               className="h-8 w-8"
               onClick={() => t !== undefined && router.push(pathname)}
             >
-              <SquareKanban />
+              <CircleDot />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Board</p>
+            <p>Open</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -38,17 +38,34 @@ export default function TopTabs({ t }: { t: string }) {
           <TooltipTrigger asChild>
             <Button
               size="icon"
-              variant={t === "settings" ? "default" : "outline"}
+              variant={t === "done" ? "default" : "outline"}
               className="h-8 w-8"
-              onClick={() =>
-                t !== "settings" && router.push(pathname + "?t=settings")
-              }
+              onClick={() => t !== "done" && router.push(pathname + "?t=done")}
             >
-              <Settings />
+              <CircleCheckBig />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Settings</p>
+            <p>Done</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              size="icon"
+              variant={t === "failed" ? "default" : "outline"}
+              className="h-8 w-8"
+              onClick={() =>
+                t !== "failed" && router.push(pathname + "?t=failed")
+              }
+            >
+              <CircleX />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Failed</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
