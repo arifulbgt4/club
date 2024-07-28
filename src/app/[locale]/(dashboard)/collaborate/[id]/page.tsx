@@ -9,6 +9,7 @@ import {
 import TopTabs from "./_lib/TopTabs";
 import EmptyState from "~/components/shared/empty-state";
 import { getCollaborateByID } from "../action";
+import CollaborateOpen from "~/components/CollaborateOpen";
 
 export default async function CollaborateDetailsPage({
   params: { id },
@@ -65,9 +66,7 @@ export default async function CollaborateDetailsPage({
         </div>
         <TopTabs t={t} />
       </div>
-      {/* <div className=" rounded-tl-md border-t">
-    <RepositoryBoard b={b} p={p} repoId={id} />
-  </div> */}
+      <div>{typeof t === "undefined" && <CollaborateOpen />}</div>
     </div>
   );
 }
