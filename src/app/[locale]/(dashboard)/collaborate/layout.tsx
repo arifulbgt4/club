@@ -15,7 +15,7 @@ export default async function Layout({
         <span className="p-2 pt-0 text-sm font-medium text-muted-foreground">
           Collaborate repositories
         </span>
-        <ul className="h-[calc(100vh-142px)] overflow-auto rounded-md pr-3">
+        <ul className="h-[calc(100vh-170px)] overflow-auto rounded-md pr-3">
           {!!collaborates?.length ? (
             collaborates?.map((r) => (
               <CollaborateRepoListItem
