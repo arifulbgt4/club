@@ -200,7 +200,7 @@ export async function addRemoveCollaborator(
     if (action === "removed" && !!collaborateId) {
       await db.collaborate.update({
         where: { id: collaborateId?.id },
-        data: { accept: false, active: false },
+        data: { active: false },
       });
       return;
     }
@@ -220,11 +220,9 @@ export async function addRemoveCollaborator(
               id: findUser?.id,
             },
           },
-          accept: true,
           active: true,
         },
         update: {
-          accept: true,
           active: true,
         },
       });

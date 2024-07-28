@@ -7,7 +7,6 @@ export default async function getCollaborate() {
   const collaborate = await db.collaborate.findMany({
     where: {
       userId: user?.id,
-      accept: true,
       active: true,
       repository: {
         active: true,

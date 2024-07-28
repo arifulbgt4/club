@@ -125,11 +125,9 @@ export async function POST(req: Request) {
                     id: findUser?.id,
                   },
                 },
-                accept: true,
                 active: true,
               },
               update: {
-                accept: true,
                 active: true,
               },
             });
