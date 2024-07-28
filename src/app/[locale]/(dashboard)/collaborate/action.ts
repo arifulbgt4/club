@@ -29,31 +29,34 @@ export default async function getCollaborate() {
   return collaborate;
 }
 
-export async function getRepositoryByID(id: string) {
+export async function getCollaborateByID(id: string) {
   const { user } = await validateRequest();
 
-  const dbRepo = await db.repository.findUnique({
-    where: { id },
+  const collaborate = await db.collaborate.findUnique({
+    where: { id, userId: user?.id },
     include: {
-      provider: {
-        select: {
-          id: true,
-          name: true,
-          picture: true,
-          active: true,
+      repository: {
+        include: {
+          provider: {
+            select: {
+              id: true,
+              name: true,
+              picture: true,
+            },
+          },
         },
       },
     },
   });
 
-  if (!dbRepo) return null;
-
+  if (!collaborate) return null;
+  const repo = collaborate?.repository;
   const octo = await octokit();
 
   const gitRepo = await octo.request("GET /repos/{owner}/{repo}", {
-    owner: dbRepo?.provider?.name,
-    repo: dbRepo?.name,
+    owner: repo?.provider?.name,
+    repo: repo?.name,
   });
 
-  return { dbRepo, gitRepo: gitRepo?.data };
+  return { dbRepo: repo, gitRepo: gitRepo?.data };
 }

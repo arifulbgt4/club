@@ -22,6 +22,7 @@ export default async function Layout({
                 key={r?.repositoryId}
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 {...(r.repository as any)}
+                collaborateId={r?.id}
               />
             ))
           ) : (

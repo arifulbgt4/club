@@ -12,12 +12,12 @@ const CollaborateRepoListItem: FC<CollaborateRepoListItemProps> = (r) => {
   return (
     <li
       className={cn(
-        id === r?.id && "pointer-events-none bg-accent",
+        id === r?.collaborateId && "pointer-events-none bg-accent",
         "mb-0.5 rounded-md hover:bg-accent"
       )}
     >
       <Link
-        href={`/collaborate/${r?.id}`}
+        href={`/collaborate/${r?.collaborateId}`}
         className="flex flex-nowrap px-2 py-1"
       >
         <div className=" mt-0.5 flex h-6 w-6 items-center justify-center text-muted-foreground">

@@ -8,7 +8,7 @@ import {
 } from "~/components/ui/tooltip";
 import TopTabs from "./_lib/TopTabs";
 import EmptyState from "~/components/shared/empty-state";
-import { getRepositoryByID } from "../action";
+import { getCollaborateByID } from "../action";
 
 export default async function CollaborateDetailsPage({
   params: { id },
@@ -17,7 +17,7 @@ export default async function CollaborateDetailsPage({
   params: { id: string };
   searchParams: { page: string; t: string };
 }) {
-  const data = await getRepositoryByID(id);
+  const data = await getCollaborateByID(id);
   if (!data) return <EmptyState title="Repository is not found" />;
   const { dbRepo, gitRepo } = data;
   // const p = Number(page) || 1;
