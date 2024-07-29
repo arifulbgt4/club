@@ -10,6 +10,7 @@ export default async function getCollaborate() {
       active: true,
       repository: {
         active: true,
+        private: true,
       },
     },
     include: {
@@ -33,7 +34,7 @@ export async function getCollaborateByID(id: string) {
   const { user } = await validateRequest();
 
   const collaborate = await db.collaborate.findUnique({
-    where: { id, userId: user?.id },
+    where: { id, userId: user?.id, repository: { private: true } },
     include: {
       repository: {
         include: {
