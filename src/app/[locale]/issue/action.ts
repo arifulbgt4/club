@@ -7,7 +7,7 @@ import { type IssueOptions } from "~/types";
 export async function getAnIssue(id: string) {
   const { session, user } = await validateRequest();
   const dbIssue = await db.issue.findUnique({
-    where: { id, active: true, state: IssueState.published },
+    where: { id, active: true },
     include: { intent: true, repository: { include: { provider: true } } },
   });
 

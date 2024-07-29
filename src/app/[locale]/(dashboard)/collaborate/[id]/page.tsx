@@ -66,7 +66,7 @@ export default async function CollaborateDetailsPage({
         </div>
         <TopTabs t={t} />
       </div>
-      <div>{typeof t === "undefined" && <CollaborateOpen />}</div>
+      <div>{typeof t === "undefined" && <CollaborateOpen id={id} />}</div>
     </div>
   );
 }
