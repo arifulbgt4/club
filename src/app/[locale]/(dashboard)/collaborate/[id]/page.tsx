@@ -10,6 +10,8 @@ import TopTabs from "./_lib/TopTabs";
 import EmptyState from "~/components/shared/empty-state";
 import { getCollaborateByID } from "../action";
 import CollaborateOpen from "~/components/CollaborateOpen";
+import CollaborateDone from "~/components/CollaborateDone";
+import CollaborateFailed from "~/components/CollaborateFailed";
 
 export default async function CollaborateDetailsPage({
   params: { id },
@@ -66,7 +68,11 @@ export default async function CollaborateDetailsPage({
         </div>
         <TopTabs t={t} />
       </div>
-      <div>{typeof t === "undefined" && <CollaborateOpen id={id} />}</div>
+      <div>
+        {typeof t === "undefined" && <CollaborateOpen id={id} />}
+        {t === "done" && <CollaborateDone id={id} />}
+        {t === "failed" && <CollaborateFailed id={id} />}
+      </div>
     </div>
   );
 }

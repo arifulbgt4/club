@@ -1,9 +1,11 @@
 import EmptyState from "../shared/empty-state";
 import { getIssues } from "./action";
 import Item from "./Item";
-import type { CollaborateOpenProps } from "./Types";
+import type { CollaborateFailedProps } from "./Types";
 
-export default async function CollaborateOpen({ id }: CollaborateOpenProps) {
+export default async function CollaborateFailed({
+  id,
+}: CollaborateFailedProps) {
   const data = await getIssues(id);
 
   if (!data || !data?.length) {
