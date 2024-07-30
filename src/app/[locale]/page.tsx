@@ -1,6 +1,6 @@
 "use server";
 import { validateRequest } from "~/server/auth";
-import PublishedIssueItem from "~/components/PublishedIssueItem/PublishedIssueItem";
+import PublishedIssueItem from "~/components/PublishedIssueItem";
 import { getIssues } from "./action";
 import Pagination from "~/components/sections/pagination";
 import RequestedCard from "~/components/RequestedCard";
