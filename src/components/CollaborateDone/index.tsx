@@ -1,4 +1,4 @@
-import EmptyState from "../shared/empty-state";
+import EmptyState from "~/components/shared/empty-state";
 import { getIssues } from "./action";
 import Item from "./Item";
 import type { CollaborateDoneProps } from "./Types";
