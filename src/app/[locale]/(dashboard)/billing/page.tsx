@@ -1,16 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AttachPaymentMethod from "~/components/AttachPaymentMethod";
 import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/ui/table";
-import {
   Card,
   CardContent,
   CardDescription,
@@ -28,7 +18,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Billing() {
   const { primary, additional } = await getPaymentMethods();
-  const invoice = await getInvoice();
+  // const invoice = await getInvoice();
   // console.log(invoice.data);
   return (
     <Card className="mb-10">
