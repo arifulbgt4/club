@@ -18,7 +18,6 @@ async function TaskPage({
   const total = await getCounts();
   return (
     <div className=" mb-10 flex flex-col">
-      {/* <span className=" mb-4 text-xl">Manage your tasks</span> */}
       <Tabs defaultValue={searchParams?.t || TASK_TABS.wip}>
         <Triggers total={total} />
         <>

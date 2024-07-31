@@ -8,7 +8,10 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { getInvoice, getPaymentMethods } from "./action";
+import {
+  // getInvoice,
+  getPaymentMethods,
+} from "./action";
 import getPaymentMethodIcon from "~/components/shared/payment-method-icons";
 import Remove from "./Remove";
 import SetPrimary from "./SetPrimary";
