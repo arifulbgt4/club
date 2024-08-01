@@ -1,10 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useEffect, useState, type FC } from "react";
+import { type FC } from "react";
 import type { SearchByTopicsProps } from "./Types";
-import Select from "react-select/async";
-import Icons from "../shared/icons";
-import { Search, X } from "lucide-react";
+
 import { useRouter } from "next/navigation";
 import { cn } from "~/lib/utils";
 import SearchTopics from "../SearchTopics";
