@@ -5,39 +5,15 @@ import type { SearchByTopicsProps } from "./Types";
 import Select from "react-select/async";
 import Icons from "../shared/icons";
 import { Search, X } from "lucide-react";
-import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { cn } from "~/lib/utils";
+import SearchTopics from "../SearchTopics";
 
 const SearchByTopics: FC<SearchByTopicsProps> = ({
   params,
   isAuthenticate,
 }) => {
-  const [isMounted, setIsMounted] = useState(false);
-  const [inputValue, setInputValue] = useState("");
   const router = useRouter();
-  const loadOptions = async (inputValue: string) => {
-    if (!inputValue) return [];
-    const res = await fetch(`/api/v1/search/topics?q=${inputValue}`, {
-      method: "GET",
-    });
-    if (!res.ok) {
-      return;
-    }
-    const topics = await res.json();
-    return topics?.map((topic: { name: string }) => ({
-      label: topic.name,
-      value: topic.name,
-    }));
-  };
-
-  const removeTopic = (t: string) => {
-    if (params?.length === 1) {
-      return router.push("/");
-    }
-    router.push(`/?topics=${params.filter((v) => v !== t).join(",")}`);
-  };
-  useEffect(() => setIsMounted(true), []);
 
   return (
     <div
@@ -46,7 +22,17 @@ const SearchByTopics: FC<SearchByTopicsProps> = ({
         "flex min-h-12 w-full items-center gap-2 rounded-lg border px-2 py-1"
       )}
     >
-      <Search className="h-5 w-5" />
+      <SearchTopics
+        value={params}
+        onChange={(v) => {
+          if (!!v?.length) {
+            router.push(`/?topics=${v.join(",")}`);
+            return;
+          }
+          router.push("/");
+        }}
+      />
+      {/* <Search className="h-5 w-5" />
       <div className="flex">
         {params?.map((p, i) => (
           <Button
@@ -95,7 +81,7 @@ const SearchByTopics: FC<SearchByTopicsProps> = ({
           defaultOptions={false}
           cacheOptions
         />
-      ) : null}
+      ) : null} */}
     </div>
   );
 };
