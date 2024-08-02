@@ -2,8 +2,8 @@
 import { type FC } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "~/lib/utils";
-import type { SearchByTopicsProps } from "./Types";
 import SearchTopics from "../SearchTopics";
+import type { SearchByTopicsProps } from "./Types";
 
 const SearchByTopics: FC<SearchByTopicsProps> = ({
   params,
