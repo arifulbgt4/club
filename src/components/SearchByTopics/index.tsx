@@ -1,8 +1,8 @@
 "use client";
 import { type FC } from "react";
-import type { SearchByTopicsProps } from "./Types";
 import { useRouter } from "next/navigation";
 import { cn } from "~/lib/utils";
+import type { SearchByTopicsProps } from "./Types";
 import SearchTopics from "../SearchTopics";
 
 const SearchByTopics: FC<SearchByTopicsProps> = ({
