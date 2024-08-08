@@ -26,5 +26,6 @@ export async function getList(page: number = 1) {
     take: TAKE,
     skip: (page - 1) * TAKE,
   });
+
   return { intents, take: TAKE, page };
 }
