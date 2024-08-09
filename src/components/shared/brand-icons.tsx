@@ -78,11 +78,11 @@ export const BrandIcons = {
         y1="40"
         x2="40"
         y2="192"
-        fill="none"
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="16"
+        fill="none"
       />
     </svg>
   ),
