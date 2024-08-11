@@ -22,17 +22,19 @@ const RepositoryBoard = async ({
   b,
   p,
   repoId,
+  isPrivate,
 }: {
   b: string;
   p: number;
   repoId: string;
+  isPrivate: boolean;
 }) => {
   const count = await getCounts(repoId);
   return (
     <Tabs defaultValue={b || TAB_VALUE.published}>
       <div className="flex flex-col items-baseline justify-between md:flex-row md:items-center">
         <BoardTabsTrigger b={b} count={count} />
-        <IssueImportModal repoId={repoId} />
+        <IssueImportModal repoId={repoId} isPrivate={isPrivate} />
       </div>
       <TabsContent className="m-0" value={TAB_VALUE.published}>
         <Published repoId={repoId} p={p} total={count?.published} />

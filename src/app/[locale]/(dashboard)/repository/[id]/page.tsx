@@ -68,7 +68,12 @@ export default async function ARepositoryPage({
         <TopTabs t={t} />
       </div>
       <div className=" rounded-tl-md border-t">
-        <RepositoryBoard b={b} p={p} repoId={id} />
+        <RepositoryBoard
+          b={b}
+          p={p}
+          repoId={id}
+          isPrivate={dbRepo?.private as boolean}
+        />
       </div>
     </div>
   );

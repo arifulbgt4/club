@@ -30,15 +30,18 @@ import { cn, formatDate } from "~/lib/utils";
 import { siteConfig } from "~/config/site";
 import SearchTopics from "../SearchTopics";
 import Payment from "../Payment";
+import type { CollaboratorsType } from "./Types";
 
 const PUBLISH_STEP = 4;
 
 const IssueImportModalContent = ({
   repoId,
   setOpen,
+  isPrivate,
 }: {
   repoId: string;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isPrivate: boolean;
 }) => {
   const [step, setStep] = useState<number>(1);
   const [issue, setIssue] = useState<any>({});
@@ -46,6 +49,7 @@ const IssueImportModalContent = ({
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [topics, setTopics] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [collaborators, setCollaborators] = useState<CollaboratorsType[]>();
   const { register, watch } = useForm();
   const [price, setPrice] = useState<number>(0);
   const [searchResults, setSearchResults] = useState([]);
@@ -134,6 +138,12 @@ const IssueImportModalContent = ({
     setDraftLoading(false);
     setStep(PUBLISH_STEP);
     router.refresh();
+  }
+
+  async function getCollaborators() {
+    const res = await fetch(`/api/v1/repo/collaborators?repoId=${repoId}`);
+    const data = await res.json();
+    setCollaborators(data);
   }
 
   async function onPublish() {
@@ -468,7 +478,13 @@ const IssueImportModalContent = ({
   );
 };
 
-const IssueImportModal = ({ repoId }: { repoId: string }) => {
+const IssueImportModal = ({
+  repoId,
+  isPrivate,
+}: {
+  repoId: string;
+  isPrivate: boolean;
+}) => {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -482,7 +498,11 @@ const IssueImportModal = ({ repoId }: { repoId: string }) => {
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <IssueImportModalContent repoId={repoId} setOpen={setOpen} />
+        <IssueImportModalContent
+          repoId={repoId}
+          setOpen={setOpen}
+          isPrivate={isPrivate}
+        />
       </DialogContent>
     </Dialog>
   );
