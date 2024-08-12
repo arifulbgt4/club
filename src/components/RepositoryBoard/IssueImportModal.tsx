@@ -32,7 +32,7 @@ import SearchTopics from "../SearchTopics";
 import Payment from "../Payment";
 import type { CollaboratorsType } from "./Types";
 
-const PUBLISH_STEP = 4;
+const PUBLISH_STEP = 5;
 
 const IssueImportModalContent = ({
   repoId,
@@ -54,6 +54,9 @@ const IssueImportModalContent = ({
   const [price, setPrice] = useState<number>(0);
   const [searchResults, setSearchResults] = useState([]);
   const [publishType, setPublishType] = useState<IntentType>("open_source");
+  const [assignType, setAssignType] = useState<"collaborator" | "global">(
+    "global"
+  );
   const [draftLoading, setDraftLoading] = useState<boolean>(false);
   const [publishLoading, setPublishLoading] = useState<boolean>(false);
   const searchQuery = watch("query");
@@ -121,6 +124,16 @@ const IssueImportModalContent = ({
       setIsEdit(false);
       return;
     }
+    if (!isPrivate) {
+      const draft_pub = await draftPublish();
+      if (!draft_pub) return;
+      setStep(PUBLISH_STEP);
+    }
+    setStep(4);
+    router.refresh();
+  }
+
+  async function draftPublish() {
     setDraftLoading(true);
     const res = await fetch("/api/v1/issue/draft_publish", {
       method: "POST",
@@ -133,11 +146,10 @@ const IssueImportModalContent = ({
     });
     if (!res.ok) {
       setDraftLoading(false);
-      return;
+      return false;
     }
     setDraftLoading(false);
-    setStep(PUBLISH_STEP);
-    router.refresh();
+    return true;
   }
 
   async function getCollaborators() {
@@ -373,6 +385,92 @@ const IssueImportModalContent = ({
                   )}
                 </span>
                 <span className="text-lg font-semibold">Paid</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <Button
+              disabled={!topics?.length || draftLoading}
+              className="mt-4"
+              onClick={stepThree}
+            >
+              {!draftLoading ? (
+                isEdit ? (
+                  "Update"
+                ) : (
+                  "Next"
+                )
+              ) : (
+                <Icons.spinner className=" animate-spin" />
+              )}
+            </Button>
+          </div>
+        </>
+      )}
+      {step === 4 && (
+        <>
+          <DialogHeader>
+            <DialogTitle className="flex flex-col">
+              {!isEdit ? (
+                <Button
+                  size="sm"
+                  variant="link"
+                  className=" mb-1 w-fit px-0"
+                  onClick={goBack}
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                </Button>
+              ) : (
+                <span className="mb-2 flex items-center text-sm">
+                  <Edit2 className="mr-1 h-3 w-3" /> editing
+                </span>
+              )}
+
+              <span>{issue?.title}</span>
+            </DialogTitle>
+            <DialogDescription>Assign</DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-2">
+            <span className=" font-medium">How you want to assign?</span>
+            <div className="flex flex-col gap-2">
+              <div
+                onClick={() => {
+                  if (assignType === "collaborator") {
+                    setAssignType("global");
+                  }
+                }}
+                className={cn(
+                  assignType === "global" && "pointer-events-none bg-accent",
+                  "flex cursor-pointer flex-nowrap items-center gap-2 rounded-md border p-3 hover:bg-accent"
+                )}
+              >
+                <span className=" flex h-5 w-5 items-center justify-center rounded-full border-2 border-accent-foreground">
+                  {assignType === "global" && (
+                    <span className=" h-3 w-3 rounded-full bg-accent-foreground"></span>
+                  )}
+                </span>
+                <span className="text-lg font-semibold">
+                  For Global Developers
+                </span>
+              </div>
+              <div
+                onClick={() => {
+                  if (assignType === "global") {
+                    setAssignType("collaborator");
+                  }
+                }}
+                className={cn(
+                  assignType === "collaborator" &&
+                    "pointer-events-none bg-accent",
+                  "flex cursor-pointer flex-nowrap items-center gap-2 rounded-md border p-3 hover:bg-accent"
+                )}
+              >
+                <span className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-accent-foreground">
+                  {assignType === "collaborator" && (
+                    <span className=" h-3 w-3 rounded-full bg-accent-foreground"></span>
+                  )}
+                </span>
+                <span className="text-lg font-semibold">For Collaborator</span>
               </div>
             </div>
           </div>
