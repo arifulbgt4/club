@@ -139,12 +139,12 @@ const IssueImportModalContent = ({
       setIsEdit(false);
       return;
     }
+    router.refresh();
 
     if (!isPrivate) {
       setStep(PUBLISH_STEP);
     }
     setStep(4);
-    router.refresh();
   }
 
   async function stepFour() {
