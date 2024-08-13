@@ -43,7 +43,7 @@ export async function POST(req: Request) {
       const reqUser = await db.user.findUnique({
         where: { githubId: String(body?.collaborator?.id) },
       });
-      isQueue = reqUser?.available as boolean;
+      isQueue = !reqUser?.available;
     }
 
     const octo = await octokit();
