@@ -75,6 +75,7 @@ const Update = ({
   }
 
   async function stepThree() {
+    await draftPublish();
     setStep(PUBLISH_STEP);
   }
 
@@ -252,11 +253,15 @@ const Update = ({
           </div>
           <div>
             <Button
-              disabled={!topics?.length}
+              disabled={draftLoading}
               className="mt-4"
               onClick={stepThree}
             >
-              Update
+              {!draftLoading ? (
+                "Update"
+              ) : (
+                <Icons.spinner className=" animate-spin" />
+              )}
             </Button>
           </div>
         </>
