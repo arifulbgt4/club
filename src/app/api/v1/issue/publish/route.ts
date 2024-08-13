@@ -37,6 +37,14 @@ export async function POST(req: Request) {
     if (!repo) {
       return new Response("Unauthorized", { status: 401 });
     }
+    let isQueue = false;
+
+    if (body?.assignType === ASSIGN_TYPE.collaborator) {
+      const reqUser = await db.user.findUnique({
+        where: { githubId: String(body?.collaborator?.id) },
+      });
+      isQueue = reqUser?.available as boolean;
+    }
 
     const octo = await octokit();
     const issue = await octo.request(
@@ -62,7 +70,7 @@ export async function POST(req: Request) {
             ? IssueState.inprogress
             : IssueState.published,
         topics: [...body?.topics],
-        status: IssueStatus.default,
+        ...(isQueue && { status: IssueStatus.queue }),
         repository: {
           connect: {
             id: repo?.id,
@@ -80,6 +88,7 @@ export async function POST(req: Request) {
           body?.assignType === ASSIGN_TYPE.collaborator
             ? IssueState.inprogress
             : IssueState.published,
+        ...(isQueue && { status: IssueStatus.queue }),
         title: issue?.data?.title,
         topics: [...body?.topics],
       },
