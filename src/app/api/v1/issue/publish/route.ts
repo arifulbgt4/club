@@ -1,8 +1,9 @@
-import { IntentType, IssueState } from "@prisma/client";
+import { IntentType, IssueState, IssueStatus } from "@prisma/client";
 import { siteConfig } from "~/config/site";
 import db from "~/lib/db";
 import { redirectError } from "~/lib/utils";
 import { octokit, validateRequest } from "~/server/auth";
+import { ASSIGN_TYPE } from "~/types";
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -56,8 +57,12 @@ export async function POST(req: Request) {
         id: String(issue?.data?.id),
         title: issue?.data?.title,
         issueNumber: Number(issue?.data?.number),
-        state: IssueState.published,
+        state:
+          body?.assignType === ASSIGN_TYPE.collaborator
+            ? IssueState.inprogress
+            : IssueState.published,
         topics: [...body?.topics],
+        status: IssueStatus.default,
         repository: {
           connect: {
             id: repo?.id,
@@ -71,7 +76,10 @@ export async function POST(req: Request) {
       },
       update: {
         active: true,
-        state: IssueState.published,
+        state:
+          body?.assignType === ASSIGN_TYPE.collaborator
+            ? IssueState.inprogress
+            : IssueState.published,
         title: issue?.data?.title,
         topics: [...body?.topics],
       },

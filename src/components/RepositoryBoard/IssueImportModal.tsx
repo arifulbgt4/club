@@ -207,6 +207,8 @@ const IssueImportModalContent = ({
         type: publishType,
         repoId,
         price,
+        assignType,
+        collaborator,
       }),
     });
     if (!res.ok) {
