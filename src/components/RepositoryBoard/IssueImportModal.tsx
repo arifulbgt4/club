@@ -112,6 +112,14 @@ const IssueImportModalContent = ({
       setPublishType(data?.issue?.intent[0]?.type as IntentType);
       setTopics(data?.issue?.topics);
       setStep(PUBLISH_STEP);
+      if (isPrivate && !!data?.assign) {
+        setAssignType(ASSIGN_TYPE.collaborator);
+        setCollaborator({
+          id: String(data?.assign?.githubId),
+          avatar_url: String(data?.assign?.picture),
+          login: String(data?.assign?.username),
+        });
+      }
     }
   }
 
@@ -552,16 +560,16 @@ const IssueImportModalContent = ({
                     className={cn(
                       d?.permissions?.admin &&
                         "pointer-events-none border hover:bg-transparent",
-                      d?.id === collaborator?.id &&
+                      String(d?.id) === collaborator?.id &&
                         "pointer-events-none bg-accent hover:bg-transparent",
                       "flex cursor-pointer items-center gap-2 rounded p-2 hover:bg-accent"
                     )}
                     onClick={() => {
                       if (
                         !d?.permissions?.admin &&
-                        d?.id !== collaborator?.id
+                        String(d?.id) !== collaborator?.id
                       ) {
-                        setCollaborator(d);
+                        setCollaborator({ ...d, id: String(d?.id) });
                       }
                     }}
                   >
@@ -572,7 +580,7 @@ const IssueImportModalContent = ({
                       <span className=" font-semibold">{d?.login}</span>
                       <span className="text-sm">{d?.role_name}</span>
                     </div>
-                    {d?.id === collaborator?.id && (
+                    {String(d?.id) === collaborator?.id && (
                       <div>
                         <Check />
                       </div>
