@@ -49,7 +49,13 @@ const RepositoryBoard = async ({
         <Done repoId={repoId} p={p} total={count?.done} b={b} />
       </TabsContent>
       <TabsContent className="m-0" value={TAB_VALUE.draft}>
-        <Draft repoId={repoId} p={p} total={count?.draft} b={b} />
+        <Draft
+          repoId={repoId}
+          p={p}
+          total={count?.draft}
+          b={b}
+          isPrivate={isPrivate}
+        />
       </TabsContent>
     </Tabs>
   );

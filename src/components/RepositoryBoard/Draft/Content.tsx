@@ -5,7 +5,11 @@ import { useState, type FC } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 import Update from "./Update";
 
-const Content: FC<{ issue: Issue; intent: Intent }> = ({ issue, intent }) => {
+const Content: FC<{ issue: Issue; intent: Intent; isPrivate: boolean }> = ({
+  issue,
+  intent,
+  isPrivate,
+}) => {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -51,7 +55,7 @@ const Content: FC<{ issue: Issue; intent: Intent }> = ({ issue, intent }) => {
         </div>
       </DialogTrigger>
       <DialogContent>
-        <Update setOpen={setOpen} issueId={issue?.id} />
+        <Update setOpen={setOpen} issueId={issue?.id} isPrivate={isPrivate} />
       </DialogContent>
     </Dialog>
   );

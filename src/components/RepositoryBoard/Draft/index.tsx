@@ -9,11 +9,13 @@ const Draft = async ({
   b,
   total,
   repoId,
+  isPrivate,
 }: {
   p: number;
   b: string;
   total: number;
   repoId: string;
+  isPrivate: boolean;
 }) => {
   // const data = await getDraft(repoId, p);
   const data = await getDraft(repoId, p);
@@ -34,6 +36,7 @@ const Draft = async ({
                 key={intent?.id}
                 issue={intent.issue as IssueOptions}
                 intent={intent}
+                isPrivate={isPrivate}
               />
             ))}
           </div>
