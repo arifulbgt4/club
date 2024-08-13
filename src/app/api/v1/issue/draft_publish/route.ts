@@ -2,6 +2,7 @@ import { type IntentType, IssueState } from "@prisma/client";
 import db from "~/lib/db";
 import { redirectError } from "~/lib/utils";
 import { octokit, validateRequest } from "~/server/auth";
+import { ASSIGN_TYPE } from "~/types";
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -63,8 +64,15 @@ export async function POST(req: Request) {
       },
     });
 
-    await db.intent.create({
-      data: {
+    const intentId = await db.intent.findFirst({
+      where: { issueId: newIssue?.id },
+    });
+
+    const newIntent = await db.intent.upsert({
+      where: {
+        id: String(intentId) || "",
+      },
+      create: {
         issue: {
           connect: {
             id: newIssue?.id,
@@ -72,7 +80,14 @@ export async function POST(req: Request) {
         },
         type: body.type as IntentType,
       },
+      update: {
+        type: body.type as IntentType,
+      },
     });
+
+    if (repo?.private && body?.assignType === ASSIGN_TYPE.collaborator) {
+    }
+
     return new Response(null, { status: 200 });
   } catch (error) {
     redirectError(error);

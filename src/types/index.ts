@@ -81,3 +81,8 @@ export enum TASK_TABS {
   completed = "completed",
   failed = "failed",
 }
+
+export enum ASSIGN_TYPE {
+  collaborator = "collaborator",
+  global = "global",
+}

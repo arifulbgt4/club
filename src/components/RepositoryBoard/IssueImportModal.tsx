@@ -33,6 +33,7 @@ import SearchTopics from "../SearchTopics";
 import Payment from "../Payment";
 import type { CollaboratorsType } from "./Types";
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
+import { ASSIGN_TYPE } from "~/types";
 
 const PUBLISH_STEP = 5;
 
@@ -57,9 +58,9 @@ const IssueImportModalContent = ({
   const [price, setPrice] = useState<number>(0);
   const [searchResults, setSearchResults] = useState([]);
   const [publishType, setPublishType] = useState<IntentType>("open_source");
-  const [assignType, setAssignType] = useState<"collaborator" | "global">(
-    "global"
-  );
+  const [assignType, setAssignType] = useState<
+    ASSIGN_TYPE.collaborator | ASSIGN_TYPE.global
+  >(ASSIGN_TYPE.global);
   const [draftLoading, setDraftLoading] = useState<boolean>(false);
   const [collaboratorLoading, setCollaboratorLoading] =
     useState<boolean>(false);
@@ -139,7 +140,7 @@ const IssueImportModalContent = ({
   }
 
   async function stepFour() {
-    if (assignType === "collaborator") {
+    if (assignType === ASSIGN_TYPE.collaborator) {
       await getCollaborators();
       setStep(4.5);
     } else {
@@ -168,6 +169,8 @@ const IssueImportModalContent = ({
         issueNumber: issue?.number,
         type: publishType,
         repoId,
+        assignType,
+        collaborator,
       }),
     });
     if (!res.ok) {
@@ -463,17 +466,18 @@ const IssueImportModalContent = ({
             <div className="flex flex-col gap-2">
               <div
                 onClick={() => {
-                  if (assignType === "collaborator") {
-                    setAssignType("global");
+                  if (assignType === ASSIGN_TYPE.collaborator) {
+                    setAssignType(ASSIGN_TYPE.global);
                   }
                 }}
                 className={cn(
-                  assignType === "global" && "pointer-events-none bg-accent",
+                  assignType === ASSIGN_TYPE.global &&
+                    "pointer-events-none bg-accent",
                   "flex cursor-pointer flex-nowrap items-center gap-2 rounded-md border p-3 hover:bg-accent"
                 )}
               >
                 <span className=" flex h-5 w-5 items-center justify-center rounded-full border-2 border-accent-foreground">
-                  {assignType === "global" && (
+                  {assignType === ASSIGN_TYPE.global && (
                     <span className=" h-3 w-3 rounded-full bg-accent-foreground"></span>
                   )}
                 </span>
@@ -483,18 +487,18 @@ const IssueImportModalContent = ({
               </div>
               <div
                 onClick={() => {
-                  if (assignType === "global") {
-                    setAssignType("collaborator");
+                  if (assignType === ASSIGN_TYPE.global) {
+                    setAssignType(ASSIGN_TYPE.collaborator);
                   }
                 }}
                 className={cn(
-                  assignType === "collaborator" &&
+                  assignType === ASSIGN_TYPE.collaborator &&
                     "pointer-events-none bg-accent",
                   "flex cursor-pointer flex-nowrap items-center gap-2 rounded-md border p-3 hover:bg-accent"
                 )}
               >
                 <span className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-accent-foreground">
-                  {assignType === "collaborator" && (
+                  {assignType === ASSIGN_TYPE.collaborator && (
                     <span className=" h-3 w-3 rounded-full bg-accent-foreground"></span>
                   )}
                 </span>
@@ -633,7 +637,7 @@ const IssueImportModalContent = ({
                 <Edit2 className="h-4 w-4" />
               </Button>
               <span className="mb-2 font-semibold">Assigned</span>
-              {assignType === "collaborator" ? (
+              {assignType === ASSIGN_TYPE.collaborator ? (
                 <div className="flex  items-center gap-2">
                   <Avatar className="h-6  w-6 border">
                     <AvatarImage src={collaborator?.avatar_url} />
