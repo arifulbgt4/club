@@ -125,14 +125,14 @@ const IssueImportModalContent = ({
   }
 
   async function stepThree() {
+    await draftPublish();
     if (isEdit) {
       setStep(PUBLISH_STEP);
       setIsEdit(false);
       return;
     }
+
     if (!isPrivate) {
-      const draft_pub = await draftPublish();
-      if (!draft_pub) return;
       setStep(PUBLISH_STEP);
     }
     setStep(4);
@@ -144,6 +144,7 @@ const IssueImportModalContent = ({
       await getCollaborators();
       setStep(4.5);
     } else {
+      await draftPublish();
       if (isEdit) {
         setIsEdit(false);
       }
@@ -153,10 +154,9 @@ const IssueImportModalContent = ({
 
   async function stepFourAndHalf() {
     if (isEdit) {
-      setStep(PUBLISH_STEP);
       setIsEdit(false);
-      return;
     }
+    await draftPublish();
     setStep(PUBLISH_STEP);
   }
 
@@ -508,11 +508,11 @@ const IssueImportModalContent = ({
           </div>
           <div>
             <Button
-              disabled={collaboratorLoading}
+              disabled={collaboratorLoading || draftLoading}
               className="mt-4"
               onClick={stepFour}
             >
-              {!collaboratorLoading ? (
+              {!collaboratorLoading && !draftLoading ? (
                 isEdit ? (
                   "Update"
                 ) : (
@@ -583,11 +583,19 @@ const IssueImportModalContent = ({
           </div>
           <div>
             <Button
-              disabled={!collaborator?.id}
+              disabled={!collaborator?.id || draftLoading}
               className="mt-4"
               onClick={stepFourAndHalf}
             >
-              {isEdit ? "Update" : "Next"}
+              {!draftLoading ? (
+                isEdit ? (
+                  "Update"
+                ) : (
+                  "Next"
+                )
+              ) : (
+                <Icons.spinner className=" animate-spin" />
+              )}
             </Button>
           </div>
         </>

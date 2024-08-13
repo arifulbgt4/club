@@ -70,7 +70,7 @@ export async function POST(req: Request) {
 
     const newIntent = await db.intent.upsert({
       where: {
-        id: String(intentId) || "",
+        id: intentId?.id || "",
       },
       create: {
         issue: {
@@ -85,7 +85,65 @@ export async function POST(req: Request) {
       },
     });
 
-    if (repo?.private && body?.assignType === ASSIGN_TYPE.collaborator) {
+    if (
+      repo?.private &&
+      body?.assignType === ASSIGN_TYPE.collaborator &&
+      !!body?.collaborator?.id
+    ) {
+      const findRequest = await db.request.findFirst({
+        where: {
+          issueId: newIssue?.id,
+          user: { username: body?.collaborator?.login },
+        },
+      });
+      const findUser = await db.user.findUnique({
+        where: { githubId: String(body?.collaborator?.id) },
+      });
+
+      const newRequest = await db.request.upsert({
+        where: {
+          id: findRequest?.id || "",
+        },
+        create: {
+          days: 1,
+          issue: {
+            connect: {
+              id: newIssue?.id,
+            },
+          },
+          user: {
+            connect: {
+              id: findUser?.id,
+            },
+          },
+          active: false,
+        },
+        update: {
+          active: false,
+        },
+      });
+
+      await db.intent.update({
+        where: {
+          id: newIntent?.id,
+        },
+        data: {
+          request: {
+            connect: {
+              id: newRequest?.id,
+            },
+          },
+          issue: {
+            update: {
+              state: IssueState.draft,
+            },
+          },
+        },
+      });
+    }
+
+    if (repo?.private && body?.assignType === ASSIGN_TYPE.global) {
+      await db.request.deleteMany({ where: { intent: { id: newIntent?.id } } });
     }
 
     return new Response(null, { status: 200 });

@@ -171,6 +171,7 @@ model Request {
   issue     Issue?   @relation(fields: [issueId], references: [id])
   issueId   String?
   intent    Intent?
+  active    Boolean? @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
