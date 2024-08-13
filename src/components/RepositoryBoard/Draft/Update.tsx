@@ -17,21 +17,20 @@ import type { CollaboratorsType } from "../Types";
 import { ASSIGN_TYPE } from "~/types";
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
 
-const UPDATE_STEP = 5;
+const PUBLISH_STEP = 5;
 
 const Update = ({
   setOpen,
-  issueId,
   isPrivate,
+  issueId,
 }: {
-  issueId: string;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isPrivate: boolean;
+  issueId: string;
 }) => {
   const [step, setStep] = useState<number>(1);
   const [issue, setIssue] = useState<Issue>();
   const [topics, setTopics] = useState<string[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [collaborators, setCollaborators] = useState<CollaboratorsType[]>();
   const [collaborator, setCollaborator] = useState<CollaboratorsType>();
   const [assignType, setAssignType] = useState<
@@ -42,7 +41,7 @@ const Update = ({
     useState<boolean>(false);
   const [price, setPrice] = useState<number>(0);
   const [publishType, setPublishType] = useState<IntentType>("open_source");
-  const [updateLoading, setUpdateLoading] = useState<boolean>(false);
+  const [publishLoading, setPublishLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const fetchResults = async () => {
@@ -53,7 +52,7 @@ const Update = ({
     setIssue(data?.issue);
     setPublishType(data?.issue?.intent[0]?.type as IntentType);
     setTopics(data?.issue?.topics);
-    setStep(UPDATE_STEP);
+    setStep(PUBLISH_STEP);
     if (isPrivate && !!data?.assign) {
       setAssignType(ASSIGN_TYPE.collaborator);
       setCollaborator({
@@ -68,19 +67,65 @@ const Update = ({
   const fetchIssue = useCallback(fetchResults, []);
 
   function goBack() {
-    setStep(UPDATE_STEP);
+    setStep(PUBLISH_STEP);
   }
 
   function stepTwo() {
-    setStep(UPDATE_STEP);
+    setStep(PUBLISH_STEP);
   }
 
   async function stepThree() {
-    setStep(UPDATE_STEP);
+    setStep(PUBLISH_STEP);
   }
 
-  async function onUpdate() {
-    setUpdateLoading(true);
+  async function stepFour() {
+    if (assignType === ASSIGN_TYPE.collaborator) {
+      await getCollaborators();
+      setStep(4.5);
+    } else {
+      await draftPublish();
+      setStep(PUBLISH_STEP);
+    }
+  }
+
+  async function stepFourAndHalf() {
+    await draftPublish();
+    setStep(PUBLISH_STEP);
+  }
+
+  async function draftPublish() {
+    setDraftLoading(true);
+    const res = await fetch("/api/v1/issue/draft_publish", {
+      method: "POST",
+      body: JSON.stringify({
+        topics,
+        issueNumber: issue?.issueNumber,
+        type: publishType,
+        repoId: issue?.repositoryId,
+        assignType,
+        collaborator,
+      }),
+    });
+    if (!res.ok) {
+      setDraftLoading(false);
+      return false;
+    }
+    setDraftLoading(false);
+    return true;
+  }
+
+  async function getCollaborators() {
+    setCollaboratorLoading(true);
+    const res = await fetch(
+      `/api/v1/repo/collaborators?repoId=${issue?.repositoryId}`
+    );
+    const data = await res.json();
+    setCollaborators(data);
+    setCollaboratorLoading(false);
+  }
+
+  async function onPublish() {
+    setPublishLoading(true);
     const res = await fetch("/api/v1/issue/publish", {
       method: "POST",
       body: JSON.stringify({
@@ -94,11 +139,11 @@ const Update = ({
       }),
     });
     if (!res.ok) {
-      setUpdateLoading(false);
+      setPublishLoading(false);
       return;
     }
     router.refresh();
-    setUpdateLoading(false);
+    setPublishLoading(false);
     setOpen(false);
   }
 
@@ -282,7 +327,7 @@ const Update = ({
             <Button
               disabled={collaboratorLoading || draftLoading}
               className="mt-4"
-              // onClick={stepFour}
+              onClick={stepFour}
             >
               {!collaboratorLoading && !draftLoading ? (
                 "Update"
@@ -353,7 +398,7 @@ const Update = ({
             <Button
               disabled={!collaborator?.id || draftLoading}
               className="mt-4"
-              // onClick={stepFourAndHalf}
+              onClick={stepFourAndHalf}
             >
               {!draftLoading ? (
                 "Update"
@@ -364,7 +409,7 @@ const Update = ({
           </div>
         </>
       )}
-      {step === UPDATE_STEP && (
+      {step === PUBLISH_STEP && (
         <>
           <DialogHeader>
             <DialogTitle>{issue?.title}</DialogTitle>
@@ -454,12 +499,6 @@ const Update = ({
               </div>
             ) : (
               <div className="flex flex-col gap-2">
-                <div className="pointer-events-none flex cursor-pointer flex-nowrap items-center gap-2 rounded-md border bg-accent p-3">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-accent-foreground">
-                    <span className=" h-3 w-3 rounded-full bg-accent-foreground"></span>
-                  </span>
-                  <span className="text-lg font-semibold">Paid</span>
-                </div>
                 <Payment value={price} onChange={setPrice} />
               </div>
             )}
@@ -467,12 +506,12 @@ const Update = ({
 
           <Button
             disabled={
-              updateLoading ||
+              publishLoading ||
               (publishType === "paid" && price < siteConfig().minimumAmount)
             }
-            onClick={onUpdate}
+            onClick={onPublish}
           >
-            {!updateLoading ? (
+            {!publishLoading ? (
               "Publish"
             ) : (
               <Icons.spinner className=" animate-spin" />
