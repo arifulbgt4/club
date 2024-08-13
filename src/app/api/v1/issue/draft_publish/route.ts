@@ -116,10 +116,9 @@ export async function POST(req: Request) {
               id: findUser?.id,
             },
           },
-          active: false,
         },
         update: {
-          active: false,
+          days: 1,
         },
       });
 
