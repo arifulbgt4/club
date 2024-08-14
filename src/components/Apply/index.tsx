@@ -61,7 +61,6 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
     }));
     setLoading(false);
   }
-  console.log(applyError);
 
   const getPrice = useMemo(() => {
     if (

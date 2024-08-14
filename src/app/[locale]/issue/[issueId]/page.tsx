@@ -1,3 +1,4 @@
+"use server";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { formatDistanceToNow } from "date-fns";
@@ -8,6 +9,8 @@ import SignUpPromotion from "~/components/SignUpPromotion";
 import Markdown from "~/components/sections/Markdown";
 import { hexToRgba } from "~/lib/utils";
 import { getAnIssue } from "../action";
+import { Lock, Unlock } from "lucide-react";
+import Link from "next/link";
 
 interface IssuePageProps {
   params: { issueId: string };
@@ -22,7 +25,8 @@ export default async function IssuePage({
     return <span>No issue Found</span>;
   }
 
-  const { issue, dbIssue, comments, isOwn, isAuthenticated } = data;
+  const { issue, dbIssue, comments, isOwn, isAuthenticated, isCollaborator } =
+    data;
 
   return (
     <div className="mt-6 flex flex-col">
@@ -120,6 +124,39 @@ export default async function IssuePage({
           ) : (
             ""
           )}
+          <div className=" flex flex-col gap-2">
+            {dbIssue?.repository?.private ? (
+              <div className="flex items-center gap-1.5">
+                <Lock className="h-4 w-4" />
+                <span>Private Repository</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5">
+                <Unlock className="h-4 w-4" />
+                <span>Public Repository</span>
+              </div>
+            )}
+            {(!dbIssue?.repository?.private || isOwn || isCollaborator) && (
+              <div className="flex flex-col gap-1">
+                <Link
+                  className=" text-blue-500 hover:underline"
+                  href={`https://github.com/${dbIssue?.repository?.fullName}`}
+                  target="_blank"
+                >
+                  {dbIssue?.repository?.fullName}{" "}
+                  <span className="text-sm">↗</span>
+                </Link>
+                <Link
+                  className=" text-blue-500 hover:underline"
+                  href={`https://github.com/${dbIssue?.repository?.fullName}/issues/${dbIssue?.issueNumber}`}
+                  target="_blank"
+                >
+                  #{dbIssue?.issueNumber} issue{" "}
+                  <span className="text-sm">↗</span>
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

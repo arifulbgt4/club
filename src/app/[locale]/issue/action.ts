@@ -1,4 +1,3 @@
-import { IssueState } from "@prisma/client";
 import { validateRequest } from "~/server/auth";
 import db from "~/lib/db";
 import { app } from "~/lib/octokit";
@@ -50,11 +49,20 @@ export async function getAnIssue(id: string) {
     }
   );
 
+  const isCollaborator = await db.collaborate.findFirst({
+    where: {
+      repositoryId: dbIssue.repositoryId,
+      userId: user?.id,
+      active: true,
+    },
+  });
+
   return {
     issue: issue.data,
     comments: comments?.data,
     isOwn: user?.id === dbIssue?.userId,
     isAuthenticated: !!session,
+    isCollaborator: !!isCollaborator,
     dbIssue: dbIssue as IssueOptions,
   };
 }
