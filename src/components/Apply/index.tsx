@@ -17,26 +17,33 @@ import { cn } from "~/lib/utils";
 const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
   const [days, setDays] = useState(0);
   const [applyError, setApplyError] = useState(false);
-  const [applyed, setApplyed] = useState<boolean>();
+  const [checkStatus, setCheckStatus] = useState<{
+    qualified: boolean;
+    applyed: boolean;
+    count: number;
+  }>({ qualified: false, count: 0, applyed: false });
   const [loading, setLoading] = useState(true);
   const isApplyed = useCallback(async () => {
     try {
-      const res = await fetch(`/api/v1/issue/checkApply?issueId=${issueId}`, {
-        method: "GET",
-      });
+      const res = await fetch(
+        `/api/v1/issue/checkApply?issueId=${issueId}&issueType=${issueType}`,
+        {
+          method: "GET",
+        }
+      );
       const data = await res.json();
-      console.log("data", data);
-      setApplyed(data);
+      setDays(data?.applyedDay || 0);
+      setCheckStatus(data);
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [issueId]);
 
   async function onApply() {
     if (days <= 0) {
-      console.log(true, days <= 0);
       setApplyError(true);
       return;
     }
@@ -46,7 +53,11 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
       method: "POST",
       body: JSON.stringify({ issueId, days: Number(days) }),
     });
-    setApplyed(true);
+    setCheckStatus((prevState) => ({
+      ...prevState,
+      qualified: false,
+      applyed: true,
+    }));
     setLoading(false);
   }
   console.log(applyError);
@@ -81,13 +92,17 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
           {getPrice}
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <p>
-          To qualify for a paid issue, you must first complete 5 open-source
-          issues.
-        </p>
-        <span className="mt-2 block text-gray-600">Completed 3/5</span>
-      </CardContent>
+      {issueType === IntentType.paid && checkStatus?.count < 5 && (
+        <CardContent>
+          <p>
+            To qualify for a paid issue, you must first complete 5 open-source
+            issues.
+          </p>
+          <span className="mt-2 block font-semibold text-muted-foreground">
+            Completed {checkStatus?.count}/5
+          </span>
+        </CardContent>
+      )}
       <CardFooter aria-disabled="true" className=" flex-col">
         <div className="flex flex-col gap-4">
           <span className=" text-sm font-semibold">
@@ -95,7 +110,7 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
           </span>
           <div className="flex gap-2">
             <Input
-              disabled={applyed || loading || disabled}
+              disabled={!checkStatus?.qualified || loading || disabled}
               placeholder="EX: 2"
               value={days}
               onChange={(event) => {
@@ -105,7 +120,7 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
                 }
               }}
               className={cn(
-                "h-8 w-[78px] border-yellow-100",
+                "h-8 w-14 border-yellow-100",
                 applyError && "border-red-500"
               )}
               type="number"
@@ -115,11 +130,11 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
           <div>
             {!loading ? (
               <Button
-                disabled={applyed || disabled}
+                disabled={!checkStatus?.qualified || disabled}
                 onClick={onApply}
                 className=" bg-green-500"
               >
-                {applyed ? "Applyed" : "Apply"}
+                {checkStatus?.applyed ? "Applyed" : "Apply"}
               </Button>
             ) : (
               <Button disabled className=" bg-green-500">

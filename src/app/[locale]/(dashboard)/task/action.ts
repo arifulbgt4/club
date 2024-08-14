@@ -37,13 +37,11 @@ export async function getCounts() {
         countIntents({
           active: false,
           success: true,
-          issue: { status: IssueStatus.default },
           request: { userId },
         }),
         countIntents({
           active: false,
           success: false,
-          issue: { status: IssueStatus.default },
           request: { userId },
         }),
       ]);
