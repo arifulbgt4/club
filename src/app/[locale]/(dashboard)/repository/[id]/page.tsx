@@ -67,14 +67,22 @@ export default async function ARepositoryPage({
         </div>
         <TopTabs t={t} />
       </div>
-      <div className=" rounded-tl-md border-t">
-        <RepositoryBoard
-          b={b}
-          p={p}
-          repoId={id}
-          isPrivate={dbRepo?.private as boolean}
-        />
-      </div>
+
+      {typeof t === "undefined" && (
+        <div className=" rounded-tl-md border-t">
+          <RepositoryBoard
+            b={b}
+            p={p}
+            repoId={id}
+            isPrivate={dbRepo?.private as boolean}
+          />
+        </div>
+      )}
+      {t === "settings" && (
+        <div className="border-t">
+          <span>Settings</span>
+        </div>
+      )}
     </div>
   );
 }
