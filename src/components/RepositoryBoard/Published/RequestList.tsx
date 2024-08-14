@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import Icons from "~/components/shared/icons";
@@ -76,7 +76,6 @@ function RequestItem({
 }) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const pathname = usePathname();
   async function onAccept() {
     try {
       setLoading(true);
@@ -89,11 +88,8 @@ function RequestItem({
           intentId,
         }),
       });
-
-      router.push(`${pathname}?b=inprogress`);
-
+      router.refresh();
       setOpen(false);
-      setTimeout(() => router.refresh(), 300);
     } catch (error) {
       console.log(error);
     } finally {
