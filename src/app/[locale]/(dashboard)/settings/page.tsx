@@ -9,5 +9,9 @@ export const metadata: Metadata = {
 
 export default async function Settings() {
   const { user } = await validateRequest();
-  return <SettingsForm currentUser={user as User} />;
+  return (
+    <div className="flex flex-1  justify-center">
+      <SettingsForm currentUser={user as User} />
+    </div>
+  );
 }

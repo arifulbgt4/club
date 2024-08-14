@@ -96,21 +96,20 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
           {getPrice}
         </CardTitle>
       </CardHeader>
-      {issueType === IntentType.paid &&
-        checkStatus?.count < siteConfig().qualifyIssue && (
-          <CardContent>
-            <p>
-              To qualify for a paid issue, you must first complete{" "}
-              {siteConfig().qualifyIssue} open-source issues.
-            </p>
-            <span className="mt-2 block font-semibold text-muted-foreground">
-              Completed {checkStatus?.count}/{siteConfig().qualifyIssue}
-            </span>
-          </CardContent>
-        )}
+      {checkStatus?.count < siteConfig().qualifyIssue && (
+        <CardContent>
+          <p className="text-sm font-semibold">
+            To qualify for a paid issue, you must first contribute{" "}
+            {siteConfig().qualifyIssue} open-source issues.
+          </p>
+          <span className="mt-2 block font-semibold text-muted-foreground">
+            Completed {checkStatus?.count}/{siteConfig().qualifyIssue}
+          </span>
+        </CardContent>
+      )}
       <CardFooter aria-disabled="true" className=" flex-col">
         <div className="flex flex-col gap-4">
-          <span className=" text-sm font-semibold">
+          <span className="text-sm font-semibold">
             How many days will it take for you to submit a pull request?{" "}
           </span>
           <div className="flex gap-2">
@@ -129,7 +128,7 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
               )}
               type="number"
             />{" "}
-            <span>days</span>
+            <span className="font-semibold">days</span>
           </div>
           <div>
             {!loading ? (

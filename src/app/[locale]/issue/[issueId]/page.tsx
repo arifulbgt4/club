@@ -103,7 +103,7 @@ export default async function IssuePage({
             )}
           </div>
           {issue?.labels?.length ? (
-            <div className="flex flex-col">
+            <div className="mb-3 flex flex-col">
               <span className=" pb-3 text-sm font-medium">Labels</span>
               <div className="flex flex-wrap">
                 {issue?.labels?.map((label: any) => (
@@ -128,12 +128,12 @@ export default async function IssuePage({
             {dbIssue?.repository?.private ? (
               <div className="flex items-center gap-1.5">
                 <Lock className="h-4 w-4" />
-                <span>Private Repository</span>
+                <span className="font-semibold">Private</span>
               </div>
             ) : (
               <div className="flex items-center gap-1.5">
                 <Unlock className="h-4 w-4" />
-                <span>Public Repository</span>
+                <span className="font-semibold">Public</span>
               </div>
             )}
             {(!dbIssue?.repository?.private || isOwn || isCollaborator) && (

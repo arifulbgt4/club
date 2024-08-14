@@ -4,9 +4,9 @@ import dynamic from "next/dynamic";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type User } from "lucia";
 import { Loader2 } from "lucide-react";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Avatar, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import {
   Form,
@@ -20,22 +20,13 @@ import {
 import { Input } from "~/components/ui/input";
 import { toast } from "~/components/ui/use-toast";
 import { settingsSchema, type SettingsValues } from "~/types";
-import {
-  removeNewImageFromCDN,
-  removeUserOldImageFromCDN,
-  updateUser,
-} from "./actions";
-
-const ImageUploadModal = dynamic(
-  () => import("~/components/layout/image-upload-modal")
-);
+import { updateUser } from "./actions";
 
 const CancelConfirmModal = dynamic(
   () => import("~/components/layout/cancel-confirm-modal")
 );
 
 export default function SettingsForm({ currentUser }: { currentUser: User }) {
-  const oldImage = useRef("");
   const [pending, startTransition] = useTransition();
 
   const form = useForm<SettingsValues>({
@@ -45,29 +36,19 @@ export default function SettingsForm({ currentUser }: { currentUser: User }) {
       name: currentUser.name,
       email: currentUser.email,
       picture: currentUser.picture,
+      username: currentUser?.username,
     },
   });
 
-  const { formState, getFieldState } = form;
-  const { isDirty: isImageChanged } = getFieldState("picture");
+  const { formState } = form;
 
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
-
-  useEffect(() => {
-    if (isImageChanged && currentUser.picture !== oldImage.current) {
-      oldImage.current = currentUser.picture;
-    }
-  }, [currentUser.picture, isImageChanged]);
 
   function onSubmit(data: SettingsValues) {
     if (!formState.isDirty) return;
 
     startTransition(() => {
-      const updatePromise = isImageChanged
-        ? removeUserOldImageFromCDN(currentUser.id, data.picture).then(() =>
-            updateUser(currentUser.id, data)
-          )
-        : updateUser(currentUser.id, data);
+      const updatePromise = updateUser(currentUser.id, data);
 
       return updatePromise
         .then(() => {
@@ -85,42 +66,23 @@ export default function SettingsForm({ currentUser }: { currentUser: User }) {
   }
 
   function handleReset() {
-    if (isImageChanged) {
-      removeNewImageFromCDN(form.getValues().picture)
-        .then(() => form.reset())
-        .catch((error) => console.error(error));
-    } else {
-      form.reset();
-    }
+    form.reset();
   }
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="max-w-2xl space-y-8 rounded-md border p-6 "
+        className=" max-w-2xl space-y-6"
       >
-        <FormField
-          control={form.control}
-          name="picture"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Picture</FormLabel>
-              <FormControl>
-                <Avatar className="group relative h-28 w-28 rounded-full">
-                  <AvatarImage src={field.value} alt={form.getValues().name} />
-                  <AvatarFallback className=" text-xs">
-                    {form.getValues().name}
-                  </AvatarFallback>
-                  <ImageUploadModal onChange={field.onChange} />
-                </Avatar>
-              </FormControl>
-              <FormDescription>
-                Click on the avatar to upload new one.
-              </FormDescription>
-            </FormItem>
-          )}
-        ></FormField>
+        <span>Profile picture</span>
+        <Avatar className="group relative h-28 w-28 rounded-full">
+          <AvatarImage
+            src={form?.getValues("picture")}
+            alt={form.getValues().name}
+          />
+        </Avatar>
+
         <FormField
           control={form.control}
           name="name"
@@ -129,6 +91,24 @@ export default function SettingsForm({ currentUser }: { currentUser: User }) {
               <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input placeholder="Your name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input
+                  className=" bg-muted"
+                  readOnly
+                  placeholder="username"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -152,6 +132,10 @@ export default function SettingsForm({ currentUser }: { currentUser: User }) {
             </FormItem>
           )}
         />
+        <FormDescription>
+          Note: If your information does not match your GitHub profile, please
+          log in again
+        </FormDescription>
 
         <div className="inline-flex gap-x-4">
           <CancelConfirmModal
