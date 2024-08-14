@@ -36,7 +36,7 @@ async function Wip({}: WipProps) {
       </div>
       <div className="my-5 flex">
         <div className=" mr-9 flex w-[70%] flex-col">
-          <div className="mb-6 flex flex-auto">
+          <div className="mb-6 flex flex-auto flex-col">
             <Markdown
               className="rounded-md border p-4"
               body={issue?.body_html}

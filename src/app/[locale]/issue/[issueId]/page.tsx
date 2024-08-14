@@ -42,7 +42,7 @@ export default async function IssuePage({
       </div>
       <div className="my-5 flex">
         <div className=" mr-9 flex w-[75%] flex-col">
-          <div className="mb-6 flex flex-auto">
+          <div className="mb-6 flex flex-auto flex-col">
             <Markdown
               className="rounded-md border p-4"
               body={issue?.body_html as string}

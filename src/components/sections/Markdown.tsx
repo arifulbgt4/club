@@ -15,7 +15,7 @@ const Markdown = ({
   className?: ClassNameValue;
 }) => {
   return (
-    <div className={cn(className, "flex-1")}>
+    <div className={cn(className)}>
       <ReactMarkdown
         className=" prose max-w-fit"
         remarkPlugins={[gfm]}
