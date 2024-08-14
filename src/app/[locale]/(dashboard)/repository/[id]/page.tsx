@@ -11,6 +11,7 @@ import { Avatar, AvatarImage } from "~/components/ui/avatar";
 import TopTabs from "./_lib/TopTabs";
 import RepositoryBoard from "~/components/RepositoryBoard";
 import EmptyState from "~/components/shared/empty-state";
+import RepositorySettings from "~/components/RepositorySettings";
 
 export default async function ARepositoryPage({
   params: { id },
@@ -78,11 +79,7 @@ export default async function ARepositoryPage({
           />
         </div>
       )}
-      {t === "settings" && (
-        <div className="border-t">
-          <span>Settings</span>
-        </div>
-      )}
+      {t === "settings" && <RepositorySettings repoId={dbRepo.id} />}
     </div>
   );
 }
