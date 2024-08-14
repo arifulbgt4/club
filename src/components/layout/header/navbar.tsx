@@ -37,8 +37,8 @@ export default function Navbar({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
   return (
-    <nav className="flex h-full items-center justify-between">
-      <Link href="/" className="flex items-center gap-0.5 text-2xl font-bold">
+    <nav className="flex items-center justify-between py-4">
+      <Link href="/" className="flex items-center gap-1 text-2xl font-bold">
         <Image
           src="/logo.png"
           alt="Otask logo"

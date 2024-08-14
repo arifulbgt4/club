@@ -24,7 +24,7 @@ export default async function RepositoryLayout({
           <span className="mt-1 p-2 text-sm font-medium text-muted-foreground">
             All Repository
           </span>
-          <ul className="h-[calc(100vh-222px)] overflow-auto rounded-md pr-3">
+          <ul className="h-[calc(100vh-206px)] overflow-auto rounded-md pr-3">
             {!!repos?.length ? (
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               repos?.map((r) => <RepoListItem key={r?.id} {...(r as any)} />)

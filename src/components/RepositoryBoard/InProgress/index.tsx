@@ -25,8 +25,8 @@ const InProgress = async ({
 
   return (
     <>
-      <div className="max-h-[calc(100vh-279px)] overflow-scroll ">
-        <div className="min-h-[calc(100vh-279px)] pt-3">
+      <div className="max-h-[calc(100vh-261px)] overflow-scroll ">
+        <div className="min-h-[calc(100vh-261px)] pt-3">
           <div className=" flex flex-col gap-3">
             {intents?.map((intent) => (
               <Content

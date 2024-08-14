@@ -12,8 +12,8 @@ export default async function Header() {
     dashboard: scopedT("dashboard"),
   };
   return (
-    <header className="h-20 w-full">
-      <div className="container h-full">
+    <header className="w-full">
+      <div className="container">
         <Navbar
           headerText={headerText}
           session={session!}
