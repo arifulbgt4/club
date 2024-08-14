@@ -7,7 +7,7 @@ import { type payload } from "~/types";
 export async function updateUser(id: string, payload: payload) {
   await db.user.update({
     where: { id },
-    data: { ...payload },
+    data: { name: payload?.name },
   });
 
   revalidatePath("/settings");
