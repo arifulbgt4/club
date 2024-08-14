@@ -1,5 +1,9 @@
 import { Skeleton } from "~/components/ui/skeleton";
 
 export default function Loading() {
-  return <Skeleton className="h-[500px] max-w-2xl rounded-md" />;
+  return (
+    <div className="flex flex-1 justify-center">
+      <Skeleton className="flex h-[500px] max-w-2xl flex-1 rounded-md" />
+    </div>
+  );
 }
