@@ -5,10 +5,14 @@ import { validateRequest } from "~/server/auth";
 export async function POST(req: Request) {
   const body = await req.json();
   try {
-    const { user } = await validateRequest();
+    const { user, session } = await validateRequest();
+    if (!session || Number(body?.days) <= 0) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
     const request = await db.request.create({
       data: {
-        days: 1,
+        days: Number(body?.days),
         issue: {
           connect: {
             id: body?.issueId,

@@ -14,6 +14,7 @@ import { Search, X } from "lucide-react";
 import { Input } from "../ui/input";
 import Icons from "../shared/icons";
 import { Button } from "../ui/button";
+import { cn } from "~/lib/utils";
 
 const SearchTopics: FC<SearchTopicsProps> = ({
   value = [],
@@ -64,7 +65,9 @@ const SearchTopics: FC<SearchTopicsProps> = ({
   }, [searchQuery, debouncedSearch]);
 
   return (
-    <div className="flex flex-1">
+    <div
+      className={cn(!isAuthenticate && "pointer-events-none", "flex flex-1")}
+    >
       <div className="relative flex min-h-12 w-full flex-wrap items-center gap-2 rounded-lg border px-2 py-1">
         <div className="flex flex-wrap gap-1">
           {topicsValue?.map((p, i) => (
