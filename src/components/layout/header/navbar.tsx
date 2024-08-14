@@ -38,7 +38,7 @@ export default function Navbar({
   const router = useRouter();
   return (
     <nav className="flex h-full items-center justify-between">
-      <Link href="/" className="flex items-center text-2xl font-bold">
+      <Link href="/" className="flex items-center gap-0.5 text-2xl font-bold">
         <Image
           src="/logo.png"
           alt="Otask logo"
@@ -46,7 +46,7 @@ export default function Navbar({
           height="24"
           className=" rounded-sm object-contain"
         />
-        <p className="text-xl font-bold  italic">Task</p>
+        <p className="font-mono text-xl font-semibold tracking-wide">Task</p>
       </Link>
       <div className="hidden items-center gap-12 lg:flex 2xl:gap-16">
         <div className="space-x-4 text-center text-sm leading-loose text-muted-foreground md:text-left">
