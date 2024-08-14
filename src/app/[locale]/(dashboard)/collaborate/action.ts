@@ -25,6 +25,9 @@ export default async function getCollaborate() {
         },
       },
     },
+    orderBy: {
+      updatedAt: "desc",
+    },
   });
 
   return collaborate;

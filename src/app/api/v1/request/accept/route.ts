@@ -1,6 +1,5 @@
 import { IssueState } from "@prisma/client";
 import db from "~/lib/db";
-import { app } from "~/lib/octokit";
 import { redirectError } from "~/lib/utils";
 import { octokit, validateRequest } from "~/server/auth";
 
@@ -15,11 +14,7 @@ export async function PUT(req: Request) {
     const issue = await db.issue.findUnique({
       where: { id: String(body?.issueId) },
       include: {
-        repository: {
-          include: {
-            provider: true,
-          },
-        },
+        repository: true,
       },
     });
 
@@ -27,10 +22,6 @@ export async function PUT(req: Request) {
       return new Response("Unauthorized", { status: 401 });
     }
     const repo = issue?.repository;
-
-    if (!repo?.provider?.active) {
-      return new Response("Unauthorized", { status: 401 });
-    }
 
     if (repo?.private) {
       const requestUser = await db.request.findUnique({
@@ -59,19 +50,13 @@ export async function PUT(req: Request) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         if (error?.status === 404) {
-          const gitApp = await app.getInstallationOctokit(
-            Number(repo.provider?.installationId)
-          );
-          await gitApp.request(
+          await octo.request(
             "PUT /repos/{owner}/{repo}/collaborators/{username}",
             {
               owner: user?.username,
               repo: repo.name as string,
               username: requestUser?.user?.username as string,
               permission: "read",
-              headers: {
-                authorization: `token ${repo?.provider?.accessToken}`,
-              },
             }
           );
         }
