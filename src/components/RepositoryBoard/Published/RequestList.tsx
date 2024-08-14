@@ -47,11 +47,12 @@ const RequestList = ({
           {loading && <Icons.spinner className=" animate-spin" />}
         </SheetTitle>
         <SheetDescription>
-          Accept a request and assign the developer to continue working on the
-          issue
+          Approve a request and assign the developer to continue working on the
+          issue. If your repository is private, the developer will receive a
+          collaborator invitation with <strong>Read</strong> access.
         </SheetDescription>
       </SheetHeader>
-      <div className="grid gap-4 py-4">
+      <div className="flex max-h-[calc(100vh-145px)] flex-col gap-2 overflow-y-scroll py-4">
         {reqData?.map((r) => (
           <RequestItem
             key={r?.id}
