@@ -15,7 +15,11 @@ import { Input } from "../ui/input";
 import Icons from "../shared/icons";
 import { Button } from "../ui/button";
 
-const SearchTopics: FC<SearchTopicsProps> = ({ value = [], onChange }) => {
+const SearchTopics: FC<SearchTopicsProps> = ({
+  value = [],
+  onChange,
+  isAuthenticate = true,
+}) => {
   const [open, setOpen] = useState(false);
   const [topicsValue, setTopicsValue] = useState<string[]>(value);
   const [loading, setLoading] = useState<boolean>(false);
@@ -60,7 +64,7 @@ const SearchTopics: FC<SearchTopicsProps> = ({ value = [], onChange }) => {
   }, [searchQuery, debouncedSearch]);
 
   return (
-    <div>
+    <div className="flex flex-1">
       <div className="relative flex min-h-12 w-full flex-wrap items-center gap-2 rounded-lg border px-2 py-1">
         <div className="flex flex-wrap gap-1">
           {topicsValue?.map((p, i) => (
@@ -79,7 +83,8 @@ const SearchTopics: FC<SearchTopicsProps> = ({ value = [], onChange }) => {
           onClick={() => setOpen(true)}
           className="flex items-center gap-x-1.5 px-2 py-1 text-sm text-muted-foreground"
         >
-          <span className="-mb-[1px] text-lg">🔍</span> Search topics
+          <span className="-mb-[1px] text-lg">🔍</span>
+          {isAuthenticate ? "Search topics" : "Login and search"}
         </div>
         <CommandDialog open={open} onOpenChange={setOpen}>
           <div className="-m-[1px] flex flex-nowrap items-center rounded-md border px-3">
