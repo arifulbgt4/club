@@ -1,5 +1,6 @@
 import { IntentType } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { siteConfig } from "~/config/site";
 import db from "~/lib/db";
 import { validateRequest } from "~/server/auth";
 
@@ -30,7 +31,8 @@ export async function GET(req: Request) {
     });
 
     const checkCount =
-      (issueType === IntentType.paid && getCount >= 5) ||
+      (issueType === IntentType.paid &&
+        getCount >= siteConfig().qualifyIssue) ||
       issueType === IntentType.open_source;
 
     const qualified = !check && checkCount;

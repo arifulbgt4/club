@@ -13,6 +13,7 @@ import { Input } from "../ui/input";
 import Icons from "../shared/icons";
 import { IntentType } from "@prisma/client";
 import { cn } from "~/lib/utils";
+import { siteConfig } from "~/config/site";
 
 const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
   const [days, setDays] = useState(0);
@@ -63,7 +64,11 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
   console.log(applyError);
 
   const getPrice = useMemo(() => {
-    if (price === 0 || price < 3 || issueType === IntentType.open_source) {
+    if (
+      price === 0 ||
+      price < siteConfig().minimumAmount ||
+      issueType === IntentType.open_source
+    ) {
       return (
         <span className="font-normal tracking-normal">
           Open source{" "}
@@ -92,17 +97,18 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
           {getPrice}
         </CardTitle>
       </CardHeader>
-      {issueType === IntentType.paid && checkStatus?.count < 5 && (
-        <CardContent>
-          <p>
-            To qualify for a paid issue, you must first complete 5 open-source
-            issues.
-          </p>
-          <span className="mt-2 block font-semibold text-muted-foreground">
-            Completed {checkStatus?.count}/5
-          </span>
-        </CardContent>
-      )}
+      {issueType === IntentType.paid &&
+        checkStatus?.count < siteConfig().qualifyIssue && (
+          <CardContent>
+            <p>
+              To qualify for a paid issue, you must first complete{" "}
+              {siteConfig().qualifyIssue} open-source issues.
+            </p>
+            <span className="mt-2 block font-semibold text-muted-foreground">
+              Completed {checkStatus?.count}/{siteConfig().qualifyIssue}
+            </span>
+          </CardContent>
+        )}
       <CardFooter aria-disabled="true" className=" flex-col">
         <div className="flex flex-col gap-4">
           <span className=" text-sm font-semibold">
@@ -111,7 +117,6 @@ const Apply: FC<ApplyProps> = ({ issueId, price, issueType, disabled }) => {
           <div className="flex gap-2">
             <Input
               disabled={!checkStatus?.qualified || loading || disabled}
-              placeholder="EX: 2"
               value={days}
               onChange={(event) => {
                 if (Number(event?.target?.value) > 0) {
