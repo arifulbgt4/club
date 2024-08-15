@@ -1,4 +1,5 @@
 import { type MetadataRoute } from "next";
+import routes from "~/config/routes";
 import { siteUrl } from "~/config/site";
 
 export default function robots(): MetadataRoute.Robots {
@@ -8,11 +9,12 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: [
         "/api/",
-        "/profile",
-        "/repo",
-        "/task",
-        "/settings",
-        "/billing",
+        routes.profile,
+        routes.repository,
+        routes.collaborate,
+        routes.settings,
+        routes.task,
+        routes.billing,
       ],
     },
     sitemap: [`${siteUrl}/sitemap.xml`],

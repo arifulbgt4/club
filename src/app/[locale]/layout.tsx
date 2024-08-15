@@ -1,4 +1,4 @@
-import { type Metadata } from "next";
+import { type Viewport, type Metadata } from "next";
 import Footer from "~/components/layout/footer";
 import Header from "~/components/layout/header";
 import ThemeProvider from "~/components/shared/theme-provider";
@@ -11,37 +11,36 @@ type Props = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: siteConfig().themeColor },
+    { media: "(prefers-color-scheme: dark)", color: siteConfig().themeColor },
+  ],
+};
+
+export async function generateMetadata({
+  params,
+}: Omit<Props, "children">): Promise<Metadata> {
   const locale = params.locale;
   const site = siteConfig(locale);
-
-  const siteOgImage = `${siteUrl}/api/og?locale=${locale}`;
 
   return {
     title: {
       default: site.name,
-      template: `%s - ${site.name}`,
+      template: `%s - ${site.shortName}`,
     },
     description: site.description,
-    keywords: [
-      "Next.js",
-      "Shadcn/ui",
-      "LuciaAuth",
-      "Prisma",
-      "Vercel",
-      "Tailwind",
-      "Radix UI",
-      "Stripe",
-      "Internationalization",
-      "Postgres",
-    ],
+    keywords: site.keywords,
     authors: [
       {
-        name: "ariful",
-        url: "https://ariful.io",
+        name: site.name,
+        url: siteUrl,
       },
     ],
-    creator: "Ariful islam",
+    creator: site.name,
     openGraph: {
       type: "website",
       locale: locale,
@@ -51,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       siteName: site.name,
       images: [
         {
-          url: siteOgImage,
+          url: `${site.url}/opengraph-image`,
           width: 1200,
           height: 630,
           alt: site.name,
@@ -62,13 +61,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: site.name,
       description: site.description,
-      images: [siteOgImage],
-      creator: "@arifulbgt4",
+      images: [`${site.url}/opengraph-image`],
+      creator: "@otask",
     },
     icons: {
-      icon: "/favicon.ico",
-      shortcut: "/favicon-16x16.png",
-      apple: "/apple-touch-icon.png",
+      icon: "/icon/favicon.ico",
+      shortcut: "/icon/favicon-16x16.png",
+      apple: "/apple-icon/apple-touch-icon.png",
     },
     manifest: `${siteUrl}/manifest.json`,
     metadataBase: new URL(site.url),
@@ -81,14 +80,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
   };
 }
-
-export const viewport = {
-  width: 1,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
-};
 
 export default function SubLayout({
   children,

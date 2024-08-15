@@ -16,13 +16,16 @@ export default async function HomePage({
   searchParams: { page: string; topics: string };
 }) {
   const { session } = await validateRequest();
+
   const topics =
     (!!searchParams?.topics && searchParams?.topics?.split(",")) || [];
   const { intents, total, take, page } = await getIssues(
     Number(searchParams.page) || 1,
     topics
   );
+
   const totalPages = Math.ceil(total / take);
+
   return (
     <div className="container">
       <div className="flex pb-10 pt-3">
