@@ -70,7 +70,7 @@ export async function generateMetadata({
       apple: "/apple-icon/apple-touch-icon.png",
     },
     manifest: `${siteUrl}/manifest.json`,
-    metadataBase: new URL(site.url),
+    metadataBase: new URL(siteUrl),
     alternates: {
       canonical: "/",
       languages: {
