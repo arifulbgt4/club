@@ -64,11 +64,11 @@ export async function generateMetadata({
       images: [`${siteUrl}/opengraph-image`],
       creator: "@otask",
     },
-    icons: {
-      icon: "/icon/favicon.ico",
-      shortcut: "/icon/favicon-16x16.png",
-      apple: "/apple-icon/apple-touch-icon.png",
-    },
+    // icons: {
+    //   icon: "/icon/favicon.ico",
+    //   shortcut: "/icon/favicon-16x16.png",
+    //   apple: "/apple-icon/apple-touch-icon.png",
+    // },
     manifest: `${siteUrl}/manifest.json`,
     metadataBase: new URL(siteUrl),
     alternates: {
