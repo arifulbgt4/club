@@ -47,11 +47,22 @@ export async function POST(req: Request) {
       },
       update: {
         active: true,
+        delete: false,
         name: repo?.data?.name,
         fullName: repo?.data?.full_name,
         private: Boolean(repo?.data?.private),
         language: repo?.data?.language,
         topics: repo?.data?.topics,
+        user: {
+          connect: {
+            id: user?.id,
+          },
+        },
+        provider: {
+          connect: {
+            id: provider.id,
+          },
+        },
       },
     });
 

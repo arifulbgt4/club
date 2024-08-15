@@ -5,7 +5,7 @@ import type { ProviderPublic } from "~/types";
 export async function getRepository() {
   const { user } = await validateRequest();
   const repo = await db.repository.findMany({
-    where: { userId: user?.id, active: true },
+    where: { userId: user?.id, active: true, delete: false },
     orderBy: {
       createdAt: "desc",
     },
@@ -27,7 +27,7 @@ export async function getRepositoryByID(id: string) {
   const { user } = await validateRequest();
 
   const dbRepo = await db.repository.findUnique({
-    where: { id, userId: user?.id },
+    where: { id, userId: user?.id, delete: false },
     include: {
       provider: {
         select: {
