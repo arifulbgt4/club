@@ -1,5 +1,4 @@
 import { ImageResponse } from "next/og";
-import { siteConfig } from "~/config/site";
 
 // Route segment config
 // export const runtime = "edge";
@@ -35,7 +34,7 @@ export default function Icon() {
         style={{
           width: "100%",
           height: "100%",
-          border: `4px solid ${siteConfig().themeColor}`,
+          border: `4px solid #01e601`,
           borderRadius: "100%",
           display: "flex",
           alignItems: "center",
@@ -47,7 +46,7 @@ export default function Icon() {
             width: "9px",
             height: "9px",
             borderRadius: "100%",
-            background: siteConfig().themeColor,
+            background: "#01e601",
           }}
         ></span>
       </div>

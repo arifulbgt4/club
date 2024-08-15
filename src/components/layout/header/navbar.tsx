@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
+import { siteConfig } from "~/config/site";
 export default function Navbar({
   session,
   user,
@@ -39,13 +40,26 @@ export default function Navbar({
   return (
     <nav className="flex items-center justify-between py-4">
       <Link href="/" className="flex items-center gap-1 text-2xl font-bold">
-        <Image
-          src="/logo.png"
-          alt="Otask logo"
-          width="24"
-          height="24"
-          className=" rounded-sm object-contain"
-        />
+        <div
+          style={{
+            width: "24px",
+            height: "24px",
+            border: `3px solid ${siteConfig().themeColor}`,
+            borderRadius: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <span
+            style={{
+              width: "6px",
+              height: "6px",
+              borderRadius: "100%",
+              background: siteConfig().themeColor,
+            }}
+          ></span>
+        </div>
         <p className="font-mono text-xl font-semibold tracking-wide">Task</p>
       </Link>
       <div className="hidden items-center gap-12 lg:flex 2xl:gap-16">
