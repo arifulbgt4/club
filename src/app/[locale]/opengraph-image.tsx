@@ -29,18 +29,55 @@ export default async function Image({
           flexDirection: "column",
           padding: 30,
           backgroundImage:
-            "linear-gradient(to right, #74ebd5 0%, #9face6 100%)",
+            "linear-gradient(to right, #020817 0%, #040d22 50%, #020817 100%)",
         }}
       >
-        <h1
+        <div
           style={{
-            fontSize: 90,
-            marginBottom: 40,
-            lineHeight: 1.0002,
+            display: "flex",
+            alignContent: "center",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: "30px",
           }}
         >
-          Otask
-        </h1>
+          <div
+            style={{
+              width: "80px",
+              height: "80px",
+              border: `7px solid ${siteConfig().themeColor}`,
+              borderRadius: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <span
+              style={{
+                width: "20px",
+                height: "20px",
+                borderRadius: "100%",
+                background: siteConfig().themeColor,
+              }}
+            ></span>
+          </div>
+          <p
+            style={{
+              color: "#fff",
+              fontSize: "80px",
+              marginLeft: "5px",
+              fontWeight: 600,
+              letterSpacing: "3px",
+              fontFamily:
+                'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+            }}
+          >
+            Task
+          </p>
+        </div>
+        <p style={{ color: "#fff", fontSize: "60px", width: "900px" }}>
+          {siteConfig().shortName}
+        </p>
       </div>
     ),
     {

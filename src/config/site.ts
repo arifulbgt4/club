@@ -5,7 +5,7 @@ export const locales = ["en", "fr"];
 
 export const siteConfig = (locale?: string) => ({
   name: "Otask",
-  shortName: "Become a problem solver or publish your issue",
+  shortName: "Become a problem solver or publish your issues",
   url: siteUrl + "/" + locale,
   ogImage: `${siteUrl}/${locale}/opengraph-image`,
   description:
