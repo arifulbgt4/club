@@ -65,9 +65,22 @@ export async function generateMetadata({
       creator: "@otask",
     },
     icons: {
-      icon: "/icon/favicon.ico",
-      shortcut: "/icon/favicon-16x16.png",
-      apple: "/apple-icon/apple-touch-icon.png",
+      icon: [
+        { url: "/favicon.svg" },
+        new URL("/favicon.svg", siteUrl),
+        { url: "/favicon.svg", media: "(prefers-color-scheme: dark)" },
+      ],
+      shortcut: ["/favicon.svg"],
+      apple: [
+        { url: "/favicon.svg" },
+        { url: "/favicon.svg", sizes: "180x180" },
+      ],
+      other: [
+        {
+          rel: "apple-touch-icon-precomposed",
+          url: "/favicon.svg",
+        },
+      ],
     },
     manifest: `${siteUrl}/manifest.json`,
     metadataBase: new URL(siteUrl),
