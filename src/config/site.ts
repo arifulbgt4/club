@@ -13,10 +13,6 @@ export const siteConfig = (locale?: string) => ({
   keywords: ["otask", "issue", "github", "repository", "pull request"],
   backgroundColor: "#020817",
   themeColor: "#01e601",
-  links: {
-    twitter: "https://x.com/arifulbgt4",
-    github: "https://github.com/arifulbgt4",
-  },
   minimumAmount: 3,
   qualifyIssue: 3,
 });
