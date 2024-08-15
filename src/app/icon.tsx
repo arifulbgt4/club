@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { siteConfig } from "~/config/site";
 
 // Route segment config
-// export const runtime = "edge";
+export const runtime = "edge";
 
 // Image metadata
 export const size = {

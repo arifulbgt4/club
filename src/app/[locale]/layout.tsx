@@ -65,13 +65,9 @@ export async function generateMetadata({
       creator: "@otask",
     },
     icons: {
-      icon: "/icon.png",
-      shortcut: "/shortcut-icon.png",
-      apple: "/apple-icon.png",
-      other: {
-        rel: "apple-touch-icon-precomposed",
-        url: "/apple-touch-icon-precomposed.png",
-      },
+      icon: "/icon/favicon.ico",
+      shortcut: "/icon/favicon-16x16.png",
+      apple: "/apple-icon/apple-touch-icon.png",
     },
     manifest: `${siteUrl}/manifest.json`,
     metadataBase: new URL(siteUrl),
