@@ -296,6 +296,22 @@ export async function POST(req: NextRequest) {
         );
 
         break;
+      case "installation_repositories":
+        if (data?.action === "removed") {
+          const repositories_removed = data?.repositories_removed[0];
+          await db.repository.update({
+            where: {
+              id: String(repositories_removed?.id),
+              active: true,
+              fullName: repositories_removed?.full_name,
+            },
+            data: {
+              active: false,
+              delete: true,
+            },
+          });
+        }
+        break;
       default:
         console.log("Alert! Comming Unknown github webhook event.");
     }

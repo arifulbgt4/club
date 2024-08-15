@@ -6,19 +6,14 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import AuthForm from "../layout/auth-form";
+import { siteConfig } from "~/config/site";
 
 const SignUpPromotion = async () => {
   return (
     <Card className="bg-accent p-5">
       <CardHeader className="pb-0 text-center">
-        <CardTitle className="text-lg">
-          Become a problem solver or publish your issue
-        </CardTitle>
-        <CardDescription>
-          Encouraging individuals to either take on the role of solving existing
-          problems or to share their own issues for others to address, fostering
-          a collaborative and supportive environment.
-        </CardDescription>
+        <CardTitle className="text-lg">{siteConfig().shortName}</CardTitle>
+        <CardDescription>{siteConfig().description}</CardDescription>
       </CardHeader>
       <CardContent>
         <AuthForm />

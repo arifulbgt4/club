@@ -97,6 +97,7 @@ model Repository {
   fullName    String?
   language    String?
   private     Boolean?
+  delete      Boolean?      @default(false)
   active      Boolean?      @default(true)
   topics      String[]
   user        User?         @relation(fields: [userId], references: [id])
