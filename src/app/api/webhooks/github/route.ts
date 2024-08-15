@@ -299,7 +299,7 @@ export async function POST(req: NextRequest) {
       case "installation_repositories":
         if (data?.action === "removed") {
           const repositories_removed = data?.repositories_removed[0];
-          await db.repository.update({
+          const deletedRepo = await db.repository.update({
             where: {
               id: String(repositories_removed?.id),
               active: true,
@@ -308,6 +308,16 @@ export async function POST(req: NextRequest) {
             data: {
               active: false,
               delete: true,
+            },
+          });
+
+          await db.issue.updateMany({
+            where: {
+              repositoryId: deletedRepo?.id,
+              active: true,
+            },
+            data: {
+              active: false,
             },
           });
         }

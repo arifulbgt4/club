@@ -66,6 +66,13 @@ export async function POST(req: Request) {
       },
     });
 
+    await db.issue.updateMany({
+      where: { repositoryId: pub?.id, active: false },
+      data: {
+        active: true,
+      },
+    });
+
     const collaborators = await octo.request(
       "GET /repos/{owner}/{repo}/collaborators",
       {
