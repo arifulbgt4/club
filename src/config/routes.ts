@@ -6,6 +6,7 @@ export default {
   about: "/about",
   issueIdPage: "/issue",
   profile: "/profile",
+  payment: "/payment",
   repository: "/repository",
   repositoryIdPage: "/repository",
   task: "/task",

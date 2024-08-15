@@ -9,11 +9,11 @@ export default function Footer() {
       <div className="container flex items-center justify-between gap-4  md:flex-row">
         <div className="flex flex-col items-center gap-4 md:flex-row md:gap-2">
           <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-            Copyright © {new Date().getFullYear()}{" "}
-            <Link href="/" className="font-medium underline underline-offset-4">
+            © {new Date().getFullYear()}{" "}
+            <Link href="/" className="font-medium ">
               Otask
             </Link>{" "}
-            All rights reserved
+            . All Rights Reserved.
           </p>
         </div>
 

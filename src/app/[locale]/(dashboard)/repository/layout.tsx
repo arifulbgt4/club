@@ -1,8 +1,13 @@
+import { type Metadata } from "next";
 import AddRepository from "~/components/AddRepository";
 import EmptyState from "~/components/shared/empty-state";
 import RepoListItem from "~/components/RepoListItem";
 import { Button } from "~/components/ui/button";
 import { getProviders, getRepository } from "./action";
+
+export const metadata: Metadata = {
+  title: "Repository",
+};
 
 export default async function RepositoryLayout({
   children,

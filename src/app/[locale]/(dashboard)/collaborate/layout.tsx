@@ -1,6 +1,11 @@
+import { type Metadata } from "next";
 import EmptyState from "~/components/shared/empty-state";
 import getCollaborate from "./action";
 import CollaborateRepoListItem from "~/components/CollaborateRepoListItem";
+
+export const metadata: Metadata = {
+  title: "Collaborate",
+};
 
 export default async function Layout({
   children,

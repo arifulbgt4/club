@@ -30,7 +30,7 @@ export async function generateMetadata({
   return {
     title: {
       default: site.name,
-      template: `%s - ${site.shortName}`,
+      template: `${site.name} | %s`,
     },
     description: site.description,
     keywords: site.keywords,
